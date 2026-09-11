@@ -16,7 +16,7 @@ def test_revisions_and_lock(service):
     patch=Correction(expected_revision=1,parameters=Parameters(filter_policy='cpm1'),reason='Check robustness',evidence_ids=['law2018:0'])
     changed=service.correct('alice',p['id'],patch)
     assert changed['revision']==2
-    with pytest.raises(Problem,match='') as e:service.correct('alice',p['id'],patch)
+    with pytest.raises(Problem) as e:service.correct('alice',p['id'],patch)
     assert e.value.status==409
     with pytest.raises(Problem):service.lock('alice',p['id'],LockRequest(expected_revision=2,reviewed_fields=['dataset']))
     service.lock('alice',p['id'],LockRequest(expected_revision=2,reviewed_fields=REQUIRED_REVIEW))
