@@ -1,0 +1,138 @@
+{
+  "checked_date": "2026-09-11",
+  "method": "Read-only source inspection; no repository tests or applications executed. Files may be changing in other tasks. Hashes identify inspected snapshot.",
+  "repositories": [
+    {
+      "repository": "/Users/chris/Projects/codetrace",
+      "head": "e0b436028a7c67e2a431a40ba117e7e3ee230a71",
+      "files": [
+        {
+          "path": "lib/spatial-pdf.ts",
+          "sha256": "70232b4c6ac32b9648d004250d56baaa62c61dbfbf524f5e08073ac84354b410"
+        },
+        {
+          "path": "lib/revision-evidence.ts",
+          "sha256": "42e15bf337f9e242a431fc4390edcf34516ded5ee0c1e1ffca98a242468205c5"
+        },
+        {
+          "path": "lib/ai/validate-output.ts",
+          "sha256": "d9d4e44a845eb1fa04d407e76c3078d417f40ef1e6556337dc514bf46a80426f"
+        },
+        {
+          "path": "lib/ai/worker.ts",
+          "sha256": "5948b5bdb192e4a0ac74eacbd1950a0c83ca7be8b1c33da43b5093d559874ff2"
+        },
+        {
+          "path": "lib/ai/local-queue.ts",
+          "sha256": "acc9f7e8fc6f328b788ec1688608c4d9a9d4d5dd745f34573022601fe03f4e3f"
+        },
+        {
+          "path": "tests/revision-evidence.test.ts",
+          "sha256": "1cc4de40abf58286837b57995a1def0bb06c8412d6582495275509957105d312"
+        }
+      ]
+    },
+    {
+      "repository": "/Users/chris/Projects/DSPy-Supabase-RAG",
+      "head": "85a5d7e6abf47d1b93feccdaa1c2e0d3f13a0a5b",
+      "files": [
+        {
+          "path": "pdf_processor.py",
+          "sha256": "61367c4fe26d9965516d46a94e03c3f4b9effae782a5299c59933078a661cb67"
+        },
+        {
+          "path": "retriever.py",
+          "sha256": "c85f56e867e2ce1f363f6b97b420ddfaa1b4717a519c24b05152dc15f575287e"
+        },
+        {
+          "path": "faithful_rag.py",
+          "sha256": "3e1fa851e22076e76d1218da5650e659dcd71c93c063cd0c72dbf5653d913a03"
+        },
+        {
+          "path": "supabase_schema.sql",
+          "sha256": "6174b8321fa10f9f4e18e83304c3f0cf40f260e06693607e5620dd92f7c315a8"
+        }
+      ]
+    },
+    {
+      "repository": "/Users/chris/Projects/distributed-task-scheduler",
+      "head": "71af5c702fd306e2683d13569776de59a857e53f",
+      "files": [
+        {
+          "path": "internal/worker/processor.go",
+          "sha256": "cc3a3a794129ec69034c76f085bdff76aabe14b3efe33a590e08ed5b463bb400"
+        },
+        {
+          "path": "internal/queue/redis_queue.go",
+          "sha256": "2403a8db2ddfaeae75e9dbb98813dc4ed72bfee1582e0dec363af30a061edf3f"
+        },
+        {
+          "path": "internal/store/postgres.go",
+          "sha256": "bba0c7f6f0ee525f76efbbb2ea24165a950da3c2953fd661f0c2ef1ccbe350ae"
+        },
+        {
+          "path": "internal/api/server.go",
+          "sha256": "64470bdbac01a3acd984f257e08a89ae4ab101e3f3b3b91cac7e5f1f5ce9023f"
+        }
+      ]
+    },
+    {
+      "repository": "/Users/chris/Projects/agent-eval-k3s",
+      "head": "9b68ab520427e93a104a8d36966401a499f2fd92",
+      "files": [
+        {
+          "path": "src/agent_eval/agents/base.py",
+          "sha256": "4577ba77b9dcfdf8d378ce8c78dc6c44123ba865a8384133eb93a9b0813fca26"
+        },
+        {
+          "path": "src/agent_eval/blackbox/models.py",
+          "sha256": "59022e653535fd3c74ffdac3ba862981e86d7a114958c837cfee7c8fcbb74bc6"
+        },
+        {
+          "path": "src/agent_eval/blackbox/targets.py",
+          "sha256": "ef05595fc7a3a5550b390e71237755ed6d06303e86a1d8d1b4f7c1717fb947f7"
+        }
+      ]
+    },
+    {
+      "repository": "/Users/chris/Projects/pr-review-agent-flue",
+      "head": "024f477e613de41a23a4b6a8986c735f703bbdae",
+      "files": [
+        {
+          "path": "src/runner.ts",
+          "sha256": "50636135103ae8a81740eaf8bff00dd8be3df110937c6d377246548db50283ee"
+        },
+        {
+          "path": "src/schema.ts",
+          "sha256": "27627a754b43200fd6485988fc1420118d3fbe806506905b6b1f1718000ccdc4"
+        },
+        {
+          "path": "src/review.ts",
+          "sha256": "01cea946fa36b9446ea76c851b52e2603f46125ad130adff41b404974ac51100"
+        }
+      ]
+    },
+    {
+      "repository": "/Users/chris/Projects/multi-agent-software-engineering-platform",
+      "head": null,
+      "files": [
+        {
+          "path": "README.md",
+          "sha256": "0ed5aeee858a5a400d736178daeb41c0a242946e3f92e52d03b022da0a46c417"
+        },
+        {
+          "path": "ARCHITECTURE.md",
+          "sha256": "1124293fdedac97cc927cd368fdc5f2e69a32ebf2221839e0a012e6534b59c81"
+        },
+        {
+          "path": "CONTRACTS.md",
+          "sha256": "68e0f6584651a888d1c01e9c037ed5d61cec3eaa03d6ca379440c9175841abc1"
+        },
+        {
+          "path": "IMPLEMENTATION.md",
+          "sha256": "53da32210a6d1af7b5d6a33876118685669741e41032aaeac21e1f032d1b6b64"
+        }
+      ]
+    }
+  ]
+}
