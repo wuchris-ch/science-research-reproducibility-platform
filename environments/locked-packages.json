@@ -1,0 +1,32 @@
+[
+  {
+    "file": "limma_3.38.3.tar.gz",
+    "url": "https://bioconductor.org/packages/3.8/bioc/src/contrib/limma_3.38.3.tar.gz",
+    "sha256": "f43c8954f4e3c27267a0ed682f6b9ef1d5306c58b69692aae7c1ecfa9e446a23"
+  },
+  {
+    "file": "edgeR_3.24.0.tar.gz",
+    "url": "https://bioconductor.org/packages/3.8/bioc/src/contrib/Archive/edgeR/edgeR_3.24.0.tar.gz",
+    "sha256": "6f43b38376efed22940340ab476486f1356bce0ef7cf8e581f98ac97ff831146"
+  },
+  {
+    "file": "Rcpp_1.0.0.tar.gz",
+    "url": "https://cran.r-project.org/src/contrib/Archive/Rcpp/Rcpp_1.0.0.tar.gz",
+    "sha256": "b7378bf0dda17ef72aa3f2a318a9cb5667bef50b601dc1096431e17426e18bc2"
+  },
+  {
+    "file": "locfit_1.5-9.1.tar.gz",
+    "url": "https://cran.r-project.org/src/contrib/Archive/locfit/locfit_1.5-9.1.tar.gz",
+    "sha256": "f524148fdb29aac3a178618f88718d3d4ac91283014091aa11a01f1c70cd4e51"
+  },
+  {
+    "file": "RColorBrewer_1.1-2.tar.gz",
+    "url": "https://cran.r-project.org/src/contrib/Archive/RColorBrewer/RColorBrewer_1.1-2.tar.gz",
+    "sha256": "f3e9781e84e114b7a88eb099825936cc5ae7276bbba5af94d35adb1b3ea2ccdd"
+  },
+  {
+    "file": "jsonlite_1.6.tar.gz",
+    "url": "https://cran.r-project.org/src/contrib/Archive/jsonlite/jsonlite_1.6.tar.gz",
+    "sha256": "88c5b425229966b7409145a6cabc72db9ed04f8c37ee95901af0146bb285db53"
+  }
+]
