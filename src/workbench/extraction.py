@@ -42,7 +42,7 @@ def validate_proposals(fields,source):
         if set(item.evidence_ids)-set(segments):raise ValueError('Unknown evidence ID')
         if item.origin=='reported':
             if item.value is None or not item.quote or not item.evidence_ids:raise ValueError('Reported field needs a value and exact evidence quote')
-            if not any(item.quote in segments[e] for e in item.evidence_ids):raise ValueError('Quote not found in supplied evidence')
+            if not any(re.search(r'(?<![\w.])'+re.escape(item.quote)+r'(?![\w.])', segments[e]) for e in item.evidence_ids):raise ValueError('Quote not found at token boundaries in supplied evidence')
             if str(item.value).lower() not in item.quote.lower():raise ValueError('Reported value absent from quote')
         result.append(item.model_dump())
     return result

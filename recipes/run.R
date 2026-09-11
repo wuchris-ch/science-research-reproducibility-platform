@@ -28,7 +28,8 @@ original.libs <- colSums(counts)
 raw <- cpm(x, log=TRUE)
 M <- median(original.libs)*1e-6
 L <- mean(original.libs)*1e-6
-cutoff <- log2(q$min_count/M + 2/L)
+filter.cpm <- if(q$filter_policy == 'cpm1') 1 else q$min_count/M
+cutoff <- log2(filter.cpm + 2/L)
 if (p$dataset_id == 'chen2016') {
     symbols <- read.delim('/data/chen2016/symbols.tsv', stringsAsFactors=FALSE)
     x <- x[rownames(x) %in% symbols$gene_id, ]
@@ -68,7 +69,7 @@ if (p$recipe == 'density') {
     }
     dev.off()
     write.table(grids,file.path(out,'density.tsv'),sep='\t',quote=FALSE,row.names=FALSE)
-    metrics$cpm_cutoff <- q$min_count/M
+    metrics$cpm_cutoff <- filter.cpm
     metrics$log_cpm_cutoff <- cutoff
     metrics$raw_summary <- unclass(apply(raw,2,summary))
     metrics$filtered_summary <- unclass(apply(filtered,2,summary))

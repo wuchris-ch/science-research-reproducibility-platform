@@ -25,6 +25,8 @@ def bundle(service,run):
              ('environments/Dockerfile','build/Dockerfile'),('environments/entrypoint.sh','build/entrypoint.sh'),
              ('fixtures/law-samples.csv','build/law-samples.csv'),('environments/locked-packages.json','locked-packages.json'),
              ('scripts/reproduce.py','reproduce.py')]:add(name,(ROOT/relative).read_bytes())
+    if 'recipe.R' in run['body']['artifacts']:
+        files['build/run.R']=service.store.read(run['body']['artifacts']['recipe.R']['sha256'])
     for suffix in ('xml','json','pdf'):
         path=service.settings.data_dir/f'sources/{dataset}.{suffix}'
         if path.exists():add('source/'+path.name,path.read_bytes())

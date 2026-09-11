@@ -1,4 +1,6 @@
 import json
+import io
+import tarfile
 import shutil
 import subprocess
 import time
@@ -45,8 +47,25 @@ class Docker:
     def done(self,name):
         return self.command(['exec',name,'test','-f','/work/done'],check=False).returncode==0
     def collect(self,name,dest):
+        if dest.exists():shutil.rmtree(dest)
         dest.mkdir(parents=True,exist_ok=True)
-        self.command(['cp',name+':/work/output/.',str(dest)],timeout=60)
+        # docker cp cannot reliably see tmpfs mounts on every daemon. Read from the live namespace.
+        result=subprocess.run(self.prefix+['exec',name,'tar','-C','/work/output','-cf','-','.'],
+                              capture_output=True,timeout=60)
+        if result.returncode or len(result.stdout)>100*1024*1024:
+            raise ValueError('Output collection failed or exceeded 100 MiB')
+        with tarfile.open(fileobj=io.BytesIO(result.stdout),mode='r:') as archive:
+            for item in archive:
+                path=Path(item.name)
+                if item.isdir():continue
+                if not item.isfile() or path.is_absolute() or '..' in path.parts or len(path.parts)>2:
+                    raise ValueError('Unsafe output archive member')
+                target=dest/path
+                target.parent.mkdir(parents=True,exist_ok=True)
+                target.write_bytes(archive.extractfile(item).read())
+        recipe=self.command(['exec',name,'cat','/app/run.R']).stdout.encode()
+        if len(recipe)>100_000:raise ValueError('Unexpected recipe size')
+        (dest/'recipe.R').write_bytes(recipe)
     def stop(self,name):
         current=self.inspect(name)
         if current and current['State']['Running']:
