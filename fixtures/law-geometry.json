@@ -1,0 +1,31 @@
+{
+  "source_sha256": "65ad336492e083c9507428abd802b7f65db2ecaef3ffef176878e9e12a18e5f7",
+  "page": 8,
+  "page_size_points": [
+    612.283,
+    792
+  ],
+  "coordinate_system": "top-left PDF points",
+  "figure_bbox": [
+    138,
+    88,
+    458,
+    261
+  ],
+  "caption_bbox": [
+    92,
+    266,
+    519,
+    296
+  ],
+  "method_bbox": [
+    92,
+    315,
+    519,
+    470
+  ],
+  "verified": "2026-09-11",
+  "paper_version": 3,
+  "pdf_footer_update": "2025-11-13",
+  "note": "Publisher PDF regenerated with updated footer and review material; article v3 is December 28 2018."
+}

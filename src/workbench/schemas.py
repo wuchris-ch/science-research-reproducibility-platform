@@ -61,3 +61,5 @@ class ExtractionField(Strict):
     origin: Literal["reported", "inferred", "missing"]
     evidence_ids: list[str] = Field(default_factory=list, max_length=10)
     explanation: str = Field(max_length=2000)
+
+    quote: str = Field(default="", max_length=2000)
