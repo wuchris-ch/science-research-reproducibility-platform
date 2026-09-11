@@ -1,0 +1,138 @@
+{
+  "checked_date": "2026-09-11",
+  "kind": "bounded_read_only_data_probe",
+  "execution_limit": "No R, edgeR runtime, plotting, model calls, or full paper reproduction was run; Python parsed counts and independently translated one filtering rule.",
+  "files": [
+    {
+      "member": "GSM1545535_10_6_5_11.txt.gz",
+      "compressed_bytes": 178740,
+      "decompressed_bytes": 401942,
+      "sha256_gzip": "86a0ab7dae3c82a843a29f9f2560bacc1f064c27acbcf66d992caf49c0191ac8",
+      "sha256_text": "6b5cbeb953874439c14bf0dd14213e36dcc0374ade68687296fb2156aea12ad0",
+      "rows": 27179,
+      "library_size": 32863052
+    },
+    {
+      "member": "GSM1545536_9_6_5_11.txt.gz",
+      "compressed_bytes": 179754,
+      "decompressed_bytes": 403741,
+      "sha256_gzip": "9c303254fe1ea6b790edcf0eef39a145eb1c545fddcfd27d27e415877cad2b7e",
+      "sha256_text": "65b91705cee1747e84388621428c4b195554dbcfbe75e6f1d4dd106b313211c3",
+      "rows": 27179,
+      "library_size": 35335491
+    },
+    {
+      "member": "GSM1545538_purep53.txt.gz",
+      "compressed_bytes": 182457,
+      "decompressed_bytes": 408124,
+      "sha256_gzip": "f8ac0367ac30b600475903561da423b4624afa86a4ee3ccd348dd65190c69d51",
+      "sha256_text": "ff1c3a8f41dd2a3edbf63990f4763bd608f503a5f93c0d2767bc42de38a6867f",
+      "rows": 27179,
+      "library_size": 57160817
+    },
+    {
+      "member": "GSM1545539_JMS8-2.txt.gz",
+      "compressed_bytes": 181725,
+      "decompressed_bytes": 407055,
+      "sha256_gzip": "399c79362221f671e2c48c77e519ec57b0ee77cb038d5851f869b287f6cfffc1",
+      "sha256_text": "e3a7b59a34acb6b47f5d08c3a6f8f62946543ac6e486159b22ad3c30109d1aaa",
+      "rows": 27179,
+      "library_size": 51368625
+    },
+    {
+      "member": "GSM1545540_JMS8-3.txt.gz",
+      "compressed_bytes": 183039,
+      "decompressed_bytes": 409216,
+      "sha256_gzip": "ca69edbeaf9d856879c45242c564561c016bd8cd362045d622116a9308259ba0",
+      "sha256_text": "40f8b46069c3dc1c881a053fe4fb06607dd8ccaba0f0e4162c450af6190002d1",
+      "rows": 27179,
+      "library_size": 75795034
+    },
+    {
+      "member": "GSM1545541_JMS8-4.txt.gz",
+      "compressed_bytes": 181787,
+      "decompressed_bytes": 407004,
+      "sha256_gzip": "28058437e15ab2edaabe5b88446ea3913465d1888f25522ae20d6314be8cfb58",
+      "sha256_text": "74d51de4641f7b63b6265de70429b92a17cd9e841e32f2b671ab359c27efa505",
+      "rows": 27179,
+      "library_size": 60517657
+    },
+    {
+      "member": "GSM1545542_JMS8-5.txt.gz",
+      "compressed_bytes": 181948,
+      "decompressed_bytes": 407483,
+      "sha256_gzip": "ea620bc306a342ed324e6c222c955301cd38c1d25ea258849febd0fd04e5a450",
+      "sha256_text": "070fb2d184b8ca37fefff6bef6ffa96852b56a27f6b88813204428d14c4f3163",
+      "rows": 27179,
+      "library_size": 55086324
+    },
+    {
+      "member": "GSM1545544_JMS9-P7c.txt.gz",
+      "compressed_bytes": 177793,
+      "decompressed_bytes": 400482,
+      "sha256_gzip": "8990a9f78e7cb08b723550615d59d9161546cd6edf0421f8ef538c2173af3d23",
+      "sha256_text": "0f5e2fb9437c14ba25127f5a308670cf0fe20a528fe2b68fe7419b753c8a5e4e",
+      "rows": 27179,
+      "library_size": 21311068
+    },
+    {
+      "member": "GSM1545545_JMS9-P8c.txt.gz",
+      "compressed_bytes": 177071,
+      "decompressed_bytes": 399405,
+      "sha256_gzip": "bb1b2d1ee9cd99bafc5761f468ce926119872a4b11be3718b4a87276631040b2",
+      "sha256_text": "d588d2da59de07c7bbb817479c00ff43f80b4256877a8419c30af9b4ea5f2575",
+      "rows": 27179,
+      "library_size": 19958838
+    }
+  ],
+  "matrix_shape": [
+    27179,
+    9
+  ],
+  "all_zero_rows": 5153,
+  "independent_filter_probe": {
+    "basis": "Small Python translation of bioc/edgeR RELEASE_3_8 R/filterByExpr.R for nine samples, three equal groups, unnormalized library sizes. Not an R execution or full reproduction.",
+    "cpm_cutoff": 0.19467135824640042,
+    "retained_genes": 16624,
+    "alternative_cpm_gt_1_in_3_samples": 14165
+  },
+  "archives": [
+    {
+      "url": "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE63310&format=file",
+      "bytes": 1996800,
+      "sha256": "8cb208fdef9254dc78162bdbeb958e179eba7f015716d74d2d4b34e12f36fbe8",
+      "members": 11,
+      "selected_members": 9
+    }
+  ],
+  "code": [
+    {
+      "url": "https://bioconductor.org/packages/3.23/workflows/src/contrib/RNAseq123_1.36.0.tar.gz",
+      "bytes": 7259084,
+      "sha256": "0931719c6827b6229710bb98c026d4d9e39242bd4309c73fd2944ca74df4af2f",
+      "package_license": "Artistic-2.0",
+      "inspected_script_sha256": "a3af2b1987986f65dd7630a6f26d55cdb281d7bf4e00c5964152023db77ed469"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/bioc/edgeR/RELEASE_3_8/R/filterByExpr.R",
+      "bytes": 1550,
+      "sha256": "2ca3792878b2ec2a02d285c4eaa3718fc63af3a0d94475a8c79c3ac7e1142ed6"
+    }
+  ],
+  "article": {
+    "doi": "10.12688/f1000research.9005.3",
+    "version": 3,
+    "published": "2018-12-28",
+    "xml_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4937821/fullTextXML",
+    "xml_sha256": "83b6485c4f7e2951ac684ff8456b8c51dfd0887ce949b0972b626eb36e58bdee"
+  },
+  "fallback": {
+    "doi": "10.12688/f1000research.8987.2",
+    "url": "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE60450&format=file&file=GSE60450%5FLactation%2DGenewiseCounts%2Etxt%2Egz",
+    "compressed_bytes": 513592,
+    "decompressed_bytes": 1340161,
+    "rows": 27179,
+    "sample_columns": 12,
+    "sha256": "906b6ec4c33e95ca0ba454a3e0d07ad74e9cb7528ee38b89a9b122f5674a5f0d"
+  }
+}
