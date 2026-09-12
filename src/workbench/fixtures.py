@@ -11,37 +11,11 @@ from pathlib import Path
 import httpx
 from defusedxml import ElementTree
 
+from .adapters import datasets
 from .config import ROOT, Settings
 
 EVIDENCE = json.loads((ROOT / "evidence/feasibility.json").read_text())
-SOURCES = {
-    "law2018": {
-        "title": "RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR",
-        "authors": "Law et al.",
-        "year": 2018,
-        "doi": EVIDENCE["article"]["doi"],
-        "version": 3,
-        "accession": "GSE63310",
-        "figure": "Figure 1",
-        "url": EVIDENCE["article"]["xml_url"],
-        "sha256": EVIDENCE["article"]["xml_sha256"],
-        "license": "CC BY 4.0",
-        "recipes": ["density", "differential"],
-    },
-    "chen2016": {
-        "title": "From reads to genes to pathways: differential expression analysis of RNA-Seq experiments using Rsubread and the edgeR quasi-likelihood pipeline",
-        "authors": "Chen et al.",
-        "year": 2016,
-        "doi": "10.12688/f1000research.8987.2",
-        "version": 2,
-        "accession": "GSE60450",
-        "figure": "Figure 1",
-        "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4934518/fullTextXML",
-        "sha256": "d0922133ec1126302fe84e84a19d8695616be59c5603c60779907e2434b68db4",
-        "license": "CC BY 4.0",
-        "recipes": ["mds"],
-    },
-}
+SOURCES = datasets()
 
 
 def sha(data: bytes) -> str:

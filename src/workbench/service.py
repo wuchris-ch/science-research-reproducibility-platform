@@ -3,6 +3,7 @@ import time
 
 from sqlalchemy import func, insert, select, update
 
+from .adapters import resolve
 from .artifacts import digest
 from .database import Database, members, plans, revisions, runs, uid, workspaces
 from .fixtures import SOURCES
@@ -46,16 +47,14 @@ class Service:
     def new_plan(self, actor, request: PlanCreate):
         source = self.source(request.dataset_id)
         body = request.model_dump()
+        try:
+            adapter, body["parameters"] = resolve(request.dataset_id, request.recipe, request.parameters)
+        except ValueError as error:
+            raise Problem(422, str(error)) from None
+        body["adapter"] = adapter.snapshot()
         body["source_sha256"] = source["sha256"]
-        body["environment"] = "R 3.5.1 / edgeR 3.24.0 / limma 3.38.3 / Linux amd64"
-        body["adaptations"] = (
-            [
-                "Linux instead of the original operating system; rendering fonts may differ",
-                "Entrez IDs retained; Law display-only symbol annotation omitted",
-            ]
-            if request.dataset_id == "law2018"
-            else ["R and edgeR differ from the 2016 paper; original annotation and filter are preserved"]
-        )
+        body["environment"] = adapter.environment
+        body["adaptations"] = adapter.adaptations
         body["reviewed_fields"] = []
         with self.db.transaction() as c:
             self.authorize(c, request.workspace_id, actor, "editor")
@@ -103,14 +102,18 @@ class Service:
             self.authorize(c, plan["workspace_id"], actor, "editor")
             if plan["revision"] != request.expected_revision or plan["state"] != "draft":
                 raise Problem(409, "Plan changed or is locked. Reload before editing.")
-            if plan["body"]["dataset_id"] == "chen2016" and request.parameters.min_samples != 2:
-                raise Problem(422, "Chen MDS requires two samples per group")
+            try:
+                _, parameters = resolve(
+                    plan["body"]["dataset_id"], plan["body"]["recipe"], request.parameters
+                )
+            except ValueError as error:
+                raise Problem(422, str(error)) from None
             valid_ids = {e["id"] for e in self.source(plan["body"]["dataset_id"])["segments"]}
             if set(request.evidence_ids) - valid_ids:
                 raise Problem(422, "Unknown source evidence")
             body = {
                 **plan["body"],
-                "parameters": request.parameters.model_dump(),
+                "parameters": parameters,
                 "reason": request.reason,
                 "evidence_ids": request.evidence_ids,
                 "reviewed_fields": [],

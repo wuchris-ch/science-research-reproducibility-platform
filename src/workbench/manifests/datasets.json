@@ -1,0 +1,57 @@
+{
+  "law2018": {
+    "title": "RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR",
+    "authors": "Law et al.",
+    "year": 2018,
+    "doi": "10.12688/f1000research.9005.3",
+    "version": 3,
+    "accession": "GSE63310",
+    "figure": "Figure 1",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4937821/fullTextXML",
+    "sha256": "83b6485c4f7e2951ac684ff8456b8c51dfd0887ce949b0972b626eb36e58bdee",
+    "license": "CC BY 4.0",
+    "recipes": [
+      "density",
+      "differential"
+    ]
+  },
+  "chen2016": {
+    "title": "From reads to genes to pathways: differential expression analysis of RNA-Seq experiments using Rsubread and the edgeR quasi-likelihood pipeline",
+    "authors": "Chen et al.",
+    "year": 2016,
+    "doi": "10.12688/f1000research.8987.2",
+    "version": 2,
+    "accession": "GSE60450",
+    "figure": "Figure 1",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4934518/fullTextXML",
+    "sha256": "d0922133ec1126302fe84e84a19d8695616be59c5603c60779907e2434b68db4",
+    "license": "CC BY 4.0",
+    "recipes": [
+      "mds"
+    ],
+    "parameter_defaults": {
+      "min_samples": 2
+    },
+    "parameter_constraints": {
+      "min_samples": [
+        2
+      ]
+    }
+  },
+  "airway2015": {
+    "title": "RNA-Seq workflow: gene-level exploratory analysis and differential expression",
+    "authors": "Love, Anders, Kim and Huber",
+    "year": 2015,
+    "doi": "10.12688/f1000research.7035.1",
+    "version": 1,
+    "accession": "GSE52778",
+    "figure": "Figure 10",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4670015/fullTextXML",
+    "sha256": "e2a006eb119941122e9712ec1423d89222a05f72aade452e81d17e677bc1a6da",
+    "license": "CC BY 4.0",
+    "recipes": [
+      "deseq2"
+    ],
+    "parameter_defaults": {}
+  }
+}

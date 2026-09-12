@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "id": "deseq2-paired",
+  "version": "1.0.0",
+  "recipe": "deseq2",
+  "title": "Paired donor DESeq2 differential expression",
+  "runtime": "deseq2",
+  "environment": "R 4.2.2 / DESeq2 1.38.3 / Linux amd64",
+  "input_contract": "paired-counts-v1",
+  "parameters": {
+    "min_total_count": {
+      "type": "integer",
+      "default": 2,
+      "label": "Minimum total count across samples",
+      "minimum": 2,
+      "maximum": 100,
+      "sensitivity": [
+        2,
+        10
+      ]
+    },
+    "size_factor": {
+      "type": "string",
+      "default": "ratio",
+      "label": "Size-factor estimator",
+      "choices": [
+        "ratio",
+        "poscounts"
+      ],
+      "sensitivity": [
+        "ratio",
+        "poscounts"
+      ]
+    },
+    "independent_filtering": {
+      "type": "boolean",
+      "default": true,
+      "label": "Independent filtering",
+      "sensitivity": [
+        true,
+        false
+      ]
+    },
+    "beta_prior": {
+      "type": "boolean",
+      "default": true,
+      "label": "Normal prior on log2 fold change"
+    },
+    "fdr": {
+      "type": "number",
+      "default": 0.1,
+      "label": "FDR threshold",
+      "minimum": 0.001,
+      "maximum": 0.2
+    },
+    "seed": {
+      "type": "integer",
+      "default": 1,
+      "label": "Random seed",
+      "minimum": 0,
+      "maximum": 2147483647
+    }
+  },
+  "required_outputs": [
+    "metrics.json",
+    "genes.tsv",
+    "samples.tsv",
+    "effects.tsv",
+    "normalized-counts.tsv",
+    "design.tsv",
+    "figure.png",
+    "session.txt"
+  ],
+  "numeric_outputs": [
+    "metrics.json",
+    "genes.tsv",
+    "samples.tsv",
+    "effects.tsv",
+    "normalized-counts.tsv",
+    "design.tsv"
+  ],
+  "methods": {
+    "organism": "Homo sapiens",
+    "counts": "Unnormalized integer gene counts",
+    "design": "~ donor + condition",
+    "contrast": "treated versus control",
+    "fit": "Negative binomial GLM, parametric dispersion trend, Wald test",
+    "multiple_testing": "Benjamini-Hochberg within each retained independent-filter universe",
+    "outliers": "DESeq2 Cook distance filtering, no automatic replacement with fewer than seven replicates"
+  },
+  "adaptations": [
+    "Historical airway 0.102.0 counts and eight-sample subset are preserved.",
+    "R 4.2.2 / DESeq2 1.38.3 replaces R 3.2.1 / DESeq2 1.8.1. The normal fold-change prior is explicitly enabled, as in the source workflow.",
+    "Independent filtering threshold selection and numerical libraries differ by version. Published scalar and gene examples are compared separately from fresh reruns."
+  ],
+  "references": [
+    "https://doi.org/10.12688/f1000research.7035.1",
+    "https://doi.org/10.1371/journal.pone.0099625",
+    "https://bioconductor.org/packages/3.1/data/experiment/html/airway.html"
+  ]
+}
