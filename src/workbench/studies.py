@@ -31,10 +31,15 @@ class Studies:
         self.service, self.db = service, service.db
 
     def get(self, c, actor, identity, minimum="viewer"):
+        result = self.read(c, identity)
+        self.service.authorize(c, result["workspace_id"], actor, minimum)
+        return result
+
+    def read(self, c, identity):
+        """Internal scheduler read; public methods use get to enforce workspace access."""
         row = self.db.row(c, studies, identity)
         if not row:
             raise Problem(404, "Study not found")
-        self.service.authorize(c, row["workspace_id"], actor, minimum)
         entries = []
         for variant in c.execute(
             select(variants).where(variants.c.study_id == identity).order_by(variants.c.ordinal)
@@ -192,11 +197,32 @@ class Studies:
         for item in pending:
             actor = item["body"]["registered_by"]
             with self.db.transaction() as c:
-                study = self.get(c, actor, item["id"])
+                study = self.read(c, item["id"])
+                if study["state"] == "running":
+                    try:
+                        self.service.authorize(c, study["workspace_id"], actor, "editor")
+                    except Problem as error:
+                        if error.status != 403:
+                            raise
+                        c.execute(
+                            update(studies)
+                            .where(studies.c.id == study["id"])
+                            .values(state="cancel_requested")
+                        )
+                        self.db.emit(
+                            c,
+                            study["workspace_id"],
+                            "study.scheduling_access_revoked",
+                            "scheduler",
+                            {"id": study["id"]},
+                        )
+                        study["state"] = "cancel_requested"
             for variant in study["variants"]:
                 if study["state"] == "cancel_requested":
                     if variant["run_id"]:
-                        self.service.cancel(actor, variant["run_id"])
+                        with self.db.transaction() as c:
+                            run = dict(self.db.row(c, runs, variant["run_id"]))
+                            self.service.cancel_registered_run(c, run, "scheduler")
                     continue
                 if variant["run_id"]:
                     continue
@@ -216,7 +242,7 @@ class Studies:
                         .values(run_id=run["id"])
                     )
             with self.db.transaction() as c:
-                current = self.get(c, actor, item["id"])
+                current = self.read(c, item["id"])
                 states = [v["state"] for v in current["variants"]]
                 active = any(s in ("queued", "running", "cancel_requested") for s in states)
                 outcome = None
@@ -225,8 +251,15 @@ class Studies:
                 elif not active and "not_submitted" not in states:
                     outcome = "complete" if all(s == "succeeded" for s in states) else "incomplete"
                 if outcome:
-                    c.execute(update(studies).where(studies.c.id == item["id"]).values(state=outcome))
-                    self.db.emit(c, item["workspace_id"], "study." + outcome, actor, {"id": item["id"]})
+                    changed = c.execute(
+                        update(studies)
+                        .where(
+                            studies.c.id == item["id"], studies.c.state.in_(["running", "cancel_requested"])
+                        )
+                        .values(state=outcome)
+                    ).rowcount
+                    if changed:
+                        self.db.emit(c, item["workspace_id"], "study." + outcome, actor, {"id": item["id"]})
 
 
 def register_studies(app, service, actor):

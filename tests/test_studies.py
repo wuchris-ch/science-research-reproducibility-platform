@@ -85,3 +85,25 @@ def test_correction_retains_missing_hypotheses_in_family():
     assert adjust([0.01], "BY", universe=4) == pytest.approx([0.08333333333333333])
     with pytest.raises(ValueError):
         adjust([0.1, 0.2], "BY", universe=1)
+
+
+def test_revoked_membership_stops_family_without_blocking_scheduler(service):
+    from sqlalchemy import delete
+
+    from workbench.database import members
+
+    base = paired_plan(service)
+    flow = Studies(service)
+    study = flow.create("alice", request(base), "image", "revocation")
+    flow.start("alice", study["id"])
+    with service.db.transaction() as c:
+        c.execute(
+            delete(members).where(
+                members.c.workspace_id == base["workspace_id"], members.c.subject == "alice"
+            )
+        )
+    flow.advance()
+    with service.db.transaction() as c:
+        current = flow.read(c, study["id"])
+    assert current["state"] == "cancelled"
+    assert all(v["state"] == "cancelled" for v in current["variants"])

@@ -372,13 +372,17 @@ class Service:
         with self.db.transaction() as c:
             run = self.get_run(c, actor, identity)
             self.authorize(c, run["workspace_id"], actor, "editor")
-            if run["state"] not in ("queued", "running", "cancel_requested"):
-                return run
-            state = "cancelled" if run["state"] == "queued" else "cancel_requested"
-            c.execute(
-                update(runs)
-                .where(runs.c.id == identity)
-                .values(cancel_requested=1, state=state, updated=time.time())
-            )
-            self.db.emit(c, run["workspace_id"], "run." + state, actor, {}, identity)
-            return dict(self.db.row(c, runs, identity))
+            return self.cancel_registered_run(c, run, actor)
+
+    def cancel_registered_run(self, c, run, actor):
+        """Internal scheduler cancellation; public callers must authorize first."""
+        if run["state"] not in ("queued", "running", "cancel_requested"):
+            return run
+        state = "cancelled" if run["state"] == "queued" else "cancel_requested"
+        c.execute(
+            update(runs)
+            .where(runs.c.id == run["id"])
+            .values(cancel_requested=1, state=state, updated=time.time())
+        )
+        self.db.emit(c, run["workspace_id"], "run." + state, actor, {}, run["id"])
+        return dict(self.db.row(c, runs, run["id"]))
