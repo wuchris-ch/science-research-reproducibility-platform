@@ -7,7 +7,7 @@ import time
 from pathlib import Path
 from sqlalchemy import select, update, insert, or_, and_
 from .database import runs, attempts, uid
-from .comparison import validate_metrics, compare
+from .comparison import validate_metrics, validate_tables, compare
 from .artifacts import canonical
 
 class Docker:
@@ -66,6 +66,10 @@ class Docker:
         recipe=self.command(['exec',name,'cat','/app/run.R']).stdout.encode()
         if len(recipe)>100_000:raise ValueError('Unexpected recipe size')
         (dest/'recipe.R').write_bytes(recipe)
+        for filename in ('locked-packages.json','Dockerfile','entrypoint.sh','law-samples.csv'):
+            result=self.command(['exec',name,'cat','/app/'+filename],check=False)
+            if result.returncode==0:
+                (dest/filename).write_text(result.stdout)
     def stop(self,name):
         current=self.inspect(name)
         if current and current['State']['Running']:
@@ -169,6 +173,7 @@ class Worker:
             if code==0:
                 try:
                     metrics=validate_metrics(self.service.store.read(artifacts['metrics.json']['sha256']),run['body']['plan'])
+                    validate_tables(self.service.store,artifacts,metrics,run['body']['plan'])
                     receipt['comparison']=compare(metrics,run['body']['plan'])
                     if not self.service.store.read(artifacts['figure.png']['sha256']).startswith(b'\x89PNG\r\n\x1a\n'):
                         raise ValueError('Invalid figure output')

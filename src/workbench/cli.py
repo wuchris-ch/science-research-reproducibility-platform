@@ -46,6 +46,7 @@ def build(settings):
     for src,name in [('recipes/run.R','run.R'),('environments/Dockerfile','Dockerfile'),
                      ('environments/entrypoint.sh','entrypoint.sh'),('fixtures/law-samples.csv','law-samples.csv')]:
         shutil.copyfile(ROOT/src,context/name)
+    shutil.copyfile(ROOT/'environments/locked-packages.json',context/'locked-packages.json')
     docker=Docker(settings)
     subprocess.run(docker.prefix+['build','--platform','linux/amd64','-t',settings.image,str(context)],check=True)
     print('Sealed execution image:',docker.image_id())

@@ -30,6 +30,11 @@ class PlanCreate(Strict):
     def supported(self):
         if (self.dataset_id == "chen2016") != (self.recipe == "mds"):
             raise ValueError("Chen supports MDS; Law supports density and differential expression")
+        if self.dataset_id == "chen2016":
+            if "min_samples" not in self.parameters.model_fields_set:
+                self.parameters.min_samples = 2
+            elif self.parameters.min_samples != 2:
+                raise ValueError("Chen MDS requires two samples per group")
         return self
 
 class Correction(Strict):

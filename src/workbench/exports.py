@@ -27,6 +27,11 @@ def bundle(service,run):
              ('scripts/reproduce.py','reproduce.py')]:add(name,(ROOT/relative).read_bytes())
     if 'recipe.R' in run['body']['artifacts']:
         files['build/run.R']=service.store.read(run['body']['artifacts']['recipe.R']['sha256'])
+    for name in ('locked-packages.json','Dockerfile','entrypoint.sh','law-samples.csv'):
+        if name in run['body']['artifacts']:
+            data=service.store.read(run['body']['artifacts'][name]['sha256'])
+            files[('' if name=='locked-packages.json' else 'build/')+name]=data
+    files['build/locked-packages.json']=files['locked-packages.json']
     for suffix in ('xml','json','pdf'):
         path=service.settings.data_dir/f'sources/{dataset}.{suffix}'
         if path.exists():add('source/'+path.name,path.read_bytes())

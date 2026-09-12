@@ -79,6 +79,8 @@ class Service:
             self.authorize(c,plan['workspace_id'],actor,'editor')
             if plan['revision'] != request.expected_revision or plan['state'] != 'draft':
                 raise Problem(409,'Plan changed or is locked. Reload before editing.')
+            if plan['body']['dataset_id']=='chen2016' and request.parameters.min_samples!=2:
+                raise Problem(422,'Chen MDS requires two samples per group')
             valid_ids = {e['id'] for e in self.source(plan['body']['dataset_id'])['segments']}
             if set(request.evidence_ids) - valid_ids:
                 raise Problem(422,'Unknown source evidence')

@@ -58,3 +58,47 @@ def compare_fresh(store,left,right):
             results.append({'artifact':name,'byte_equal':a==b})
     return {'checks':results,'same_numeric_bytes':all(x['byte_equal'] for x in results),
             'scope':'Fresh run artifact consistency; not independent scientific validation'}
+
+
+def validate_tables(store,artifacts,metrics,plan):
+    def table(name):
+        return list(csv.DictReader(io.StringIO(store.read(artifacts[name]['sha256']).decode()),delimiter='\t'))
+    genes=table('genes.tsv')
+    ids=[g['gene_id'] for g in genes]
+    retained={g['gene_id'] for g in genes if g['retained']=='TRUE'}
+    if len(ids)!=metrics['input_genes'] or len(set(ids))!=len(ids) or len(retained)!=metrics['retained_genes']:
+        raise ValueError('Gene universe does not match metrics')
+    if any(g['retained'] not in ('TRUE','FALSE') for g in genes):raise ValueError('Invalid retained gene flag')
+    samples=table('samples.tsv')
+    if len(samples)!=metrics['samples'] or len({s['sample'] for s in samples})!=len(samples):raise ValueError('Invalid sample mapping')
+    if {s['sample']:int(s['library_size']) for s in samples}!=metrics['library_sizes']:raise ValueError('Sample totals differ from metrics')
+    if plan['recipe']=='density':
+        rows=table('density.tsv')
+        if len(rows)!=2*metrics['samples']*512:raise ValueError('Incomplete density grids')
+        groups={}
+        for row in rows:
+            x,y=float(row['x']),float(row['y'])
+            if not math.isfinite(x) or not math.isfinite(y) or y < -1e-12:raise ValueError('Invalid density value')
+            groups.setdefault((row['stage'],row['sample']),[]).append((x,y))
+        expected={(stage,s['sample']) for stage in ('raw','filtered') for s in samples}
+        if set(groups)!=expected:raise ValueError('Unknown density series')
+        for points in groups.values():
+            if len(points)!=512 or any(b[0]<=a[0] for a,b in zip(points,points[1:])):raise ValueError('Invalid density grid order')
+            area=sum((b[0]-a[0])*(b[1]+a[1])/2 for a,b in zip(points,points[1:]))
+            if not .98<area<1.02:raise ValueError('Density area is inconsistent')
+    elif plan['recipe']=='differential':
+        rows=table('differential.tsv')
+        if len(rows)!=len(retained) or {r['gene_id'] for r in rows}!=retained:raise ValueError('Differential table must contain the full tested universe')
+        ps=[]
+        for r in rows:
+            p,a,f=float(r['P.Value']),float(r['adj.P.Val']),float(r['logFC'])
+            if not all(math.isfinite(v) for v in (p,a,f)) or not 0<=p<=a<=1:raise ValueError('Invalid differential statistic')
+            ps.append(p)
+        n=len(rows);order=sorted(range(n),key=lambda i:ps[i]);last=1.
+        for rank in range(n,0,-1):
+            i=order[rank-1];last=min(last,ps[i]*n/rank)
+            if abs(last-float(rows[i]['adj.P.Val']))>1e-10:raise ValueError('Adjusted P values do not match full-universe BH correction')
+    else:
+        rows=table('mds.tsv')
+        if {r['sample'] for r in rows}!={s['sample'] for s in samples} or len(rows)!=len(samples):raise ValueError('Invalid MDS sample mapping')
+        if any(not math.isfinite(float(r[k])) for r in rows for k in ('x','y')):raise ValueError('Invalid MDS coordinate')
