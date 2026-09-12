@@ -40,6 +40,8 @@ class Studies:
             select(variants).where(variants.c.study_id == identity).order_by(variants.c.ordinal)
         ).mappings():
             run = dict(self.db.row(c, runs, variant["run_id"])) if variant["run_id"] else None
+            if run:
+                run["body"] = {k: v for k, v in run["body"].items() if k != "plan"}
             entries.append({**dict(variant), "state": run["state"] if run else "not_submitted", "run": run})
         return {**dict(row), "variants": entries}
 
