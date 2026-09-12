@@ -113,3 +113,16 @@ def test_imported_pdfs_are_scoped_and_downloaded_as_inert_attachments(client):
     assert response.content == data
     assert response.headers["content-type"] == "application/octet-stream"
     assert response.headers["content-disposition"].startswith("attachment;")
+
+
+def test_health_reports_database_failure(client, monkeypatch):
+    from sqlalchemy.exc import OperationalError
+
+    def unavailable():
+        raise OperationalError("SELECT 1", {}, Exception("database offline"))
+
+    assert client.get("/api/health").status_code == 200
+    monkeypatch.setattr(client.app.state.service.db.engine, "connect", unavailable)
+    response = client.get("/api/health")
+    assert response.status_code == 503
+    assert response.json()["database"] == "unreachable"

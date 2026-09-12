@@ -9,7 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import Field
-from sqlalchemy import func, insert, select, update
+from sqlalchemy import func, insert, select, text, update
+from sqlalchemy.exc import SQLAlchemyError
 
 from .artifacts import ArtifactStore
 from .auth import Auth
@@ -17,6 +18,7 @@ from .comparison import compare_fresh
 from .config import ROOT, Settings
 from .database import Database, attachments, events, members, plans, reviews, revisions, runs, uid, workspaces
 from .fixtures import SOURCES
+from .request_limits import RequestLimit
 from .runtime import RuntimeRegistry
 from .schemas import Correction, LockRequest, Membership, PlanCreate, Review, RunCreate, Strict
 from .service import Problem, Service
@@ -59,6 +61,7 @@ def create_app(settings=None, docker=None):
         allow_methods=["GET", "POST", "PUT", "OPTIONS"],
         allow_headers=["Content-Type", "Authorization", "X-CSRF-Token", "Idempotency-Key", "Last-Event-ID"],
     )
+    app.add_middleware(RequestLimit, max_bytes=10_000_000)
 
     @app.exception_handler(Problem)
     async def problem(_, error):
@@ -66,8 +69,6 @@ def create_app(settings=None, docker=None):
 
     @app.middleware("http")
     async def boundary(request, call_next):
-        if int(request.headers.get("content-length", "0")) > 10_000_000:
-            return JSONResponse({"detail": "Request too large"}, status_code=413)
         response = await call_next(request)
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "same-origin"
@@ -83,6 +84,11 @@ def create_app(settings=None, docker=None):
 
     @app.get("/api/health")
     def health():
+        try:
+            with db.engine.connect() as c:
+                c.execute(text("SELECT 1"))
+        except SQLAlchemyError:
+            return JSONResponse({"status": "unavailable", "database": "unreachable"}, status_code=503)
         return {"status": "ok", "version": "0.1.0", "identity_mode": "oidc" if auth.jwks else "local"}
 
     @app.get("/api/session")
