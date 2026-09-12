@@ -1,0 +1,31 @@
+{
+  "source_sha256": "f0715ad6a13e2715a76ee5ce77778c2afc0c5f0304a6e101b2810eb98e8b3938",
+  "page": 25,
+  "page_size_points": [
+    612.283,
+    792
+  ],
+  "coordinate_system": "top-left PDF points",
+  "figure_bbox": [
+    192,
+    490,
+    425,
+    694
+  ],
+  "caption_bbox": [
+    95,
+    698,
+    523,
+    736
+  ],
+  "method_bbox": [
+    95,
+    709,
+    523,
+    736
+  ],
+  "verified": "2026-09-11",
+  "paper_version": 1,
+  "pdf_footer_update": "2025-11-13",
+  "note": "Figure 10 MA plot and caption inspected on the version 1 publisher PDF."
+}

@@ -12,5 +12,7 @@
   "input_genes": 64102,
   "samples": 8,
   "review": "The package is the exact version named in the workflow session. Its selected samples have no albuterol treatment. Matrix slots and row/column identities are extracted without numerical transformation; metadata labels are explicitly mapped from dex trt/untrt to treated/control. Primary public counts are redistributable with source attribution; package source remains available under its declared LGPL license. No patient identifiers or controlled-access data are included.",
-  "compute": "Gene counts only; no FASTQ alignment or genome download. Runs are bounded to 2 CPUs, 4 GiB memory, 10 minutes and no network by default."
+  "compute": "Gene counts only; no FASTQ alignment or genome download. Runs are bounded to 2 CPUs, 4 GiB memory, 10 minutes and no network by default.",
+  "counts_sha256": "92141360e6c4d2df11c8a22dca8634a324abb6bb88f1114d3ff9c53b4da3df70",
+  "samples_sha256": "a2ef7a8f12c2d1ba148426ea7c2ec41c391eaa4198ed5cde7c1a62b52c9c9859"
 }

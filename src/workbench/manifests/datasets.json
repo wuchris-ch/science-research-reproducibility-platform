@@ -13,7 +13,14 @@
     "recipes": [
       "density",
       "differential"
-    ]
+    ],
+    "input_shape": {
+      "genes": 27179,
+      "samples": 9
+    },
+    "sample_description": "Three cell populations, three replicates each",
+    "figure_title": "Figure 1. Expression before and after filtering",
+    "geometry_file": "law-geometry.json"
   },
   "chen2016": {
     "title": "From reads to genes to pathways: differential expression analysis of RNA-Seq experiments using Rsubread and the edgeR quasi-likelihood pipeline",
@@ -36,7 +43,14 @@
       "min_samples": [
         2
       ]
-    }
+    },
+    "input_shape": {
+      "genes": 27179,
+      "samples": 12
+    },
+    "sample_description": "Two cell types across three biological states",
+    "figure_title": "Figure 1. Sample relationships",
+    "geometry_file": "chen-geometry.json"
   },
   "airway2015": {
     "title": "RNA-Seq workflow: gene-level exploratory analysis and differential expression",
@@ -52,6 +66,18 @@
     "recipes": [
       "deseq2"
     ],
-    "parameter_defaults": {}
+    "parameter_defaults": {},
+    "input_shape": {
+      "genes": 64102,
+      "samples": 8
+    },
+    "sample_description": "Four donor pairs, dexamethasone versus control",
+    "figure_title": "Figure 10. Treatment response",
+    "geometry_file": "airway-geometry.json",
+    "figure_format": "png",
+    "input_hashes": {
+      "counts.tsv": "92141360e6c4d2df11c8a22dca8634a324abb6bb88f1114d3ff9c53b4da3df70",
+      "samples.tsv": "a2ef7a8f12c2d1ba148426ea7c2ec41c391eaa4198ed5cde7c1a62b52c9c9859"
+    }
   }
 }

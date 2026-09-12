@@ -82,7 +82,9 @@ def validate_metrics(data: bytes, plan: dict):
 
 
 def compare(metrics, plan):
-    reference = json.loads((MANIFESTS / "references.json").read_text()).get(plan["dataset_id"], {})
+    reference = json.loads((MANIFESTS / "references.json").read_text()).get(
+        plan.get("reference_dataset", plan["dataset_id"]), {}
+    )
     checks = []
     for entry in reference.get("checks", []):
         if any(plan["parameters"].get(k) != v for k, v in entry.get("when", {}).items()):

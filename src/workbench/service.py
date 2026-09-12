@@ -70,7 +70,7 @@ class Service:
         path = self.settings.data_dir / f"sources/{dataset}.json"
         if dataset not in SOURCES or not path.exists():
             raise Problem(409, "Source is unavailable. Run workbench setup first.")
-        return json.loads(path.read_text())
+        return {**SOURCES[dataset], **json.loads(path.read_text())}
 
     def new_plan(self, actor, request: PlanCreate):
         source = self.source(request.dataset_id, actor, request.workspace_id)
@@ -109,6 +109,11 @@ class Service:
                     body["inputs"][name] = {"sha256": self.store.put(data), "bytes": len(data)}
                 body["input_summary"] = validate_paired(*raw)
             body["input_hash"] = digest({name: item["sha256"] for name, item in body["inputs"].items()})
+            for dataset, reference in SOURCES.items():
+                if reference.get("input_hashes") == {
+                    name: entry["sha256"] for name, entry in body["inputs"].items()
+                }:
+                    body["reference_dataset"] = dataset
         body["reviewed_fields"] = []
         with self.db.transaction() as c:
             self.authorize(c, request.workspace_id, actor, "editor")

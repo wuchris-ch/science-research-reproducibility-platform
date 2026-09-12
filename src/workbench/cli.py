@@ -94,17 +94,27 @@ def assets(settings):
         fetch(entry["url"], settings.data_dir / "sources" / entry["file"], entry["sha256"], cap=10_000_000)
     import pypdfium2 as pdfium
 
-    for dataset, name in (("law2018", "law"), ("chen2016", "chen")):
-        geometry = json.loads((ROOT / f"fixtures/{name}-geometry.json").read_text())
+    from .adapters import datasets
+
+    for dataset, metadata in datasets().items():
+        if not metadata.get("geometry_file"):
+            continue
+        geometry = json.loads((ROOT / "fixtures" / metadata["geometry_file"]).read_text())
         path = settings.data_dir / f"sources/{dataset}.json"
         source = json.loads(path.read_text())
         source["geometry"] = geometry
-        source["geometry_status"] = "Verified on publisher PDF, page 8"
+        source["geometry_status"] = f"Verified on publisher PDF, page {geometry['page']}"
         path.write_text(json.dumps(source))
         pdf = pdfium.PdfDocument(str(settings.data_dir / f"sources/{dataset}.pdf"))
         pdf[geometry["page"] - 1].render(scale=1.6).to_pil().save(
             settings.data_dir / f"sources/{dataset}-page.png"
         )
+        if metadata.get("figure_format") == "png":
+            left, top, right, bottom = geometry["figure_bbox"]
+            width, height = pdf[geometry["page"] - 1].get_size()
+            pdf[geometry["page"] - 1].render(
+                scale=2, crop=(left, height - bottom, width - right, top)
+            ).to_pil().save(settings.data_dir / f"sources/{dataset}-figure.png")
         pdf.close()
 
 
