@@ -37,3 +37,20 @@ def test_last_owner_and_source_validation(client):
     assert client.put(f'/api/workspaces/{w}/members',json={'subject':'local','role':'viewer'}).status_code==409
     assert client.post(f'/api/workspaces/{w}/sources',files={'file':('x.html',b'<script>alert(1)</script>')}).status_code==422
     assert client.get('/api/workspaces/unknown').status_code==403
+
+def test_session_reuse_does_not_invalidate_another_tab(client):
+    first=client.get('/api/session').json()['csrf']
+    second=client.get('/api/session').json()['csrf']
+    assert first==second
+    assert client.post('/api/workspaces',json={'name':'Another tab'},headers={'x-csrf-token':first}).status_code==200
+
+def test_review_survives_workspace_poll(client):
+    from sqlalchemy import update
+    from workbench.database import runs
+    w=client.post('/api/workspaces',json={'name':'Review lab'}).json()['id']
+    p=client.post('/api/plans',json={'workspace_id':w,'title':'Figure'}).json()
+    client.post('/api/plans/'+p['id']+'/lock',json={'expected_revision':1,'reviewed_fields':REQUIRED_REVIEW})
+    r=client.post('/api/runs',json={'plan_id':p['id']},headers={'Idempotency-Key':'review'}).json()
+    with client.app.state.service.db.transaction() as c:c.execute(update(runs).where(runs.c.id==r['id']).values(state='succeeded'))
+    assert client.post('/api/runs/'+r['id']+'/reviews',json={'status':'disputed','note':'A documented discrepancy'}).status_code==200
+    assert client.get('/api/workspaces/'+w).json()['runs'][0]['reviews'][0]['body']['status']=='disputed'

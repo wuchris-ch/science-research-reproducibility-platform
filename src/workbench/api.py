@@ -69,9 +69,15 @@ def create_app(settings=None, docker=None):
     def workspace(identity:str,who=Depends(actor)):
         with db.transaction() as c:
             role=service.authorize(c,identity,who)
+            recent=[dict(r) for r in c.execute(select(runs).where(runs.c.workspace_id==identity).order_by(runs.c.created.desc()).limit(200)).mappings()]
+            by_run={r['id']:r for r in recent}
+            for run in recent:run['reviews']=[]
+            if by_run:
+                for row in c.execute(select(reviews).where(reviews.c.run_id.in_(by_run)).order_by(reviews.c.created)).mappings():
+                    by_run[row['run_id']]['reviews'].append(dict(row))
             return {'workspace':dict(db.row(c,workspaces,identity)),'role':role,
                     'plans':[dict(r) for r in c.execute(select(plans).where(plans.c.workspace_id==identity).order_by(plans.c.created.desc())).mappings()],
-                    'runs':[dict(r) for r in c.execute(select(runs).where(runs.c.workspace_id==identity).order_by(runs.c.created.desc()).limit(200)).mappings()]}
+                    'runs':recent}
     @app.get('/api/workspaces/{identity}/members')
     def membership(identity:str,who=Depends(actor)):
         with db.transaction() as c:
