@@ -126,16 +126,27 @@ class Docker:
                 content = store.read(entry["sha256"])
                 member = tarfile.TarInfo(plan["dataset_id"] + "/" + filename)
                 member.size = len(content)
-                member.mode = 0o400
+                # Owner-writable until the ready marker makes the complete staged input visible.
+                # A supervisor retry can overwrite a partially extracted archive after interruption.
+                member.mode = 0o600
                 archive.addfile(member, io.BytesIO(content))
         result = subprocess.run(
-            self.prefix + ["exec", "-i", name, "tar", "-C", "/work/input", "-xf", "-"],
+            self.prefix + ["exec", "-i", name, "tar", "--unlink-first", "-C", "/work/input", "-xf", "-"],
             input=data.getvalue(),
             capture_output=True,
             timeout=30,
         )
         if result.returncode:
             raise RuntimeError("Immutable input staging failed")
+        self.command(
+            [
+                "exec",
+                name,
+                "chmod",
+                "400",
+                *["/work/input/" + plan["dataset_id"] + "/" + filename for filename in plan["inputs"]],
+            ]
+        )
         self.command(["exec", name, "touch", "/work/input-ready"])
 
     def collect(self, name, dest):
