@@ -12,7 +12,7 @@ from pathlib import Path
 from .artifacts import ArtifactStore
 from .config import ROOT, Settings
 from .database import Database
-from .fixtures import fetch, prepare
+from .fixtures import EVIDENCE, fetch, prepare
 from .runner import Docker, Worker
 from .service import Service
 
@@ -53,13 +53,25 @@ def prepare_annotation(settings):
 
 
 def build(settings):
+    # Reconstruct derived inputs from verified archives, including on rebuilds.
+    prepare(settings)
+    prepare_annotation(settings)
+    assets(settings)
     context = settings.data_dir / "build"
     context.mkdir(exist_ok=True)
     packages = context / "packages"
     packages.mkdir(exist_ok=True)
     for entry in json.loads((ROOT / "environments/locked-packages.json").read_text()):
         fetch(entry["url"], packages / entry["file"], entry["sha256"], cap=20_000_000)
-    shutil.copytree(settings.data_dir / "datasets", context / "data", dirs_exist_ok=True)
+    data = context / "data"
+    if data.exists():
+        shutil.rmtree(data)
+    (data / "law2018").mkdir(parents=True)
+    (data / "chen2016").mkdir()
+    expected = ["law2018/" + e["member"].removesuffix(".gz") for e in EVIDENCE["files"]]
+    expected += ["chen2016/counts.tsv", "chen2016/symbols.tsv"]
+    for name in expected:
+        shutil.copyfile(settings.data_dir / "datasets" / name, data / name)
     for src, name in [
         ("recipes/run.R", "run.R"),
         ("environments/Dockerfile", "Dockerfile"),
@@ -163,6 +175,7 @@ def main():
     sub.add_parser("setup")
     sub.add_parser("build")
     sub.add_parser("doctor")
+    sub.add_parser("migrate")
     serve = sub.add_parser("serve")
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8317)
@@ -182,14 +195,14 @@ def main():
     settings = Settings()
     settings.initialize()
     if args.command == "setup":
-        prepare(settings)
-        prepare_annotation(settings)
-        assets(settings)
         build(settings)
         make_service(settings)
         print("Setup complete. Start workbench serve and workbench worker in separate terminals.")
     elif args.command == "build":
         build(settings)
+    elif args.command == "migrate":
+        make_service(settings).db.engine.dispose()
+        print("Database schema is current.")
     elif args.command == "doctor":
         result = {
             "database": settings.database_url.split(":", 1)[0],
