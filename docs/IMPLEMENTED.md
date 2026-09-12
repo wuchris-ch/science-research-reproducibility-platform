@@ -1,6 +1,6 @@
 # Implemented behavior and evidence
 
-Verification date: September 11, 2026. These are local observations from this repository, not a claim of production readiness or a completed user study. Earlier planning documents remain historical design records.
+Verification date: September 11, 2026. The application and scientific checks below were executed against this repository. The read-only public example is described in [the study milestone](STUDY-MILESTONE.md); the authenticated team deployment remains a separate operating profile. Earlier planning documents remain historical design records.
 
 ## Delivered scope
 
@@ -9,8 +9,9 @@ Verification date: September 11, 2026. These are local observations from this re
 | P0 | Pinned source archives, counts, sample identity, original paper PDFs and page-8 regions; historical R image; reference and controlled variation | `fixtures/`, `recipes/ADAPTATIONS.md`, `evidence/science-verification.json` |
 | P1 | Typed API; SQLite and PostgreSQL schema migration; immutable artifacts; idempotent submit; fenced claims; bounded isolated execution; persisted events, diagnostics and recovery | Contract tests plus real runtime and budget receipts |
 | P2 | Responsive paper library, source viewer, method correction/revisions, review locks, live runs, published/generated plots, scalar comparisons, lineage, reviews, fresh reruns and export | Browser walkthrough and independent bundle replay |
-| P3.1 | Optional HTTPS model broker, structured extraction, source quote validation, server-held credentials, spending reservations and manual workflow | Mocked provider contract tests; no paid provider call |
+| P3.1 | Optional HTTPS model broker, structured extraction, source quote validation, server-held credentials, spending reservations and manual workflow | Broker contract tests and three bounded live extraction calls against frozen source questions |
 | P3.2 | Versioned lexical baseline evaluation on eight synthetic cases, including misleading instructions and abstention | `evidence/extraction-evaluation.json`; precision 0.8, recall 1.0 within this small set |
+| Study milestone | Validated adapter registry, paper/supplement onboarding, paired human DESeq2, frozen sensitivity families, gene exploration and portable offline reports | `evidence/airway-study-verification.json`, `evidence/heldout-extraction.json`, [walkthrough](STUDY-MILESTONE.md) |
 | P4.1-2 | Full primary-data differential expression and second-paper MDS adapter | Actual executions, complete tested universe, table validation and package/session records |
 | P5 foundations | OIDC access-token verification, workspace roles, scoped queries/storage access, audit, review records, quotas, backup/restore, Docker-engine-bound recovery | Cross-workspace, JWT, restore and recovery tests; isolated PostgreSQL suite |
 | Operations | Source checkout lifecycle commands, contract regeneration, CI, API image with no Docker CLI/socket, team configuration template | Build and container health/UI smoke test |
@@ -29,6 +30,9 @@ Neither article supplies an authoritative machine-readable density grid or full 
 
 ## Verification receipts
 
+- `evidence/airway-study-verification.json`: rejected sample mismatch, frozen protocol, all eight executed variants, numerical artifact hashes, and independent reference and family-variant replay receipts. Both replays matched all six numerical files.
+- `evidence/heldout-extraction.json`: frozen exact scores, separate semantic adjudication, source links, three-call token/time usage and recorded failures.
+- `evidence/staging-recovery.json`: real interruption after input files became read-only, followed by successful idempotent restaging.
 - `evidence/science-verification.json`: five real executions, comprising the reference twice, filter variation, differential expression and Chen MDS. Contains run IDs, input/runtime provenance, metrics and numerical consistency results.
 - `evidence/export-replay.json`: cold replay from an independently extracted bundle. Verified metrics, density, gene and sample files were byte-identical to the exported run.
 - `evidence/runtime-verification.json`: observed no-network execution, read-only root, non-root user, dropped capabilities, bounded memory/processes/tmpfs, denied outbound request and root write, and cancellation after verified termination.
@@ -44,11 +48,11 @@ The Python tests exercise stale revision rejection, unresolved locks, concurrent
 
 The local profile uses transactional SQLite to make the complete loop usable without another service. PostgreSQL remains supported and directly tested, with advisory locking for schema migration and row locking for worker claims. A small durable supervisor owns scheduling; introducing Temporal now would duplicate that responsibility without measured benefit.
 
-Code changes are released through the repository and rebuilt as a new immutable runtime. The application exposes typed scientific variations, not arbitrary R patches. P4.3 remains gated because the local Docker boundary has not been certified for hostile user code. Imported papers are inert attachments and cannot expand execution capabilities.
+Code changes are released through the repository and rebuilt as a new immutable runtime. The application exposes typed scientific variations, not arbitrary R patches. P4.3 remains gated because the local Docker boundary has not been certified for hostile user code. Uploaded source documents remain inert. Validated paired count inputs can execute through the registered DESeq2 adapter after source review and plan locking.
 
-P3.3's independent critic is not enabled. There is no measured comparison showing that it reduces critical review errors enough to justify cost. P3.2's actual provider-versus-human experiment and review-time measurements still require a configured provider and participant study. The implemented lexical evaluation is explicitly not a substitute for that study.
+P3.3's independent critic is not enabled. There is no measured comparison showing that it reduces critical review errors enough to justify cost. The live extraction benchmark covers 18 frozen questions from three source papers: the lexical baseline scores 12/18 and the configured model 15/18 under the frozen exact scorer. A separate source-based semantic adjudication accepts three equivalent model answers, yielding 18/18. Original answers and strict scores are preserved. The same reviewer authored the gold and performed adjudication; no participant review-time study or blinded second review was conducted.
 
-P5 includes tested team foundations and a deployable API image, but no actual authenticated team pilot, production release, managed object storage, or remote-host failover drill was performed. Workers can share PostgreSQL and a private POSIX artifact directory. An in-flight attempt stays attached to its Docker engine; a different engine cannot declare its container absent and duplicate execution. Cross-engine failover requires explicit operational recovery, not automatic ownership transfer.
+P5 includes tested team foundations and a deployable API image, but no actual authenticated team pilot, managed object storage, or remote-host failover drill was performed. The public release serves a static study explorer; it does not expose the execution API. Workers can share PostgreSQL and a private POSIX artifact directory. An in-flight attempt stays attached to its Docker engine; a different engine cannot declare its container absent and duplicate execution. Cross-engine failover requires explicit operational recovery, not automatic ownership transfer.
 
 ## Known operating limits
 

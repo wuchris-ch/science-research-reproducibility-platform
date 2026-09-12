@@ -2,7 +2,9 @@
 
 An evidence-linked workbench for reviewing and rerunning published bulk RNA-seq analyses. Select a paper, inspect its methods, lock a reviewed plan, execute a bounded R recipe, compare numerical results, create a controlled variation, and export the complete provenance bundle.
 
-Implemented and locally verified on September 11, 2026. The application executes real analyses from two published datasets. Scientific agreement, execution success, and a researcher's interpretation are recorded separately.
+Implemented and locally verified on September 11, 2026. The application executes four registered adapters across three published datasets and validated uploaded paired-count studies. Scientific agreement, execution success, and a researcher's interpretation are recorded separately.
+
+[Explore the public airway study](https://research-workbench-airway.chrisw21tech.chatgpt.site) · [Download the replay bundle](https://github.com/wuchris-ch/science-research-reproducibility-platform/releases/download/v0.2.0/airway-sensitivity.zip) · [Milestone walkthrough](docs/STUDY-MILESTONE.md)
 
 ## Start on macOS
 
@@ -13,7 +15,7 @@ colima start research --cpus 4 --memory 8 --disk 30 --mount none --activate=fals
 make setup
 ```
 
-`make setup` installs locked dependencies, builds the interface, downloads and verifies public source/data archives, reconstructs the two datasets, builds the R image, registers its immutable identity, and initializes local storage. Downloads include a historical annotation archive of about 63 MB. Source downloads and builds need network access; scientific executions do not.
+`make setup` installs locked dependencies, builds the interface, downloads and verifies public source/data archives, reconstructs the three datasets, builds both pinned R runtimes, registers its immutable identity, and initializes local storage. Downloads include a historical annotation archive of about 63 MB. Source downloads and builds need network access; scientific executions do not.
 
 Start these in two terminals from this checkout:
 
@@ -25,7 +27,7 @@ make serve
 make worker
 ```
 
-Open [Research Workbench](http://127.0.0.1:8317). Create a workspace and analysis, review the five required method fields, lock the revision, and run. Use **Results** to inspect checks and artifacts, **Create variation** to preserve a parent analysis, and **Export reproducibility bundle** to save a portable record. To populate the same four example analyses used in verification, run `make science`; this is a verification harness, not a human scientific review.
+Open [Research Workbench](http://127.0.0.1:8317). Create a workspace and analysis, review the five required method fields, lock the revision, and run. Use **Results** to inspect checks and artifacts, **Create variation** to preserve a parent analysis, and **Export reproducibility bundle** to save a portable record. To populate the historical example analyses used in verification, run `make science`; this is a verification harness, not a human scientific review.
 
 The default profile is loopback-only, uses SQLite, and needs no account or model key. Data and logs live in `.runtime/`, which is excluded from Git. Optional settings are listed in [.env.example](.env.example). For another Docker engine, set `WORKBENCH_DOCKER_CONTEXT` to its context name. Keep the API and worker on the same data directory and database.
 
@@ -36,6 +38,8 @@ The default profile is loopback-only, uses SQLite, and needs no account or model
 | Law et al. v3, Figure 1 | 27,179 input genes, 9 samples, 5,153 all-zero genes, 16,624 retained | Published scalar checks match; the paper provides no density grid for exact curve comparison |
 | Controlled Law filter variation | 14,165 retained genes | Matches the independent input probe; this is a sensitivity analysis |
 | Law differential expression | Full 16,624-gene tested universe, 9,511 significant at BH FDR 0.05 for Basal versus LP | TMM, voom, `~0+group+lane`, eBayes; distinct from the paper's later TREAT analysis |
+| Love et al. v1, human airway | 64,102 input genes, 8 samples, 4 donor pairs; 29,391 retained; 4,822 significant versus 4,897 published | Pinned DESeq2 1.38.3 reanalysis; source used 1.8.1 |
+| Airway sensitivity family | All 8 variants completed; 660 genes satisfy the registered family criteria | BY correction over 512,816 gene-variant hypotheses, consistent sign and absolute log2 fold change at least 1 |
 | Chen et al. v2, Figure 1 | 26,357 annotated genes, 15,653 retained, 12 samples | Original annotation and filtering counts match in an explicitly adapted R environment |
 
 Fresh reference runs produced identical numerical artifact bytes. A separately extracted export rebuilt its runtime and reproduced the exported numerical files. See [implementation status and evidence](docs/IMPLEMENTED.md) and [scientific adaptations](recipes/ADAPTATIONS.md) for the exact scope.
@@ -56,6 +60,6 @@ For frontend development, keep the API running and use `make dev-web` at [localh
 
 ## Scope and design records
 
-The optional model broker proposes source-linked fields under a spending reservation. Proposals never lock methods or execute code. Imported PDFs are stored for manual review. Execution currently supports the three curated recipes above; arbitrary uploaded code and repositories require a separate, stronger execution boundary.
+The optional model broker proposes source-linked fields under a spending reservation. Proposals never lock methods or execute code. Study onboarding accepts papers, supplements, count matrices and sample tables. Reviewed methods and validated immutable inputs can produce executable paired DESeq2 plans. Sensitivity families freeze their choices before execution and retain every outcome. Execution supports the four registered recipes; arbitrary uploaded code and repositories require a separate, stronger execution boundary.
 
 The [original backlog](docs/IMPLEMENTATION.md), [architecture](docs/ARCHITECTURE.md), [verification plan](docs/VERIFICATION.md), [product research](docs/PRODUCT.md), and [source register](docs/SOURCES.md) remain as design records. [IMPLEMENTED.md](docs/IMPLEMENTED.md) maps them to delivered behavior, measured results, and deferred gates. Git history preserves meaningful implementation, correction, test and operational checkpoints.

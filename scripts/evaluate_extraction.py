@@ -64,7 +64,7 @@ report = {
     "precision": tp / (tp + fp) if tp + fp else None,
     "recall": tp / (tp + fn) if tp + fn else None,
     "scope": "Eight small synthetic regression cases based on the two supported papers and adversarial text. Not an independently reviewed benchmark or user study.",
-    "live_model_evaluation": "Not run; no provider or paid model authorized/configured for this implementation.",
+    "live_model_evaluation": "Separate live source benchmark: evidence/heldout-extraction.json. This receipt covers only the synthetic lexical regression.",
     "finding": "Exact quotations alone cannot establish scientific support. A misleading accession instruction is still matched lexically. All extracted fields remain unaccepted proposals.",
     "critic_decision": "No independent model critic added: there is no measured benefit or same-budget comparison supporting one.",
 }
