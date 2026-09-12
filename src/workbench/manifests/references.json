@@ -194,6 +194,60 @@
     "limitations": [
       "Counts and sample identities match the historical airway package. DESeq2 1.38.3 replaces 1.8.1, including changes in independent filtering and numerical fitting.",
       "The paper reports selected gene examples and aggregate results. Fresh-run consistency is evaluated separately."
-    ]
+    ],
+    "gene_examples": {
+      "basis": "Published top up- and down-regulated examples, page 24 of version 1",
+      "doi": "10.12688/f1000research.7035.1",
+      "values": [
+        {
+          "gene_id": "ENSG00000162692",
+          "published_log2fc": -3.452454
+        },
+        {
+          "gene_id": "ENSG00000146006",
+          "published_log2fc": -2.856273
+        },
+        {
+          "gene_id": "ENSG00000105989",
+          "published_log2fc": -2.85096
+        },
+        {
+          "gene_id": "ENSG00000214814",
+          "published_log2fc": -2.759539
+        },
+        {
+          "gene_id": "ENSG00000267339",
+          "published_log2fc": -2.743928
+        },
+        {
+          "gene_id": "ENSG00000013293",
+          "published_log2fc": -2.646116
+        },
+        {
+          "gene_id": "ENSG00000179593",
+          "published_log2fc": 4.880507
+        },
+        {
+          "gene_id": "ENSG00000109906",
+          "published_log2fc": 4.860877
+        },
+        {
+          "gene_id": "ENSG00000152583",
+          "published_log2fc": 4.315374
+        },
+        {
+          "gene_id": "ENSG00000250978",
+          "published_log2fc": 4.090157
+        },
+        {
+          "gene_id": "ENSG00000163884",
+          "published_log2fc": 4.078073
+        },
+        {
+          "gene_id": "ENSG00000168309",
+          "published_log2fc": 3.991146
+        }
+      ]
+    }
   }
 }
