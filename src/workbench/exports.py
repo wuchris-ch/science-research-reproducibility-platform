@@ -110,7 +110,7 @@ def bundle(service, run):
         add("reviews.json", canonical([dict(row) for row in rows]))
     add(
         "README.txt",
-        b"Research Workbench result bundle\n\nRun: python3 reproduce.py --verify-only\nRerun: python3 reproduce.py --context colima-research\nRequires Python 3 and Docker. Rebuild downloads only hash-pinned R package archives.\nThe script verifies bundle hashes before execution and creates a fresh isolated container.\n\nPublic GEO counts retain source attribution and access terms. Papers are CC BY.\nSee source metadata, ADAPTATIONS.md and comparison.json for limits.\nExecution success and checked-observable agreement do not establish all conclusions of the paper.\n",
+        b"Research Workbench result bundle\n\nRun: python3 reproduce.py --verify-only\nRerun: python3 reproduce.py --context colima-research\nRequires Python 3 and Docker. Rebuild downloads only hash-pinned R package archives.\nThe script verifies bundle hashes before execution and creates a fresh isolated container.\n\nSource documents and datasets retain their original attribution and terms. Refer to their source records and ADAPTATIONS.md.\nSee source metadata, ADAPTATIONS.md and comparison.json for limits.\nExecution success and checked-observable agreement do not establish all conclusions of the paper.\n",
     )
     manifest = {
         "schema_version": 1,
