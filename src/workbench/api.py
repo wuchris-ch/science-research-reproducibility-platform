@@ -46,7 +46,7 @@ def create_app(settings=None, docker=None):
         response.headers['X-Content-Type-Options']='nosniff'
         response.headers['Referrer-Policy']='same-origin'
         response.headers['X-Frame-Options']='SAMEORIGIN'
-        response.headers['Content-Security-Policy']="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'"
+        response.headers['Content-Security-Policy']="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self' blob:; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'"
         if request.url.path.startswith('/api/'):response.headers['Cache-Control']='no-store'
         return response
     actor=auth.actor

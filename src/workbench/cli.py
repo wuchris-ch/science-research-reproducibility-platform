@@ -89,7 +89,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     sub=parser.add_subparsers(dest='command',required=True)
     sub.add_parser('setup');sub.add_parser('build');sub.add_parser('doctor')
-    serve=sub.add_parser('serve');serve.add_argument('--host',default='127.0.0.1');serve.add_argument('--port',type=int,default=8765)
+    serve=sub.add_parser('serve');serve.add_argument('--host',default='127.0.0.1');serve.add_argument('--port',type=int,default=8317)
     worker=sub.add_parser('worker');worker.add_argument('--once',action='store_true')
     b=sub.add_parser('backup');b.add_argument('destination',type=Path)
     r=sub.add_parser('restore');r.add_argument('source',type=Path);r.add_argument('destination',type=Path)
