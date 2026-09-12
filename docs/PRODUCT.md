@@ -1,5 +1,7 @@
 # Product recommendation
 
+> Design record from the planning phase. See [implemented behavior and evidence](IMPLEMENTED.md) and the [current operating guide](RUNBOOK.md) for delivered capabilities and remaining gates.
+
 [Start](../README.md) · [Demo](DEMO.md) · [Architecture](ARCHITECTURE.md) · [Sources](SOURCES.md)
 
 ## Decision

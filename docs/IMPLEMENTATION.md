@@ -1,5 +1,7 @@
 # Implementation backlog
 
+> Design record from the planning phase. See [implemented behavior and evidence](IMPLEMENTED.md) and the [current operating guide](RUNBOOK.md) for delivered capabilities and remaining gates.
+
 [Start](../README.md) · [Architecture](ARCHITECTURE.md) · [Evaluation](VERIFICATION.md) · [Operations and learning](OPERATIONS-LEARNING.md)
 
 ## Delivery strategy
