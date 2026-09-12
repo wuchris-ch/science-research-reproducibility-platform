@@ -46,6 +46,10 @@ def bundle(service, run):
 
     add("run.json", canonical(run))
     add("plan.json", canonical(run["body"]["plan"]))
+    if run["body"]["plan"].get("adapter"):
+        add("adapter.json", canonical(run["body"]["plan"]["adapter"]))
+    if run["body"]["plan"].get("evidence_graph"):
+        add("evidence-graph.json", canonical(run["body"]["plan"]["evidence_graph"]))
     add("comparison.json", canonical(run["body"].get("comparison")))
     for name, item in run["body"]["artifacts"].items():
         add("outputs/" + name, service.store.read(item["sha256"]))
@@ -94,6 +98,9 @@ def bundle(service, run):
                     "The source cache differs from this plan. Restore its verified source before exporting.",
                 )
             add("source/" + path.name, data)
+    for document in run["body"]["plan"].get("source_documents", []):
+        add("source/" + document["id"] + "." + document["kind"], service.store.read(document["sha256"]))
+    add("source/documents.json", canonical(run["body"]["plan"].get("source_documents", [])))
     with service.db.transaction() as c:
         rows = c.execute(select(revisions).where(revisions.c.plan_id == run["plan_id"])).mappings()
         add("plan-history.json", canonical([dict(row) for row in rows]))
@@ -120,7 +127,7 @@ def bundle(service, run):
     return result.getvalue()
 
 
-def verify_bundle(data: bytes):
+def verify_bundle(data: bytes, max_bytes=100_000_000):
     with zipfile.ZipFile(io.BytesIO(data)) as z:
         names = z.namelist()
         if len(names) != len(set(names)) or len(names) > 1000:
@@ -129,7 +136,7 @@ def verify_bundle(data: bytes):
         for info in z.infolist():
             p = PurePosixPath(info.filename)
             total += info.file_size
-            if p.is_absolute() or ".." in p.parts or total > 100_000_000 or info.is_dir():
+            if p.is_absolute() or ".." in p.parts or total > max_bytes or info.is_dir():
                 raise ValueError("Unsafe archive")
         manifest = json.loads(z.read("manifest.json"))
         if set(names) != set(manifest["files"]) | {"manifest.json"}:
