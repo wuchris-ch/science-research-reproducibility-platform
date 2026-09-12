@@ -233,13 +233,20 @@ def main():
         make_service(settings).db.engine.dispose()
         print("Database schema is current.")
     elif args.command == "doctor":
+        from .adapters import datasets, registry
+        from .runtime import RuntimeRegistry
+
         result = {
             "database": settings.database_url.split(":", 1)[0],
             "data_dir": str(settings.data_dir),
-            "sources": {
-                k: (settings.data_dir / f"sources/{k}.json").exists() for k in ("law2018", "chen2016")
-            },
+            "sources": {k: (settings.data_dir / f"sources/{k}.json").exists() for k in datasets()},
+            "runtimes": {},
         }
+        for profile in sorted({adapter.runtime for adapter in registry().values()}):
+            try:
+                result["runtimes"][profile] = {"image_id": RuntimeRegistry(settings).image_id(profile)}
+            except RuntimeError as ex:
+                result["runtimes"][profile] = {"error": str(ex)}
         try:
             result["image_id"] = Docker(settings).image_id()
         except Exception as ex:
