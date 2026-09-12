@@ -173,7 +173,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("setup")
-    sub.add_parser("build")
+    build_parser = sub.add_parser("build")
+    build_parser.add_argument("--profile", choices=["historical", "deseq2", "all"], default="all")
     sub.add_parser("doctor")
     sub.add_parser("migrate")
     serve = sub.add_parser("serve")
@@ -196,10 +197,18 @@ def main():
     settings.initialize()
     if args.command == "setup":
         build(settings)
+        from .airway import build_airway
+
+        build_airway(settings)
         make_service(settings)
         print("Setup complete. Start workbench serve and workbench worker in separate terminals.")
     elif args.command == "build":
-        build(settings)
+        if args.profile in ("historical", "all"):
+            build(settings)
+        if args.profile in ("deseq2", "all"):
+            from .airway import build_airway
+
+            build_airway(settings)
     elif args.command == "migrate":
         make_service(settings).db.engine.dispose()
         print("Database schema is current.")

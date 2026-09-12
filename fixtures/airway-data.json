@@ -1,0 +1,16 @@
+{
+  "package": "airway",
+  "version": "0.102.0",
+  "url": "https://bioconductor.org/packages/3.1/data/experiment/src/contrib/airway_0.102.0.tar.gz",
+  "sha256": "83e3b13907ab5ca63bae746d958151d7c35ce16a4119374946057148f4890721",
+  "bytes": 11763178,
+  "license": "LGPL, as declared by the airway package DESCRIPTION",
+  "experimental_source": "https://doi.org/10.1371/journal.pone.0099625",
+  "workflow_source": "https://doi.org/10.12688/f1000research.7035.1",
+  "accession": "GSE52778",
+  "organism": "Homo sapiens",
+  "input_genes": 64102,
+  "samples": 8,
+  "review": "The package is the exact version named in the workflow session. Its selected samples have no albuterol treatment. Matrix slots and row/column identities are extracted without numerical transformation; metadata labels are explicitly mapped from dex trt/untrt to treated/control. Primary public counts are redistributable with source attribution; package source remains available under its declared LGPL license. No patient identifiers or controlled-access data are included.",
+  "compute": "Gene counts only; no FASTQ alignment or genome download. Runs are bounded to 2 CPUs, 4 GiB memory, 10 minutes and no network by default."
+}

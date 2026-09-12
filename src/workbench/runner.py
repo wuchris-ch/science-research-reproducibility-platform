@@ -95,7 +95,14 @@ class Docker:
             "--label",
             f"research.epoch={run['epoch']}",
             "-e",
-            "PLAN_JSON=" + canonical(run["body"]["plan"]).decode(),
+            "PLAN_JSON="
+            + canonical(
+                {key: run["body"]["plan"][key] for key in ("dataset_id", "recipe", "parameters")}
+            ).decode(),
+            "-e",
+            "STAGED_INPUTS=" + ("1" if run["body"]["plan"].get("inputs") else "0"),
+            "-e",
+            "INPUT_ROOT=" + ("/work/input" if run["body"]["plan"].get("inputs") else "/data"),
             "-e",
             f"WALL_SECONDS={limits['wall_seconds']}",
             run["body"]["image_id"],
@@ -107,6 +114,29 @@ class Docker:
 
     def done(self, name):
         return self.command(["exec", name, "test", "-f", "/work/done"], check=False).returncode == 0
+
+    def stage(self, name, plan, store):
+        if self.command(["exec", name, "test", "-f", "/work/input-ready"], check=False).returncode == 0:
+            return
+        data = io.BytesIO()
+        with tarfile.open(fileobj=data, mode="w") as archive:
+            for filename, entry in plan["inputs"].items():
+                if filename not in ("counts.tsv", "samples.tsv"):
+                    raise ValueError("Unknown runtime input")
+                content = store.read(entry["sha256"])
+                member = tarfile.TarInfo(plan["dataset_id"] + "/" + filename)
+                member.size = len(content)
+                member.mode = 0o400
+                archive.addfile(member, io.BytesIO(content))
+        result = subprocess.run(
+            self.prefix + ["exec", "-i", name, "tar", "-C", "/work/input", "-xf", "-"],
+            input=data.getvalue(),
+            capture_output=True,
+            timeout=30,
+        )
+        if result.returncode:
+            raise RuntimeError("Immutable input staging failed")
+        self.command(["exec", name, "touch", "/work/input-ready"])
 
     def collect(self, name, dest):
         if dest.exists():
@@ -134,15 +164,22 @@ class Docker:
         if len(recipe) > 100_000:
             raise ValueError("Unexpected recipe size")
         (dest / "recipe.R").write_bytes(recipe)
+        staged = self.command(["exec", name, "test", "-f", "/work/input-ready"], check=False).returncode == 0
         inputs = subprocess.run(
-            self.prefix + ["exec", name, "tar", "-C", "/data", "-cf", "-", "."],
+            self.prefix + ["exec", name, "tar", "-C", "/work/input" if staged else "/data", "-cf", "-", "."],
             capture_output=True,
             timeout=30,
         )
         if inputs.returncode or len(inputs.stdout) > 30_000_000:
             raise ValueError("Runtime input capture failed or exceeded its limit")
         (dest / "inputs.tar").write_bytes(inputs.stdout)
-        for filename in ("locked-packages.json", "Dockerfile", "entrypoint.sh", "law-samples.csv"):
+        for filename in (
+            "locked-packages.json",
+            "Dockerfile",
+            "entrypoint.sh",
+            "law-samples.csv",
+            "system-packages.tsv",
+        ):
             result = self.command(["exec", name, "cat", "/app/" + filename], check=False)
             if result.returncode == 0:
                 (dest / filename).write_text(result.stdout)
@@ -306,6 +343,9 @@ class Worker:
             )
 
     def tick(self):
+        from .studies import Studies
+
+        Studies(self.service).advance()
         run = self.claim()
         if not run:
             return False
@@ -348,6 +388,14 @@ class Worker:
         if info["State"]["Status"] == "created":
             self.docker.start(name)
             return True
+        if info["State"]["Running"] and run["body"]["plan"].get("inputs"):
+            try:
+                self.docker.stage(name, run["body"]["plan"], self.service.store)
+            except ValueError as error:
+                self.docker.stop(name)
+                if self.finish(run, "failed", {"diagnostic": "Input integrity failure: " + str(error)}):
+                    self.docker.remove(name)
+                return True
         if info["State"]["Running"] and self.docker.done(name):
             dest = self.settings.data_dir / "attempts" / name
             try:

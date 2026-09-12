@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "distribution": "Debian bookworm",
+  "base": "debian:bookworm-20250203-slim@sha256:40b107342c492725bc7aacbe93a49945445191ae364184a6d24fedb28172f6f7",
+  "snapshot": "http://snapshot.debian.org/archive/debian/20250203T000000Z",
+  "verification": "APT verifies the archived signed Release index and package SHA-256 values. The complete installed version inventory is captured with every run.",
+  "packages": {
+    "r-base-core": "4.2.2.20221110-2",
+    "r-bioc-deseq2": "1.38.3+dfsg-1",
+    "r-cran-jsonlite": "1.8.4+dfsg-1"
+  }
+}
