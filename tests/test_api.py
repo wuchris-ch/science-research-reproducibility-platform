@@ -97,3 +97,19 @@ def test_review_survives_workspace_poll(client):
         == 200
     )
     assert client.get("/api/workspaces/" + w).json()["runs"][0]["reviews"][0]["body"]["status"] == "disputed"
+
+
+def test_imported_pdfs_are_scoped_and_downloaded_as_inert_attachments(client):
+    w = client.post("/api/workspaces", json={"name": "Sources"}).json()["id"]
+    other = client.post("/api/workspaces", json={"name": "Other sources"}).json()["id"]
+    data = b"%PDF-1.7\nUnreviewed input bytes for inert storage testing."
+    source = client.post(
+        f"/api/workspaces/{w}/sources", files={"file": ("paper.pdf", data, "application/pdf")}
+    ).json()
+    assert source["executable"] is False and source["status"] == "unreviewed"
+    assert len(client.get(f"/api/workspaces/{w}/sources").json()) == 1
+    assert client.get(f"/api/workspaces/{other}/sources/{source['id']}/download").status_code == 404
+    response = client.get(f"/api/workspaces/{w}/sources/{source['id']}/download")
+    assert response.content == data
+    assert response.headers["content-type"] == "application/octet-stream"
+    assert response.headers["content-disposition"].startswith("attachment;")

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { createRoot } from "react-dom/client";
 import {
   BookOpen,
@@ -44,6 +44,7 @@ import {
 } from "./api";
 import "./style.css";
 import { SourceViewer, useDialog } from "./SourceViewer";
+import { LibraryImports } from "./LibraryImports";
 const defaults: Parameters = {
   filter_policy: "published",
   min_count: 10,
@@ -106,11 +107,17 @@ function App() {
       null,
     ),
     [mobile, setMobile] = useState(false);
-  useDialog(Boolean(modal),()=>setModal(null));
-  const [identityMode,setIdentityMode]=useState("local");
-  const plan = plans.find((p) => p.id === selectedPlan) || null;
+  useDialog(Boolean(modal), () => setModal(null));
+  const [identityMode, setIdentityMode] = useState("local");
+  const [newDataset, setNewDataset] = useState("law2018");
+  const activeWorkspace = useRef(workspaceId);
+  activeWorkspace.current = workspaceId;
+  const plan =
+    plans.find(
+      (p) => p.id === selectedPlan && p.workspace_id === workspaceId,
+    ) || null;
   const run =
-    runs.find((r) => r.id === selectedRun) ||
+    runs.find((r) => r.id === selectedRun && r.workspace_id === workspaceId) ||
     runs.find((r) => r.plan_id === selectedPlan) ||
     null;
   const workspace = workspaces.find((w) => w.id === workspaceId);
@@ -119,6 +126,7 @@ function App() {
     const data = await api<{ plans: Plan[]; runs: Run[] }>(
       `/workspaces/${workspaceId}`,
     );
+    if (activeWorkspace.current !== workspaceId) return;
     setPlans(data.plans);
     setRuns(data.runs);
     setEvents(await api<Event[]>(`/workspaces/${workspaceId}/events`));
@@ -153,21 +161,38 @@ function App() {
   useEffect(() => {
     if (!workspaceId) return;
     localStorage.setItem("workspace", workspaceId);
-    setSelectedPlan(null);
-    setSelectedRun(null);
+    setSelectedPlan(localStorage.getItem("selected-plan:" + workspaceId));
+    setSelectedRun(localStorage.getItem("selected-run:" + workspaceId));
+    setTab(localStorage.getItem("selected-tab:" + workspaceId) || "Overview");
     refresh().catch((e) => setError(e.message));
     const id = setInterval(() => refresh().catch(() => {}), 2500);
     return () => clearInterval(id);
   }, [refresh]);
   useEffect(() => {
-    if (plans.length && !selectedPlan)
+    if (plans.length && plans[0].workspace_id === workspaceId && !selectedPlan)
       setSelectedPlan(plans[plans.length - 1].id);
-  }, [plans, selectedPlan]);
+  }, [plans, selectedPlan, workspaceId]);
   useEffect(() => {
+    if (!plan) return;
+    localStorage.setItem("selected-plan:" + workspaceId, plan.id);
+    localStorage.setItem("selected-tab:" + workspaceId, tab);
+    if (run && run.plan_id === plan.id)
+      localStorage.setItem("selected-run:" + workspaceId, run.id);
+  }, [plan?.id, run?.id, tab, workspaceId]);
+  useEffect(() => {
+    let active = true;
+    setSource(null);
     if (plan)
       api<Source>("/sources/" + plan.body.dataset_id)
-        .then(setSource)
-        .catch((e) => setError(e.message));
+        .then((value) => {
+          if (active) setSource(value);
+        })
+        .catch((e) => {
+          if (active) setError(e.message);
+        });
+    return () => {
+      active = false;
+    };
   }, [plan?.body.dataset_id]);
   useEffect(() => {
     if (run)
@@ -362,7 +387,8 @@ function App() {
             </strong>
           </div>
           <div className="header-right">
-            <span className="local-indicator" /> {identityMode==="local"?"Local workspace":"Team workspace"}{" "}
+            <span className="local-indicator" />{" "}
+            {identityMode === "local" ? "Local workspace" : "Team workspace"}{" "}
             <span className="profile">RW</span>
           </div>
         </header>
@@ -434,6 +460,7 @@ function App() {
                       onClick={() => {
                         setModal("new");
                         setSource(s);
+                        setNewDataset(s.id);
                       }}
                     >
                       Start an analysis
@@ -449,6 +476,7 @@ function App() {
                   </article>
                 ))}
               </div>
+              {workspace && <LibraryImports workspace={workspace} act={act} />}
             </>
           ) : section === "activity" ? (
             <>
@@ -680,6 +708,7 @@ function App() {
             ) : (
               <NewPlan
                 sources={sources}
+                initialDataset={newDataset}
                 workspaceId={workspaceId}
                 parent={modal === "variation" ? plan : null}
                 busy={busy}
@@ -766,7 +795,7 @@ function Overview({
   results: () => void;
   setError: (s: string) => void;
 }) {
-  const [showSource,setShowSource]=useState(false);
+  const [showSource, setShowSource] = useState(false);
   const c = run?.body.comparison,
     m = c?.metrics;
   return (
@@ -820,7 +849,11 @@ function Overview({
           <div className="card-heading">
             <div>
               <span className="eyebrow">01 / SOURCE</span>
-              <h2>{plan.body.recipe==="differential"?"Published filtering reference":"The published result"}</h2>
+              <h2>
+                {plan.body.recipe === "differential"
+                  ? "Published filtering reference"
+                  : "The published result"}
+              </h2>
             </div>
             <span className="pill">VERSION {source?.version || "–"}</span>
           </div>
@@ -847,7 +880,13 @@ function Overview({
               {source?.geometry
                 ? "Page " + source.geometry.page
                 : "Versioned source"}
-              <button className="text-button" onClick={()=>setShowSource(true)}>Open paper<ArrowUpRight size={14}/></button>
+              <button
+                className="text-button"
+                onClick={() => setShowSource(true)}
+              >
+                Open paper
+                <ArrowUpRight size={14} />
+              </button>
             </div>
           </div>
         </section>
@@ -1000,7 +1039,9 @@ function Overview({
           </button>
         </section>
       </div>
-      {showSource&&source&&<SourceViewer source={source} close={()=>setShowSource(false)}/>}
+      {showSource && source && (
+        <SourceViewer source={source} close={() => setShowSource(false)} />
+      )}
     </div>
   );
 }
@@ -1028,12 +1069,14 @@ function Stat({
 }
 function NewPlan({
   sources,
+  initialDataset,
   workspaceId,
   parent,
   busy,
   onCreate,
 }: {
   sources: Source[];
+  initialDataset: string;
   workspaceId: string;
   parent: Plan | null;
   busy: boolean;

@@ -1,6 +1,7 @@
 import asyncio
 import json
 import time
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, Header, Request, UploadFile
@@ -16,7 +17,7 @@ from .comparison import compare_fresh
 from .config import ROOT, Settings
 from .database import Database, attachments, events, members, plans, reviews, revisions, runs, uid, workspaces
 from .fixtures import SOURCES
-from .runner import Docker
+from .runtime import RuntimeRegistry
 from .schemas import Correction, LockRequest, Membership, PlanCreate, Review, RunCreate, Strict
 from .service import Problem, Service
 
@@ -40,9 +41,15 @@ def create_app(settings=None, docker=None):
     db.migrate()
     store = ArtifactStore(settings.data_dir / "blobs")
     service = Service(db, settings, store)
-    docker = docker or Docker(settings)
+    docker = docker or RuntimeRegistry(settings)
     auth = Auth(settings)
-    app = FastAPI(title="Research Workbench", version="0.1.0")
+
+    @asynccontextmanager
+    async def lifespan(app):
+        yield
+        db.engine.dispose()
+
+    app = FastAPI(title="Research Workbench", version="0.1.0", lifespan=lifespan)
     app.state.service = service
     app.state.auth = auth
     app.add_middleware(
@@ -380,6 +387,34 @@ def create_app(settings=None, docker=None):
                 c, identity, "source.uploaded", who, {"source_id": identity_source, "sha256": item["sha256"]}
             )
         return {"id": identity_source, **item}
+
+    @app.get("/api/workspaces/{identity}/sources")
+    def imported_sources(identity: str, who=Depends(actor)):
+        with db.transaction() as c:
+            service.authorize(c, identity, who)
+            return [
+                dict(row)
+                for row in c.execute(
+                    select(attachments)
+                    .where(attachments.c.workspace_id == identity)
+                    .order_by(attachments.c.created.desc())
+                    .limit(200)
+                ).mappings()
+            ]
+
+    @app.get("/api/workspaces/{identity}/sources/{source_id}/download")
+    def imported_source(identity: str, source_id: str, who=Depends(actor)):
+        with db.transaction() as c:
+            service.authorize(c, identity, who)
+            row = db.row(c, attachments, source_id)
+            if not row or row["workspace_id"] != identity:
+                raise Problem(404, "Imported source not found")
+            data = store.read(row["body"]["sha256"])
+        return Response(
+            data,
+            media_type="application/octet-stream",
+            headers={"Content-Disposition": f'attachment; filename="source-{source_id[:8]}.pdf"'},
+        )
 
     # Optional routes registered separately to keep core execution independent of inference.
     from .exports import register_exports

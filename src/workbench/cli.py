@@ -72,7 +72,9 @@ def build(settings):
     subprocess.run(
         docker.prefix + ["build", "--platform", "linux/amd64", "-t", settings.image, str(context)], check=True
     )
-    print("Sealed execution image:", docker.image_id())
+    from .runtime import register
+
+    print("Sealed execution image:", register(settings, docker)["image_id"])
 
 
 def assets(settings):
@@ -204,6 +206,17 @@ def main():
     elif args.command == "serve":
         if args.host not in ("127.0.0.1", "localhost", "::1") and not settings.oidc_issuer:
             parser.error("Non-loopback serving requires configured OIDC")
+        if args.host in ("127.0.0.1", "localhost", "::1"):
+            settings.origins = list(
+                set(
+                    settings.origins
+                    + [
+                        f"http://127.0.0.1:{args.port}",
+                        f"http://localhost:{args.port}",
+                        f"http://[::1]:{args.port}",
+                    ]
+                )
+            )
         import uvicorn
 
         from .api import create_app

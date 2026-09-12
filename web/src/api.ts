@@ -66,7 +66,13 @@ export type Source = {
   recipes: string[];
   sha256: string;
   segments: Segment[];
-  geometry?: { page: number; page_size_points: [number,number]; figure_bbox: number[]; caption_bbox: number[]; method_bbox: number[] | null };
+  geometry?: {
+    page: number;
+    page_size_points: [number, number];
+    figure_bbox: number[];
+    caption_bbox: number[];
+    method_bbox: number[] | null;
+  };
 };
 export type Workspace = { id: string; name: string; role: string };
 export type Event = {
@@ -136,4 +142,23 @@ export async function download(path: string, name: string) {
   a.download = name;
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+export async function uploadSource(workspaceId: string, file: File) {
+  const form = new FormData();
+  form.append("file", file);
+  const response = await fetch("/api/workspaces/" + workspaceId + "/sources", {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "X-CSRF-Token": csrf,
+      ...(bearer ? { Authorization: "Bearer " + bearer } : {}),
+    },
+    body: form,
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.detail || "Import failed");
+  }
+  return response.json();
 }
