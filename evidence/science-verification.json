@@ -1,0 +1,1244 @@
+{
+  "checked_date": "2026-09-11",
+  "image_id": "sha256:382463699c5a44e96648f8768e7a69f7cd4019f2e9fec331c33a8e8154265df0",
+  "runs": [
+    {
+      "id": "16995656b7514688944df3d1da833556",
+      "plan_id": "83a1faed6c324cf2b0be12cf1b8bd765",
+      "recipe": "density",
+      "dataset": "law2018",
+      "filter": "published",
+      "state": "succeeded",
+      "comparison": {
+        "status": "checks_match",
+        "checks": [
+          {
+            "key": "input_genes",
+            "expected": 27179,
+            "actual": 27179,
+            "passed": true,
+            "basis": "Public count matrix and paper"
+          },
+          {
+            "key": "samples",
+            "expected": 9,
+            "actual": 9,
+            "passed": true,
+            "basis": "Paper sample mapping"
+          },
+          {
+            "key": "all_zero_genes",
+            "expected": 5153,
+            "actual": 5153,
+            "passed": true,
+            "basis": "Paper and independent input probe"
+          },
+          {
+            "key": "retained_genes",
+            "expected": 16624,
+            "actual": 16624,
+            "passed": true,
+            "basis": "Paper v3 reported filtered universe"
+          },
+          {
+            "key": "library_sizes",
+            "expected": {
+              "10_6_5_11": 32863052,
+              "9_6_5_11": 35335491,
+              "purep53": 57160817,
+              "JMS8-2": 51368625,
+              "JMS8-3": 75795034,
+              "JMS8-4": 60517657,
+              "JMS8-5": 55086324,
+              "JMS9-P7c": 21311068,
+              "JMS9-P8c": 19958838
+            },
+            "actual": {
+              "10_6_5_11": 32863052,
+              "9_6_5_11": 35335491,
+              "purep53": 57160817,
+              "JMS8-2": 51368625,
+              "JMS8-3": 75795034,
+              "JMS8-4": 60517657,
+              "JMS8-5": 55086324,
+              "JMS9-P7c": 21311068,
+              "JMS9-P8c": 19958838
+            },
+            "passed": true,
+            "basis": "Pinned GEO sample totals"
+          }
+        ],
+        "limitations": [
+          "Paper supplies no density grid, so numerical curve agreement with the published plot is unverified.",
+          "Scalar agreement is not evidence that every scientific conclusion reproduces."
+        ],
+        "claim": "Checked observables only",
+        "metrics": {
+          "schema_version": 1,
+          "dataset_id": "law2018",
+          "recipe": "density",
+          "input_genes": 27179,
+          "samples": 9,
+          "all_zero_genes": 5153,
+          "retained_genes": 16624,
+          "library_sizes": {
+            "10_6_5_11": 32863052,
+            "9_6_5_11": 35335491,
+            "purep53": 57160817,
+            "JMS8-2": 51368625,
+            "JMS8-3": 75795034,
+            "JMS8-4": 60517657,
+            "JMS8-5": 55086324,
+            "JMS9-P7c": 21311068,
+            "JMS9-P8c": 19958838
+          },
+          "parameters": {
+            "contrast": "BasalvsLP",
+            "fdr": 0.05,
+            "filter_policy": "published",
+            "min_count": 10,
+            "min_samples": 3,
+            "min_total_count": 15,
+            "seed": 1
+          },
+          "cpm_cutoff": 0.1946713582464,
+          "log_cpm_cutoff": -2.06710145460413,
+          "raw_summary": [
+            [
+              -4.50743151448975,
+              -4.50743151448976,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448976,
+              -4.50743151448976
+            ],
+            [
+              -4.50743151448975,
+              -4.50743151448976,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448976,
+              -4.50743151448976
+            ],
+            [
+              -0.684726047812156,
+              -0.358877282142335,
+              -0.09513196686362,
+              -0.0901036095332102,
+              -0.42813624216326,
+              -0.40640054513392,
+              -0.0715222912870231,
+              -0.170396281458047,
+              -0.330041134809769
+            ],
+            [
+              0.171419465671777,
+              0.331197259630464,
+              0.435585779283208,
+              0.408866977968357,
+              0.322495748357423,
+              0.252925813976877,
+              0.404280439830467,
+              0.37078438485019,
+              0.27486448661526
+            ],
+            [
+              4.29127809522087,
+              4.56008498308404,
+              4.60081094572262,
+              4.54751528139122,
+              4.57721028172534,
+              4.31990933543854,
+              4.42512647425898,
+              4.60310165841904,
+              4.43552250369113
+            ],
+            [
+              14.7632117582582,
+              13.4952007661767,
+              12.9570025553338,
+              12.8512563622963,
+              12.9577772925421,
+              14.8519638279246,
+              13.1949132768005,
+              12.9413031130976,
+              14.0102442093151
+            ]
+          ],
+          "filtered_summary": [
+            [
+              -4.50713905676665,
+              -4.50713905676666,
+              -4.50713905676666,
+              -4.50713905676666,
+              -4.50713905676666,
+              -4.50713905676666,
+              -4.50713905676666,
+              -4.50713905676666,
+              -4.50713905676666
+            ],
+            [
+              0.435804737825655,
+              0.777375344613808,
+              0.990085700623355,
+              0.975835601153351,
+              0.655044749620423,
+              0.630349298211633,
+              0.96387034125523,
+              0.832393192519322,
+              0.675766414921642
+            ],
+            [
+              3.54473326647686,
+              3.83609798298739,
+              3.93488112997164,
+              3.88881083176225,
+              3.80377739794414,
+              3.54073595003743,
+              3.75282155092277,
+              3.86269333905795,
+              3.68623431571698
+            ],
+            [
+              2.96556108127191,
+              3.21171074201413,
+              3.34714280738043,
+              3.30691536601302,
+              3.20862241841711,
+              3.08335147906308,
+              3.28366946741991,
+              3.26581340689643,
+              3.14384862135646
+            ],
+            [
+              5.52738338367217,
+              5.71409047820681,
+              5.73358791955719,
+              5.68520882618166,
+              5.73476103350463,
+              5.56789091938463,
+              5.65677607613836,
+              5.74665431198959,
+              5.62802456775997
+            ],
+            [
+              14.7634641188009,
+              13.4954811627427,
+              12.9573275215794,
+              12.8515885070498,
+              12.9580088239568,
+              14.8522232937441,
+              13.1952617989333,
+              12.941696756473,
+              14.0104974407833
+            ]
+          ]
+        }
+      },
+      "artifacts": {
+        "Dockerfile": {
+          "sha256": "44729e64e3bb8e30a2a2cc6c124d8142abacf68c15028a7c97c15efbe2b1418d",
+          "bytes": 756
+        },
+        "density.tsv": {
+          "sha256": "f1c51c74f54c04b5adc5863e0858f6ba27ac97e309871fd7e8fa85426cd3ef34",
+          "bytes": 471282
+        },
+        "entrypoint.sh": {
+          "sha256": "00bfb01bbe2ddd56df692a75f179cdee8db17876d246576ea939e2df70e839e2",
+          "bytes": 399
+        },
+        "exit-code": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "figure.png": {
+          "sha256": "d39c4bf237a77233d433fc5d14ed28999db84a8bdb0bf35aa231b3ee255e8fea",
+          "bytes": 94593
+        },
+        "genes.tsv": {
+          "sha256": "5321862b1c2e9760c8b6bfc8c79853faf4a259e102bf594758966dee1a689ff2",
+          "bytes": 333925
+        },
+        "law-samples.csv": {
+          "sha256": "fa0c7d1e29b2d242f30413524fa00f898266c1c8861a0006e1b07cb9ccf307a0",
+          "bytes": 385
+        },
+        "locked-packages.json": {
+          "sha256": "9a768e26e475b635d86747910531eeba735543e48c1f11d52468aff34ae0f88e",
+          "bytes": 1315
+        },
+        "metrics.json": {
+          "sha256": "ede8992dc36617512c1ecac3acf1f2d079f7e74b8ad553f42b207657e96cf406",
+          "bytes": 2804
+        },
+        "recipe.R": {
+          "sha256": "b622fd19fe8056465495d1f6b48ca31d633838baabababcc8c457c7d1bbbae66",
+          "bytes": 6380
+        },
+        "samples.tsv": {
+          "sha256": "07ceb718ce16410632c49816fc6307f7e6c45e2874f80127db860a4b2a94141d",
+          "bytes": 319
+        },
+        "session.txt": {
+          "sha256": "00711ea0e4be2b928e419b1495503e9b976349e8c3d30be4894717ec9f68314f",
+          "bytes": 573
+        },
+        "stderr.log": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stdout.log": {
+          "sha256": "e70e63bd3074178430059fded1d652c64a60616f1b977fc67f16b34ea504db8a",
+          "bytes": 44
+        }
+      }
+    },
+    {
+      "id": "e18e75dfeeea487da7ae6920c0f38c99",
+      "plan_id": "83a1faed6c324cf2b0be12cf1b8bd765",
+      "recipe": "density",
+      "dataset": "law2018",
+      "filter": "published",
+      "state": "succeeded",
+      "comparison": {
+        "status": "checks_match",
+        "checks": [
+          {
+            "key": "input_genes",
+            "expected": 27179,
+            "actual": 27179,
+            "passed": true,
+            "basis": "Public count matrix and paper"
+          },
+          {
+            "key": "samples",
+            "expected": 9,
+            "actual": 9,
+            "passed": true,
+            "basis": "Paper sample mapping"
+          },
+          {
+            "key": "all_zero_genes",
+            "expected": 5153,
+            "actual": 5153,
+            "passed": true,
+            "basis": "Paper and independent input probe"
+          },
+          {
+            "key": "retained_genes",
+            "expected": 16624,
+            "actual": 16624,
+            "passed": true,
+            "basis": "Paper v3 reported filtered universe"
+          },
+          {
+            "key": "library_sizes",
+            "expected": {
+              "10_6_5_11": 32863052,
+              "9_6_5_11": 35335491,
+              "purep53": 57160817,
+              "JMS8-2": 51368625,
+              "JMS8-3": 75795034,
+              "JMS8-4": 60517657,
+              "JMS8-5": 55086324,
+              "JMS9-P7c": 21311068,
+              "JMS9-P8c": 19958838
+            },
+            "actual": {
+              "10_6_5_11": 32863052,
+              "9_6_5_11": 35335491,
+              "purep53": 57160817,
+              "JMS8-2": 51368625,
+              "JMS8-3": 75795034,
+              "JMS8-4": 60517657,
+              "JMS8-5": 55086324,
+              "JMS9-P7c": 21311068,
+              "JMS9-P8c": 19958838
+            },
+            "passed": true,
+            "basis": "Pinned GEO sample totals"
+          }
+        ],
+        "limitations": [
+          "Paper supplies no density grid, so numerical curve agreement with the published plot is unverified.",
+          "Scalar agreement is not evidence that every scientific conclusion reproduces."
+        ],
+        "claim": "Checked observables only",
+        "metrics": {
+          "schema_version": 1,
+          "dataset_id": "law2018",
+          "recipe": "density",
+          "input_genes": 27179,
+          "samples": 9,
+          "all_zero_genes": 5153,
+          "retained_genes": 16624,
+          "library_sizes": {
+            "10_6_5_11": 32863052,
+            "9_6_5_11": 35335491,
+            "purep53": 57160817,
+            "JMS8-2": 51368625,
+            "JMS8-3": 75795034,
+            "JMS8-4": 60517657,
+            "JMS8-5": 55086324,
+            "JMS9-P7c": 21311068,
+            "JMS9-P8c": 19958838
+          },
+          "parameters": {
+            "contrast": "BasalvsLP",
+            "fdr": 0.05,
+            "filter_policy": "published",
+            "min_count": 10,
+            "min_samples": 3,
+            "min_total_count": 15,
+            "seed": 1
+          },
+          "cpm_cutoff": 0.1946713582464,
+          "log_cpm_cutoff": -2.06710145460413,
+          "raw_summary": [
+            [
+              -4.50743151448975,
+              -4.50743151448976,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448976,
+              -4.50743151448976
+            ],
+            [
+              -4.50743151448975,
+              -4.50743151448976,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448976,
+              -4.50743151448976
+            ],
+            [
+              -0.684726047812156,
+              -0.358877282142335,
+              -0.09513196686362,
+              -0.0901036095332102,
+              -0.42813624216326,
+              -0.40640054513392,
+              -0.0715222912870231,
+              -0.170396281458047,
+              -0.330041134809769
+            ],
+            [
+              0.171419465671777,
+              0.331197259630464,
+              0.435585779283208,
+              0.408866977968357,
+              0.322495748357423,
+              0.252925813976877,
+              0.404280439830467,
+              0.37078438485019,
+              0.27486448661526
+            ],
+            [
+              4.29127809522087,
+              4.56008498308404,
+              4.60081094572262,
+              4.54751528139122,
+              4.57721028172534,
+              4.31990933543854,
+              4.42512647425898,
+              4.60310165841904,
+              4.43552250369113
+            ],
+            [
+              14.7632117582582,
+              13.4952007661767,
+              12.9570025553338,
+              12.8512563622963,
+              12.9577772925421,
+              14.8519638279246,
+              13.1949132768005,
+              12.9413031130976,
+              14.0102442093151
+            ]
+          ],
+          "filtered_summary": [
+            [
+              -4.50713905676665,
+              -4.50713905676666,
+              -4.50713905676666,
+              -4.50713905676666,
+              -4.50713905676666,
+              -4.50713905676666,
+              -4.50713905676666,
+              -4.50713905676666,
+              -4.50713905676666
+            ],
+            [
+              0.435804737825655,
+              0.777375344613808,
+              0.990085700623355,
+              0.975835601153351,
+              0.655044749620423,
+              0.630349298211633,
+              0.96387034125523,
+              0.832393192519322,
+              0.675766414921642
+            ],
+            [
+              3.54473326647686,
+              3.83609798298739,
+              3.93488112997164,
+              3.88881083176225,
+              3.80377739794414,
+              3.54073595003743,
+              3.75282155092277,
+              3.86269333905795,
+              3.68623431571698
+            ],
+            [
+              2.96556108127191,
+              3.21171074201413,
+              3.34714280738043,
+              3.30691536601302,
+              3.20862241841711,
+              3.08335147906308,
+              3.28366946741991,
+              3.26581340689643,
+              3.14384862135646
+            ],
+            [
+              5.52738338367217,
+              5.71409047820681,
+              5.73358791955719,
+              5.68520882618166,
+              5.73476103350463,
+              5.56789091938463,
+              5.65677607613836,
+              5.74665431198959,
+              5.62802456775997
+            ],
+            [
+              14.7634641188009,
+              13.4954811627427,
+              12.9573275215794,
+              12.8515885070498,
+              12.9580088239568,
+              14.8522232937441,
+              13.1952617989333,
+              12.941696756473,
+              14.0104974407833
+            ]
+          ]
+        }
+      },
+      "artifacts": {
+        "Dockerfile": {
+          "sha256": "44729e64e3bb8e30a2a2cc6c124d8142abacf68c15028a7c97c15efbe2b1418d",
+          "bytes": 756
+        },
+        "density.tsv": {
+          "sha256": "f1c51c74f54c04b5adc5863e0858f6ba27ac97e309871fd7e8fa85426cd3ef34",
+          "bytes": 471282
+        },
+        "entrypoint.sh": {
+          "sha256": "00bfb01bbe2ddd56df692a75f179cdee8db17876d246576ea939e2df70e839e2",
+          "bytes": 399
+        },
+        "exit-code": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "figure.png": {
+          "sha256": "d39c4bf237a77233d433fc5d14ed28999db84a8bdb0bf35aa231b3ee255e8fea",
+          "bytes": 94593
+        },
+        "genes.tsv": {
+          "sha256": "5321862b1c2e9760c8b6bfc8c79853faf4a259e102bf594758966dee1a689ff2",
+          "bytes": 333925
+        },
+        "law-samples.csv": {
+          "sha256": "fa0c7d1e29b2d242f30413524fa00f898266c1c8861a0006e1b07cb9ccf307a0",
+          "bytes": 385
+        },
+        "locked-packages.json": {
+          "sha256": "9a768e26e475b635d86747910531eeba735543e48c1f11d52468aff34ae0f88e",
+          "bytes": 1315
+        },
+        "metrics.json": {
+          "sha256": "ede8992dc36617512c1ecac3acf1f2d079f7e74b8ad553f42b207657e96cf406",
+          "bytes": 2804
+        },
+        "recipe.R": {
+          "sha256": "b622fd19fe8056465495d1f6b48ca31d633838baabababcc8c457c7d1bbbae66",
+          "bytes": 6380
+        },
+        "samples.tsv": {
+          "sha256": "07ceb718ce16410632c49816fc6307f7e6c45e2874f80127db860a4b2a94141d",
+          "bytes": 319
+        },
+        "session.txt": {
+          "sha256": "00711ea0e4be2b928e419b1495503e9b976349e8c3d30be4894717ec9f68314f",
+          "bytes": 573
+        },
+        "stderr.log": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stdout.log": {
+          "sha256": "e70e63bd3074178430059fded1d652c64a60616f1b977fc67f16b34ea504db8a",
+          "bytes": 44
+        }
+      }
+    },
+    {
+      "id": "619e16eec5db4746abb77927250bdc76",
+      "plan_id": "e736c7e0e0e348ccb5f9a8ea27a91acb",
+      "recipe": "density",
+      "dataset": "law2018",
+      "filter": "cpm1",
+      "state": "succeeded",
+      "comparison": {
+        "status": "checks_match",
+        "checks": [
+          {
+            "key": "input_genes",
+            "expected": 27179,
+            "actual": 27179,
+            "passed": true,
+            "basis": "Public count matrix and paper"
+          },
+          {
+            "key": "samples",
+            "expected": 9,
+            "actual": 9,
+            "passed": true,
+            "basis": "Paper sample mapping"
+          },
+          {
+            "key": "all_zero_genes",
+            "expected": 5153,
+            "actual": 5153,
+            "passed": true,
+            "basis": "Paper and independent input probe"
+          },
+          {
+            "key": "retained_genes",
+            "expected": 14165,
+            "actual": 14165,
+            "passed": true,
+            "basis": "Independent Python filter probe; not a published result"
+          },
+          {
+            "key": "library_sizes",
+            "expected": {
+              "10_6_5_11": 32863052,
+              "9_6_5_11": 35335491,
+              "purep53": 57160817,
+              "JMS8-2": 51368625,
+              "JMS8-3": 75795034,
+              "JMS8-4": 60517657,
+              "JMS8-5": 55086324,
+              "JMS9-P7c": 21311068,
+              "JMS9-P8c": 19958838
+            },
+            "actual": {
+              "10_6_5_11": 32863052,
+              "9_6_5_11": 35335491,
+              "purep53": 57160817,
+              "JMS8-2": 51368625,
+              "JMS8-3": 75795034,
+              "JMS8-4": 60517657,
+              "JMS8-5": 55086324,
+              "JMS9-P7c": 21311068,
+              "JMS9-P8c": 19958838
+            },
+            "passed": true,
+            "basis": "Pinned GEO sample totals"
+          }
+        ],
+        "limitations": [
+          "Paper supplies no density grid, so numerical curve agreement with the published plot is unverified.",
+          "Scalar agreement is not evidence that every scientific conclusion reproduces."
+        ],
+        "claim": "Checked observables only",
+        "metrics": {
+          "schema_version": 1,
+          "dataset_id": "law2018",
+          "recipe": "density",
+          "input_genes": 27179,
+          "samples": 9,
+          "all_zero_genes": 5153,
+          "retained_genes": 14165,
+          "library_sizes": {
+            "10_6_5_11": 32863052,
+            "9_6_5_11": 35335491,
+            "purep53": 57160817,
+            "JMS8-2": 51368625,
+            "JMS8-3": 75795034,
+            "JMS8-4": 60517657,
+            "JMS8-5": 55086324,
+            "JMS9-P7c": 21311068,
+            "JMS9-P8c": 19958838
+          },
+          "parameters": {
+            "contrast": "BasalvsLP",
+            "fdr": 0.05,
+            "filter_policy": "cpm1",
+            "min_count": 10,
+            "min_samples": 3,
+            "min_total_count": 15,
+            "seed": 1
+          },
+          "cpm_cutoff": 1,
+          "log_cpm_cutoff": 0.0620762648219475,
+          "raw_summary": [
+            [
+              -4.50743151448975,
+              -4.50743151448976,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448976,
+              -4.50743151448976
+            ],
+            [
+              -4.50743151448975,
+              -4.50743151448976,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448975,
+              -4.50743151448976,
+              -4.50743151448976
+            ],
+            [
+              -0.684726047812156,
+              -0.358877282142335,
+              -0.09513196686362,
+              -0.0901036095332102,
+              -0.42813624216326,
+              -0.40640054513392,
+              -0.0715222912870231,
+              -0.170396281458047,
+              -0.330041134809769
+            ],
+            [
+              0.171419465671777,
+              0.331197259630464,
+              0.435585779283208,
+              0.408866977968357,
+              0.322495748357423,
+              0.252925813976877,
+              0.404280439830467,
+              0.37078438485019,
+              0.27486448661526
+            ],
+            [
+              4.29127809522087,
+              4.56008498308404,
+              4.60081094572262,
+              4.54751528139122,
+              4.57721028172534,
+              4.31990933543854,
+              4.42512647425898,
+              4.60310165841904,
+              4.43552250369113
+            ],
+            [
+              14.7632117582582,
+              13.4952007661767,
+              12.9570025553338,
+              12.8512563622963,
+              12.9577772925421,
+              14.8519638279246,
+              13.1949132768005,
+              12.9413031130976,
+              14.0102442093151
+            ]
+          ],
+          "filtered_summary": [
+            [
+              -4.50582110041475,
+              -4.50582110041475,
+              -4.50582110041475,
+              -4.50582110041475,
+              -4.50582110041475,
+              -4.50582110041475,
+              -4.50582110041475,
+              -4.50582110041475,
+              -4.50582110041475
+            ],
+            [
+              2.00124785204737,
+              2.39425652028435,
+              2.52026015779265,
+              2.51009877603413,
+              2.31699966869529,
+              2.10262982434303,
+              2.39529963945603,
+              2.407792015325,
+              2.25047908988512
+            ],
+            [
+              4.14642979535147,
+              4.42947045758829,
+              4.48623136603651,
+              4.43567855637832,
+              4.42737061629024,
+              4.1704828352866,
+              4.29297676015062,
+              4.48304671203421,
+              4.29674235382464
+            ],
+            [
+              3.83765428871782,
+              4.08520628481758,
+              4.20436912406725,
+              4.16009855739246,
+              4.09355753275334,
+              3.94152426876764,
+              4.11764897975486,
+              4.1321860913653,
+              4.01514238621686
+            ],
+            [
+              5.83825372740639,
+              5.99462855266235,
+              6.01406706792322,
+              5.96071583709169,
+              6.02506673216144,
+              5.86377426040618,
+              5.95273600642515,
+              6.03129857609455,
+              5.91355722601644
+            ],
+            [
+              14.7645368803264,
+              13.4968112873599,
+              12.958809754394,
+              12.8530710716389,
+              12.9591135778798,
+              14.8533917898999,
+              13.1968069863432,
+              12.94325484847,
+              14.0116830798089
+            ]
+          ]
+        }
+      },
+      "artifacts": {
+        "Dockerfile": {
+          "sha256": "44729e64e3bb8e30a2a2cc6c124d8142abacf68c15028a7c97c15efbe2b1418d",
+          "bytes": 756
+        },
+        "density.tsv": {
+          "sha256": "a0772f792345af24d36fb3c7ab4cebcae64b2bfd2ca185b2a7fd96a31ddd7197",
+          "bytes": 471410
+        },
+        "entrypoint.sh": {
+          "sha256": "00bfb01bbe2ddd56df692a75f179cdee8db17876d246576ea939e2df70e839e2",
+          "bytes": 399
+        },
+        "exit-code": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "figure.png": {
+          "sha256": "a2f61fbd89e34971719fd947fef0b3694ba59bc9f70220e2ca94763e56cdada3",
+          "bytes": 96028
+        },
+        "genes.tsv": {
+          "sha256": "091fb07d984c3ee3b4f2917a2603c7740723d6228beaf00c6d35138aa2547036",
+          "bytes": 336384
+        },
+        "law-samples.csv": {
+          "sha256": "fa0c7d1e29b2d242f30413524fa00f898266c1c8861a0006e1b07cb9ccf307a0",
+          "bytes": 385
+        },
+        "locked-packages.json": {
+          "sha256": "9a768e26e475b635d86747910531eeba735543e48c1f11d52468aff34ae0f88e",
+          "bytes": 1315
+        },
+        "metrics.json": {
+          "sha256": "90f4351e41b35285e6e40deb49eeba01b0d416b0636c6664ce3d4f350a029766",
+          "bytes": 2772
+        },
+        "recipe.R": {
+          "sha256": "b622fd19fe8056465495d1f6b48ca31d633838baabababcc8c457c7d1bbbae66",
+          "bytes": 6380
+        },
+        "samples.tsv": {
+          "sha256": "7a3b4bc16b7773c913369cb8071e6f89a21abdee9256915b5143da181629146e",
+          "bytes": 319
+        },
+        "session.txt": {
+          "sha256": "00711ea0e4be2b928e419b1495503e9b976349e8c3d30be4894717ec9f68314f",
+          "bytes": 573
+        },
+        "stderr.log": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stdout.log": {
+          "sha256": "66f317371c5f3a01c4084128aab90d5dbff52151324378ae287aab7efcef2aef",
+          "bytes": 44
+        }
+      }
+    },
+    {
+      "id": "d502a85424f2436bb89129477d2dcd78",
+      "plan_id": "1aa162ca09c54098a5a305a7ac591a59",
+      "recipe": "differential",
+      "dataset": "law2018",
+      "filter": "published",
+      "state": "succeeded",
+      "comparison": {
+        "status": "checks_match",
+        "checks": [
+          {
+            "key": "input_genes",
+            "expected": 27179,
+            "actual": 27179,
+            "passed": true,
+            "basis": "Public count matrix and paper"
+          },
+          {
+            "key": "samples",
+            "expected": 9,
+            "actual": 9,
+            "passed": true,
+            "basis": "Paper sample mapping"
+          },
+          {
+            "key": "all_zero_genes",
+            "expected": 5153,
+            "actual": 5153,
+            "passed": true,
+            "basis": "Paper and independent input probe"
+          },
+          {
+            "key": "retained_genes",
+            "expected": 16624,
+            "actual": 16624,
+            "passed": true,
+            "basis": "Paper v3 reported filtered universe"
+          },
+          {
+            "key": "library_sizes",
+            "expected": {
+              "10_6_5_11": 32863052,
+              "9_6_5_11": 35335491,
+              "purep53": 57160817,
+              "JMS8-2": 51368625,
+              "JMS8-3": 75795034,
+              "JMS8-4": 60517657,
+              "JMS8-5": 55086324,
+              "JMS9-P7c": 21311068,
+              "JMS9-P8c": 19958838
+            },
+            "actual": {
+              "10_6_5_11": 32863052,
+              "9_6_5_11": 35335491,
+              "purep53": 57160817,
+              "JMS8-2": 51368625,
+              "JMS8-3": 75795034,
+              "JMS8-4": 60517657,
+              "JMS8-5": 55086324,
+              "JMS9-P7c": 21311068,
+              "JMS9-P8c": 19958838
+            },
+            "passed": true,
+            "basis": "Pinned GEO sample totals"
+          }
+        ],
+        "limitations": [
+          "Paper supplies no density grid, so numerical curve agreement with the published plot is unverified.",
+          "Scalar agreement is not evidence that every scientific conclusion reproduces.",
+          "Full gene-level reference table is unavailable; FDR and effect sizes are exported for review."
+        ],
+        "claim": "Checked observables only",
+        "metrics": {
+          "schema_version": 1,
+          "dataset_id": "law2018",
+          "recipe": "differential",
+          "input_genes": 27179,
+          "samples": 9,
+          "all_zero_genes": 5153,
+          "retained_genes": 16624,
+          "library_sizes": {
+            "10_6_5_11": 32863052,
+            "9_6_5_11": 35335491,
+            "purep53": 57160817,
+            "JMS8-2": 51368625,
+            "JMS8-3": 75795034,
+            "JMS8-4": 60517657,
+            "JMS8-5": 55086324,
+            "JMS9-P7c": 21311068,
+            "JMS9-P8c": 19958838
+          },
+          "parameters": {
+            "contrast": "BasalvsLP",
+            "fdr": 0.05,
+            "filter_policy": "published",
+            "min_count": 10,
+            "min_samples": 3,
+            "min_total_count": 15,
+            "seed": 1
+          },
+          "design": "~0+group+lane",
+          "normalization": "TMM",
+          "multiple_testing": "Benjamini-Hochberg across the full tested universe, per contrast",
+          "significant_genes": 9511,
+          "up": 4863,
+          "down": 4648
+        }
+      },
+      "artifacts": {
+        "Dockerfile": {
+          "sha256": "44729e64e3bb8e30a2a2cc6c124d8142abacf68c15028a7c97c15efbe2b1418d",
+          "bytes": 756
+        },
+        "design.tsv": {
+          "sha256": "f0c76570278308e75b5730f3d1db4f24895bbf53d9fb4d553ae66eb2cdcbe93d",
+          "bytes": 139
+        },
+        "differential.tsv": {
+          "sha256": "78b0e4e7766a86c1b2f87cc4593cf67835339eed9cac8f118ae28c38d9871b9e",
+          "bytes": 1925121
+        },
+        "entrypoint.sh": {
+          "sha256": "00bfb01bbe2ddd56df692a75f179cdee8db17876d246576ea939e2df70e839e2",
+          "bytes": 399
+        },
+        "exit-code": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "figure.png": {
+          "sha256": "5790cc303b9428ba6fd491dd4bf447f2dcff241983fb6de9dbd25450da6fd558",
+          "bytes": 59323
+        },
+        "genes.tsv": {
+          "sha256": "5321862b1c2e9760c8b6bfc8c79853faf4a259e102bf594758966dee1a689ff2",
+          "bytes": 333925
+        },
+        "law-samples.csv": {
+          "sha256": "fa0c7d1e29b2d242f30413524fa00f898266c1c8861a0006e1b07cb9ccf307a0",
+          "bytes": 385
+        },
+        "locked-packages.json": {
+          "sha256": "9a768e26e475b635d86747910531eeba735543e48c1f11d52468aff34ae0f88e",
+          "bytes": 1315
+        },
+        "metrics.json": {
+          "sha256": "106f9c2247f63ab340b5c73c07204a434c9def2914269e8285bb5e516f264059",
+          "bytes": 816
+        },
+        "recipe.R": {
+          "sha256": "b622fd19fe8056465495d1f6b48ca31d633838baabababcc8c457c7d1bbbae66",
+          "bytes": 6380
+        },
+        "samples.tsv": {
+          "sha256": "07ceb718ce16410632c49816fc6307f7e6c45e2874f80127db860a4b2a94141d",
+          "bytes": 319
+        },
+        "session.txt": {
+          "sha256": "00711ea0e4be2b928e419b1495503e9b976349e8c3d30be4894717ec9f68314f",
+          "bytes": 573
+        },
+        "stderr.log": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stdout.log": {
+          "sha256": "b913cbb1c7b53b0dcbb8e485f6bac67ea63acdaeec1267d14e92fdbef1c31483",
+          "bytes": 49
+        }
+      }
+    },
+    {
+      "id": "f94f49e5fcc1426b909c046f201a946f",
+      "plan_id": "0abc3764a2064aeda66ae252401b1274",
+      "recipe": "mds",
+      "dataset": "chen2016",
+      "filter": "published",
+      "state": "succeeded",
+      "comparison": {
+        "status": "checks_match",
+        "checks": [
+          {
+            "key": "input_genes",
+            "expected": 27179,
+            "actual": 27179,
+            "passed": true,
+            "basis": "Public count matrix and paper"
+          },
+          {
+            "key": "samples",
+            "expected": 12,
+            "actual": 12,
+            "passed": true,
+            "basis": "Paper sample mapping"
+          },
+          {
+            "key": "annotated_genes",
+            "expected": 26357,
+            "actual": 26357,
+            "passed": true,
+            "basis": "Paper with org.Mm.eg.db 3.3.0"
+          },
+          {
+            "key": "retained_genes",
+            "expected": 15653,
+            "actual": 15653,
+            "passed": true,
+            "basis": "Paper CPM > 0.5 in two samples"
+          }
+        ],
+        "limitations": [
+          "Adapted R and edgeR versions; no published numerical MDS coordinates are available.",
+          "MDS axis signs are arbitrary. Compare pairwise distances for fresh-run consistency."
+        ],
+        "claim": "Checked observables only",
+        "metrics": {
+          "schema_version": 1,
+          "dataset_id": "chen2016",
+          "recipe": "mds",
+          "input_genes": 27179,
+          "samples": 12,
+          "all_zero_genes": 5787,
+          "retained_genes": 15653,
+          "library_sizes": {
+            "MCL1.DG": 23227641,
+            "MCL1.DH": 21777891,
+            "MCL1.DI": 24100765,
+            "MCL1.DJ": 22665371,
+            "MCL1.DK": 21529331,
+            "MCL1.DL": 20015386,
+            "MCL1.LA": 20392113,
+            "MCL1.LB": 21708152,
+            "MCL1.LC": 22241607,
+            "MCL1.LD": 21988240,
+            "MCL1.LE": 24723827,
+            "MCL1.LF": 24657293
+          },
+          "parameters": {
+            "contrast": "BasalvsLP",
+            "fdr": 0.05,
+            "filter_policy": "published",
+            "min_count": 10,
+            "min_samples": 2,
+            "min_total_count": 15,
+            "seed": 1
+          },
+          "annotated_genes": 26357,
+          "normalization_factors": [
+            1.23498950986495,
+            1.21300114373325,
+            1.12578724480623,
+            1.06928666005925,
+            1.03624546547987,
+            1.08718184067703,
+            1.36997629328893,
+            1.3675866121763,
+            1.00590612630894,
+            0.923980251366505,
+            0.528589114874098,
+            0.534753905703148
+          ]
+        }
+      },
+      "artifacts": {
+        "Dockerfile": {
+          "sha256": "44729e64e3bb8e30a2a2cc6c124d8142abacf68c15028a7c97c15efbe2b1418d",
+          "bytes": 756
+        },
+        "entrypoint.sh": {
+          "sha256": "00bfb01bbe2ddd56df692a75f179cdee8db17876d246576ea939e2df70e839e2",
+          "bytes": 399
+        },
+        "exit-code": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "figure.png": {
+          "sha256": "8878d59439319e3d15fb42eec6205851266399677feafaa9ba542413be711415",
+          "bytes": 33580
+        },
+        "genes.tsv": {
+          "sha256": "6ffeb2fda018630524f636fa831194e392eb9027bd0ea2183b0f28eb929d15ee",
+          "bytes": 334896
+        },
+        "law-samples.csv": {
+          "sha256": "fa0c7d1e29b2d242f30413524fa00f898266c1c8861a0006e1b07cb9ccf307a0",
+          "bytes": 385
+        },
+        "locked-packages.json": {
+          "sha256": "9a768e26e475b635d86747910531eeba735543e48c1f11d52468aff34ae0f88e",
+          "bytes": 1315
+        },
+        "mds.tsv": {
+          "sha256": "e928aad95e2dfff110e97ba1c57bfeca0226b0276d6ce8fc622d436f17539eb2",
+          "bytes": 665
+        },
+        "metrics.json": {
+          "sha256": "f44df95396894810a4361631921ff75f1031537e2cda2e39adfad29d7a64a301",
+          "bytes": 1006
+        },
+        "recipe.R": {
+          "sha256": "b622fd19fe8056465495d1f6b48ca31d633838baabababcc8c457c7d1bbbae66",
+          "bytes": 6380
+        },
+        "samples.tsv": {
+          "sha256": "efdc1adadb0e0d75b4b6a2f7c44e698e86c1dc73c04eada81adba601e8f91ef5",
+          "bytes": 488
+        },
+        "session.txt": {
+          "sha256": "00711ea0e4be2b928e419b1495503e9b976349e8c3d30be4894717ec9f68314f",
+          "bytes": 573
+        },
+        "stderr.log": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stdout.log": {
+          "sha256": "658b4bba8e0af937a467af65eca5d2fcad50280f6b3503b38aaa54b7e1af6177",
+          "bytes": 40
+        }
+      }
+    }
+  ],
+  "fresh_comparison": {
+    "checks": [
+      {
+        "artifact": "density.tsv",
+        "byte_equal": true
+      },
+      {
+        "artifact": "genes.tsv",
+        "byte_equal": true
+      },
+      {
+        "artifact": "metrics.json",
+        "byte_equal": true
+      },
+      {
+        "artifact": "samples.tsv",
+        "byte_equal": true
+      }
+    ],
+    "same_numeric_bytes": true,
+    "scope": "Fresh run artifact consistency; not independent scientific validation"
+  }
+}
