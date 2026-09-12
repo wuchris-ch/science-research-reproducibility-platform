@@ -58,7 +58,7 @@ The first command checks every manifest file; it does not authenticate the sende
 
 ## Optional model assistance
 
-Set `WORKBENCH_MODEL_URL`, `WORKBENCH_MODEL_KEY`, `WORKBENCH_MODEL_NAME` and both per-million token prices. Set `WORKBENCH_MODEL_MODE` to `chat` or `responses` for the configured API shape. The endpoint must use HTTPS or a strict loopback address and return usage accounting. Keys stay server-side. The broker reserves a conservative maximum against the workspace budget before a request. Ambiguous failure retains that reservation; a retry does not silently release possible spend. Calls are scoped to a workspace and bounded source context.
+Set `WORKBENCH_MODEL_URL`, `WORKBENCH_MODEL_KEY`, `WORKBENCH_MODEL_NAME` and both per-million token prices. Set `WORKBENCH_MODEL_API_MODE` to `chat_completions` or `responses` for the configured API shape. The endpoint must use HTTPS or a strict loopback address and return usage accounting. Keys stay server-side. The broker reserves a conservative maximum against the workspace budget before a request. Ambiguous failure retains that reservation; a retry does not silently release possible spend. Calls are scoped to a workspace and bounded source context.
 
 The default workspace budget is USD 2. This is an internal accounting bound, not a substitute for a provider account's own hard spending control. Three live calls were measured in `evidence/heldout-extraction.json`; deployment credentials and endpoint identity are supplied privately. Proposals show reported, inferred or missing status and linked quotes. A reviewer must resolve and lock methods explicitly.
 
