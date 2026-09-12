@@ -200,7 +200,7 @@ def create_app(settings=None, docker=None):
 
     @app.get("/api/sources/{identity}")
     def source(identity: str, who=Depends(actor)):
-        return service.source(identity)
+        return service.source(identity, who)
 
     @app.get("/api/sources/{identity}/asset/{kind}")
     def source_asset(identity: str, kind: str, who=Depends(actor)):
@@ -252,7 +252,10 @@ def create_app(settings=None, docker=None):
     @app.post("/api/runs")
     def submit(body: RunCreate, who=Depends(actor), idempotency_key: str = Header()):
         try:
-            image = docker.image_id()
+            with db.transaction() as c:
+                plan = service.get_plan(c, who, body.plan_id)
+            profile = plan["body"].get("adapter", {}).get("runtime", "historical")
+            image = docker.image_id(profile) if isinstance(docker, RuntimeRegistry) else docker.image_id()
         except (RuntimeError, OSError) as e:
             raise Problem(503, "Scientific runtime unavailable. Run workbench doctor.") from e
         return service.submit(who, body, idempotency_key, image)
@@ -429,6 +432,9 @@ def create_app(settings=None, docker=None):
     from .extraction import register_extraction
 
     register_extraction(app, service, actor)
+    from .onboarding import register_onboarding
+
+    register_onboarding(app, service, actor)
     dist = ROOT / "web/dist"
     if dist.exists():
         app.mount("/", StaticFiles(directory=dist, html=True), name="web")

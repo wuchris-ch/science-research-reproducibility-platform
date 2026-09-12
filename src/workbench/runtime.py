@@ -10,16 +10,20 @@ class RuntimeRegistry:
     def __init__(self, settings):
         self.settings = settings
 
-    def image_id(self):
-        path = self.settings.data_dir / "runtime.json"
-        if self.settings.image_id:
+    def image_id(self, profile="historical"):
+        if profile not in ("historical", "deseq2"):
+            raise RuntimeError("Unknown registered runtime profile")
+        path = self.settings.data_dir / (
+            "runtime.json" if profile == "historical" else f"runtime-{profile}.json"
+        )
+        if self.settings.image_id and profile == "historical":
             identity = self.settings.image_id
         else:
             try:
                 record = json.loads(path.read_text())
             except (OSError, ValueError):
                 raise RuntimeError("Runtime registration is missing; run workbench build") from None
-            if record.get("image_tag") != self.settings.image:
+            if profile == "historical" and record.get("image_tag") != self.settings.image:
                 raise RuntimeError("Runtime registration names a different image")
             identity = record.get("image_id", "")
         if not re.fullmatch(r"sha256:[0-9a-f]{64}", identity):
@@ -27,7 +31,7 @@ class RuntimeRegistry:
         return identity
 
 
-def register(settings, docker):
+def register(settings, docker, profile="historical"):
     import time
 
     record = {
@@ -38,7 +42,7 @@ def register(settings, docker):
         "registered_at": time.time(),
         "platform": "linux/amd64",
     }
-    path = settings.data_dir / "runtime.json"
+    path = settings.data_dir / ("runtime.json" if profile == "historical" else f"runtime-{profile}.json")
     temp = path.with_suffix(".part")
     temp.write_bytes(canonical(record))
     temp.chmod(0o600)

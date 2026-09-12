@@ -5,7 +5,7 @@ from sqlalchemy import func, insert, select, update
 
 from .adapters import resolve
 from .artifacts import digest
-from .database import Database, members, plans, revisions, runs, uid, workspaces
+from .database import Database, members, onboardings, plans, revisions, runs, uid, workspaces
 from .fixtures import SOURCES
 from .schemas import Correction, LockRequest, PlanCreate, RunCreate
 
@@ -38,23 +38,66 @@ class Service:
             self.db.emit(c, identity, "workspace.created", actor, {"name": name})
             return identity
 
-    def source(self, dataset):
+    def source(self, dataset, actor=None, workspace_id=None):
+        if dataset.startswith("import_"):
+            with self.db.transaction() as c:
+                row = self.db.row(c, onboardings, dataset.removeprefix("import_"))
+                if not row:
+                    raise Problem(404, "Imported dataset not found")
+                self.authorize(c, row["workspace_id"], actor)
+                if workspace_id and row["workspace_id"] != workspace_id:
+                    raise Problem(403, "Dataset belongs to a different workspace")
+                if row["state"] != "sealed":
+                    raise Problem(409, "Complete source and dataset review before planning")
+                return {
+                    **row["body"],
+                    "id": dataset,
+                    "sha256": row["body"]["source_sha256"],
+                    "recipes": [row["body"]["recipe"]],
+                    "onboarding_id": row["id"],
+                }
         path = self.settings.data_dir / f"sources/{dataset}.json"
         if dataset not in SOURCES or not path.exists():
             raise Problem(409, "Source is unavailable. Run workbench setup first.")
         return json.loads(path.read_text())
 
     def new_plan(self, actor, request: PlanCreate):
-        source = self.source(request.dataset_id)
+        source = self.source(request.dataset_id, actor, request.workspace_id)
         body = request.model_dump()
         try:
-            adapter, body["parameters"] = resolve(request.dataset_id, request.recipe, request.parameters)
+            adapter, body["parameters"] = resolve(
+                request.dataset_id,
+                request.recipe,
+                request.parameters,
+                imported=request.dataset_id.startswith("import_"),
+            )
         except ValueError as error:
             raise Problem(422, str(error)) from None
         body["adapter"] = adapter.snapshot()
         body["source_sha256"] = source["sha256"]
         body["environment"] = adapter.environment
         body["adaptations"] = adapter.adaptations
+        if adapter.input_contract == "paired-counts-v1":
+            from .inputs import validate_paired
+
+            if source.get("onboarding_id"):
+                body["inputs"] = source["inputs"]
+                body["input_summary"] = source["validation"]
+                body["evidence_graph"] = source["evidence_graph"]
+                body["source_documents"] = source["documents"]
+                body["onboarding_id"] = source["onboarding_id"]
+            else:
+                body["inputs"] = {}
+                raw = []
+                for name in ("counts.tsv", "samples.tsv"):
+                    path = self.settings.data_dir / "datasets" / request.dataset_id / name
+                    if not path.exists():
+                        raise Problem(409, "Prepare this dataset before creating a plan")
+                    data = path.read_bytes()
+                    raw.append(data)
+                    body["inputs"][name] = {"sha256": self.store.put(data), "bytes": len(data)}
+                body["input_summary"] = validate_paired(*raw)
+            body["input_hash"] = digest({name: item["sha256"] for name, item in body["inputs"].items()})
         body["reviewed_fields"] = []
         with self.db.transaction() as c:
             self.authorize(c, request.workspace_id, actor, "editor")
@@ -104,11 +147,19 @@ class Service:
                 raise Problem(409, "Plan changed or is locked. Reload before editing.")
             try:
                 _, parameters = resolve(
-                    plan["body"]["dataset_id"], plan["body"]["recipe"], request.parameters
+                    plan["body"]["dataset_id"],
+                    plan["body"]["recipe"],
+                    request.parameters,
+                    imported=plan["body"]["dataset_id"].startswith("import_"),
                 )
             except ValueError as error:
                 raise Problem(422, str(error)) from None
-            valid_ids = {e["id"] for e in self.source(plan["body"]["dataset_id"])["segments"]}
+            if plan["body"].get("evidence_graph"):
+                valid_ids = {
+                    e["id"] for e in plan["body"]["evidence_graph"]["nodes"] if e["type"] == "evidence"
+                }
+            else:
+                valid_ids = {e["id"] for e in self.source(plan["body"]["dataset_id"])["segments"]}
             if set(request.evidence_ids) - valid_ids:
                 raise Problem(422, "Unknown source evidence")
             body = {

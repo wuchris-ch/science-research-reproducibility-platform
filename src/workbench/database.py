@@ -118,6 +118,25 @@ model_calls = Table(
     Column("body", JSON, nullable=False),
     Column("created", Float, nullable=False),
 )
+onboardings = Table(
+    "onboardings",
+    metadata,
+    Column("id", String, primary_key=True),
+    Column("workspace_id", ForeignKey("workspaces.id"), nullable=False, index=True),
+    Column("revision", Integer, nullable=False),
+    Column("state", String, nullable=False),
+    Column("body", JSON, nullable=False),
+    Column("created", Float, nullable=False),
+)
+onboarding_revisions = Table(
+    "onboarding_revisions",
+    metadata,
+    Column("onboarding_id", ForeignKey("onboardings.id"), primary_key=True),
+    Column("revision", Integer, primary_key=True),
+    Column("body", JSON, nullable=False),
+    Column("actor", String, nullable=False),
+    Column("created", Float, nullable=False),
+)
 
 
 def uid():
@@ -146,11 +165,13 @@ class Database:
                 c.execute(text("SELECT pg_advisory_xact_lock(83717001)"))
             c.execute(text("CREATE TABLE IF NOT EXISTS schema_version (version INTEGER PRIMARY KEY)"))
             version = c.execute(text("SELECT version FROM schema_version")).scalar()
-            if version not in (None, 1):
+            if version not in (None, 1, 2):
                 raise RuntimeError("Unsupported database version; use a matching application version")
             metadata.create_all(c)
             if version is None:
-                c.execute(text("INSERT INTO schema_version (version) VALUES (1)"))
+                c.execute(text("INSERT INTO schema_version (version) VALUES (2)"))
+            elif version == 1:
+                c.execute(text("UPDATE schema_version SET version = 2 WHERE version = 1"))
 
     @contextmanager
     def transaction(self):
