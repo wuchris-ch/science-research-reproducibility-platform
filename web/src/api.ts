@@ -1,5 +1,23 @@
-import type { components } from "./contracts";
-export type Parameters = components["schemas"]["Parameters"];
+export type Parameters = Record<string, string | number | boolean>;
+export type Rule = {
+  type: string;
+  default: string | number | boolean;
+  label: string;
+  minimum?: number;
+  maximum?: number;
+  choices: (string | number | boolean)[];
+  sensitivity: (string | number | boolean)[];
+};
+export type Adapter = {
+  id: string;
+  version: string;
+  recipe: string;
+  title: string;
+  sha256: string;
+  parameters: Record<string, Rule>;
+  methods: Record<string, string>;
+  runtime: string;
+};
 export type Plan = {
   id: string;
   workspace_id: string;
@@ -16,6 +34,11 @@ export type Plan = {
     adaptations: string[];
     plan_hash?: string;
     source_sha256: string;
+    adapter?: Adapter;
+    input_summary?: { input_genes: number; samples: number; donors: number };
+    input_hash?: string;
+    onboarding_id?: string;
+    study_id?: string;
   };
   history?: unknown[];
 };
@@ -56,16 +79,21 @@ export type Run = {
 };
 export type Segment = { id: string; kind: string; text: string };
 export type Source = {
+  onboarding_id?: string;
+  documents?: { id: string; name: string; kind: string; role: string }[];
   id: string;
   title: string;
   authors: string;
   doi: string;
   version: number;
-  year: number;
+  year?: number;
   accession: string;
   recipes: string[];
   sha256: string;
   segments: Segment[];
+  input_shape?: { genes: number; samples: number };
+  sample_description?: string;
+  figure_title?: string;
   geometry?: {
     page: number;
     page_size_points: [number, number];
@@ -160,5 +188,27 @@ export async function uploadSource(workspaceId: string, file: File) {
     const error = await response.json();
     throw new Error(error.detail || "Import failed");
   }
+  return response.json();
+}
+
+export async function uploadFile<T>(
+  path: string,
+  file: File,
+  fields: Record<string, string>,
+): Promise<T> {
+  const form = new FormData();
+  form.append("file", file);
+  for (const [key, value] of Object.entries(fields)) form.append(key, value);
+  const response = await fetch("/api" + path, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "X-CSRF-Token": csrf,
+      ...(bearer ? { Authorization: "Bearer " + bearer } : {}),
+    },
+    body: form,
+  });
+  if (!response.ok)
+    throw new Error((await response.json()).detail || "Upload failed");
   return response.json();
 }
