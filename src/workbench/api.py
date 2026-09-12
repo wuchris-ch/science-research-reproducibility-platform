@@ -191,14 +191,25 @@ def create_app(settings=None, docker=None):
 
     @app.get("/api/sources/{identity}/asset/{kind}")
     def source_asset(identity: str, kind: str, who=Depends(actor)):
-        allowed = {"pdf": f"{identity}.pdf", "figure": f"{identity}-figure.gif", "xml": f"{identity}.xml"}
+        allowed = {
+            "pdf": f"{identity}.pdf",
+            "figure": f"{identity}-figure.gif",
+            "xml": f"{identity}.xml",
+            "page": f"{identity}-page.png",
+        }
         if identity not in SOURCES or kind not in allowed:
             raise Problem(404, "Source asset not found")
         path = settings.data_dir / "sources" / allowed[kind]
         if not path.exists():
             raise Problem(404, "Source asset unavailable")
         return FileResponse(
-            path, media_type={"pdf": "application/pdf", "figure": "image/gif", "xml": "application/xml"}[kind]
+            path,
+            media_type={
+                "pdf": "application/pdf",
+                "figure": "image/gif",
+                "xml": "application/xml",
+                "page": "image/png",
+            }[kind],
         )
 
     @app.post("/api/plans")

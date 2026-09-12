@@ -1,0 +1,12 @@
+{
+  "image_id": "sha256:131a1fe10222107f890d5b581f90e01ad41f5c3dbad0b04dd61743f877a3c5fa",
+  "original_image_id": "sha256:382463699c5a44e96648f8768e7a69f7cd4019f2e9fec331c33a8e8154265df0",
+  "checks": {
+    "metrics.json": true,
+    "density.tsv": true,
+    "genes.tsv": true,
+    "samples.tsv": true
+  },
+  "same_numeric_bytes": true,
+  "scope": "Fresh bundle rerun; image rebuild may have different build metadata"
+}

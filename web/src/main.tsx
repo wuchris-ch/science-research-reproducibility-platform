@@ -43,6 +43,7 @@ import {
   type Event,
 } from "./api";
 import "./style.css";
+import { SourceViewer, useDialog } from "./SourceViewer";
 const defaults: Parameters = {
   filter_policy: "published",
   min_count: 10,
@@ -105,6 +106,8 @@ function App() {
       null,
     ),
     [mobile, setMobile] = useState(false);
+  useDialog(Boolean(modal),()=>setModal(null));
+  const [identityMode,setIdentityMode]=useState("local");
   const plan = plans.find((p) => p.id === selectedPlan) || null;
   const run =
     runs.find((r) => r.id === selectedRun) ||
@@ -133,7 +136,8 @@ function App() {
   }
   useEffect(() => {
     session()
-      .then(async () => {
+      .then(async (mode) => {
+        setIdentityMode(mode);
         setSources(await api("/sources"));
         const list = await api<Workspace[]>("/workspaces");
         setWorkspaces(list);
@@ -358,8 +362,8 @@ function App() {
             </strong>
           </div>
           <div className="header-right">
-            <span className="local-indicator" /> Local workspace{" "}
-            <span className="profile">CW</span>
+            <span className="local-indicator" /> {identityMode==="local"?"Local workspace":"Team workspace"}{" "}
+            <span className="profile">RW</span>
           </div>
         </header>
         <main id="main">
@@ -762,6 +766,7 @@ function Overview({
   results: () => void;
   setError: (s: string) => void;
 }) {
+  const [showSource,setShowSource]=useState(false);
   const c = run?.body.comparison,
     m = c?.metrics;
   return (
@@ -815,7 +820,7 @@ function Overview({
           <div className="card-heading">
             <div>
               <span className="eyebrow">01 / SOURCE</span>
-              <h2>The published result</h2>
+              <h2>{plan.body.recipe==="differential"?"Published filtering reference":"The published result"}</h2>
             </div>
             <span className="pill">VERSION {source?.version || "–"}</span>
           </div>
@@ -842,18 +847,7 @@ function Overview({
               {source?.geometry
                 ? "Page " + source.geometry.page
                 : "Versioned source"}
-              <button
-                className="text-button"
-                onClick={() =>
-                  download(
-                    "/sources/" + plan.body.dataset_id + "/asset/pdf",
-                    "source-paper.pdf",
-                  ).catch((e) => setError(e.message))
-                }
-              >
-                Open paper
-                <ArrowUpRight size={14} />
-              </button>
+              <button className="text-button" onClick={()=>setShowSource(true)}>Open paper<ArrowUpRight size={14}/></button>
             </div>
           </div>
         </section>
@@ -1006,6 +1000,7 @@ function Overview({
           </button>
         </section>
       </div>
+      {showSource&&source&&<SourceViewer source={source} close={()=>setShowSource(false)}/>}
     </div>
   );
 }

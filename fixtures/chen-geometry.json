@@ -1,0 +1,26 @@
+{
+  "source_sha256": "dfd67412e2e2701e263cd8736ed06f0a64d83f965902711b37e4c2df03d17d76",
+  "page": 8,
+  "page_size_points": [
+    612.283,
+    792
+  ],
+  "coordinate_system": "top-left PDF points",
+  "figure_bbox": [
+    150,
+    88,
+    456,
+    370
+  ],
+  "caption_bbox": [
+    92,
+    376,
+    519,
+    397
+  ],
+  "method_bbox": null,
+  "verified": "2026-09-11",
+  "paper_version": 2,
+  "pdf_footer_update": "2025-11-13",
+  "note": "Publisher regenerated PDF; figure and article version verified."
+}

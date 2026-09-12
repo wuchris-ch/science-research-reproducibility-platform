@@ -78,12 +78,20 @@ def build(settings):
 def assets(settings):
     for entry in json.loads((ROOT / "fixtures/paper-assets.json").read_text()):
         fetch(entry["url"], settings.data_dir / "sources" / entry["file"], entry["sha256"], cap=10_000_000)
-    geometry = json.loads((ROOT / "fixtures/law-geometry.json").read_text())
-    path = settings.data_dir / "sources/law2018.json"
-    source = json.loads(path.read_text())
-    source["geometry"] = geometry
-    source["geometry_status"] = "Verified on publisher PDF, page 8"
-    path.write_text(json.dumps(source))
+    import pypdfium2 as pdfium
+
+    for dataset, name in (("law2018", "law"), ("chen2016", "chen")):
+        geometry = json.loads((ROOT / f"fixtures/{name}-geometry.json").read_text())
+        path = settings.data_dir / f"sources/{dataset}.json"
+        source = json.loads(path.read_text())
+        source["geometry"] = geometry
+        source["geometry_status"] = "Verified on publisher PDF, page 8"
+        path.write_text(json.dumps(source))
+        pdf = pdfium.PdfDocument(str(settings.data_dir / f"sources/{dataset}.pdf"))
+        pdf[geometry["page"] - 1].render(scale=1.6).to_pil().save(
+            settings.data_dir / f"sources/{dataset}-page.png"
+        )
+        pdf.close()
 
 
 def backup(settings, target: Path):

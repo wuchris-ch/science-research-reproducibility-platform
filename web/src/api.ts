@@ -66,7 +66,7 @@ export type Source = {
   recipes: string[];
   sha256: string;
   segments: Segment[];
-  geometry?: { page: number };
+  geometry?: { page: number; page_size_points: [number,number]; figure_bbox: number[]; caption_bbox: number[]; method_bbox: number[] | null };
 };
 export type Workspace = { id: string; name: string; role: string };
 export type Event = {
