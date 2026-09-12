@@ -1,0 +1,20 @@
+[Unit]
+Description=Research Workbench trusted execution supervisor
+After=network-online.target docker.service
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=simple
+User=workbench
+Group=workbench
+SupplementaryGroups=docker
+WorkingDirectory=/opt/research-workbench
+ExecStart=/opt/research-workbench/.venv/bin/workbench worker
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=15
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target
