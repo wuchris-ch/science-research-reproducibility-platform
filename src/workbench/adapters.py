@@ -99,7 +99,43 @@ def registry():
 
 @lru_cache
 def datasets():
-    return json.loads((MANIFESTS / "datasets.json").read_text())
+    result = json.loads((MANIFESTS / "datasets.json").read_text())
+    for identity, data in result.items():
+        validate_dataset(identity, data)
+    return result
+
+
+def validate_dataset(identity, data):
+    if not re.fullmatch(r"[a-z][a-z0-9_]{2,60}", identity):
+        raise ValueError("Invalid registered dataset identity")
+    if not data.get("recipes") or any(recipe not in registry() for recipe in data["recipes"]):
+        raise ValueError("Dataset requires registered recipes")
+    for name, value in data.get("input_hashes", {}).items():
+        if name not in ("counts.tsv", "samples.tsv") or not re.fullmatch(r"[0-9a-f]{64}", value):
+            raise ValueError("Invalid registered input hash")
+    geometry = data.get("geometry_file")
+    if geometry and not re.fullmatch(r"[a-z0-9-]+\.json", geometry):
+        raise ValueError("Geometry must name a local fixture")
+    spec = data.get("legacy_input")
+    if not spec:
+        return
+    if (
+        set(spec) != {"reader", "filter", "sample_map"}
+        or spec["reader"] not in ("count-files", "annotated-matrix")
+        or spec["filter"] not in ("group-rule", "annotated-cpm")
+    ):
+        raise ValueError("Unknown registered input operation")
+    rows = spec["sample_map"]
+    if not 2 <= len(rows) <= 64 or len({r["sample"] for r in rows}) != len(rows):
+        raise ValueError("Sample declarations must be bounded and unique")
+    column = "file" if spec["reader"] == "count-files" else "column"
+    if len({r.get(column) for r in rows}) != len(rows):
+        raise ValueError("Input columns must map one-to-one to samples")
+    for row in rows:
+        if not row.get("group") or any(
+            not isinstance(v, str) or not re.fullmatch(r"[A-Za-z0-9_.-]+", v) for v in row.values()
+        ):
+            raise ValueError("Sample declarations require flat identifiers")
 
 
 def resolve(dataset_id, recipe, parameters=None, *, imported=False):

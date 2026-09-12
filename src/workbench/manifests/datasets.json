@@ -20,7 +20,67 @@
     },
     "sample_description": "Three cell populations, three replicates each",
     "figure_title": "Figure 1. Expression before and after filtering",
-    "geometry_file": "law-geometry.json"
+    "geometry_file": "law-geometry.json",
+    "legacy_input": {
+      "reader": "count-files",
+      "filter": "group-rule",
+      "sample_map": [
+        {
+          "file": "GSM1545535_10_6_5_11.txt",
+          "sample": "10_6_5_11",
+          "group": "LP",
+          "lane": "L004"
+        },
+        {
+          "file": "GSM1545536_9_6_5_11.txt",
+          "sample": "9_6_5_11",
+          "group": "ML",
+          "lane": "L004"
+        },
+        {
+          "file": "GSM1545538_purep53.txt",
+          "sample": "purep53",
+          "group": "Basal",
+          "lane": "L004"
+        },
+        {
+          "file": "GSM1545539_JMS8-2.txt",
+          "sample": "JMS8-2",
+          "group": "Basal",
+          "lane": "L006"
+        },
+        {
+          "file": "GSM1545540_JMS8-3.txt",
+          "sample": "JMS8-3",
+          "group": "ML",
+          "lane": "L006"
+        },
+        {
+          "file": "GSM1545541_JMS8-4.txt",
+          "sample": "JMS8-4",
+          "group": "LP",
+          "lane": "L006"
+        },
+        {
+          "file": "GSM1545542_JMS8-5.txt",
+          "sample": "JMS8-5",
+          "group": "Basal",
+          "lane": "L006"
+        },
+        {
+          "file": "GSM1545544_JMS9-P7c.txt",
+          "sample": "JMS9-P7c",
+          "group": "ML",
+          "lane": "L008"
+        },
+        {
+          "file": "GSM1545545_JMS9-P8c.txt",
+          "sample": "JMS9-P8c",
+          "group": "LP",
+          "lane": "L008"
+        }
+      ]
+    }
   },
   "chen2016": {
     "title": "From reads to genes to pathways: differential expression analysis of RNA-Seq experiments using Rsubread and the edgeR quasi-likelihood pipeline",
@@ -50,7 +110,73 @@
     },
     "sample_description": "Two cell types across three biological states",
     "figure_title": "Figure 1. Sample relationships",
-    "geometry_file": "chen-geometry.json"
+    "geometry_file": "chen-geometry.json",
+    "legacy_input": {
+      "reader": "annotated-matrix",
+      "filter": "annotated-cpm",
+      "sample_map": [
+        {
+          "column": "MCL1-DG_BC2CTUACXX_ACTTGA_L002_R1",
+          "sample": "MCL1-DG",
+          "group": "B.virgin"
+        },
+        {
+          "column": "MCL1-DH_BC2CTUACXX_CAGATC_L002_R1",
+          "sample": "MCL1-DH",
+          "group": "B.virgin"
+        },
+        {
+          "column": "MCL1-DI_BC2CTUACXX_ACAGTG_L002_R1",
+          "sample": "MCL1-DI",
+          "group": "B.pregnant"
+        },
+        {
+          "column": "MCL1-DJ_BC2CTUACXX_CGATGT_L002_R1",
+          "sample": "MCL1-DJ",
+          "group": "B.pregnant"
+        },
+        {
+          "column": "MCL1-DK_BC2CTUACXX_TTAGGC_L002_R1",
+          "sample": "MCL1-DK",
+          "group": "B.lactating"
+        },
+        {
+          "column": "MCL1-DL_BC2CTUACXX_ATCACG_L002_R1",
+          "sample": "MCL1-DL",
+          "group": "B.lactating"
+        },
+        {
+          "column": "MCL1-LA_BC2CTUACXX_GATCAG_L001_R1",
+          "sample": "MCL1-LA",
+          "group": "L.virgin"
+        },
+        {
+          "column": "MCL1-LB_BC2CTUACXX_TGACCA_L001_R1",
+          "sample": "MCL1-LB",
+          "group": "L.virgin"
+        },
+        {
+          "column": "MCL1-LC_BC2CTUACXX_GCCAAT_L001_R1",
+          "sample": "MCL1-LC",
+          "group": "L.pregnant"
+        },
+        {
+          "column": "MCL1-LD_BC2CTUACXX_GGCTAC_L001_R1",
+          "sample": "MCL1-LD",
+          "group": "L.pregnant"
+        },
+        {
+          "column": "MCL1-LE_BC2CTUACXX_TAGCTT_L001_R1",
+          "sample": "MCL1-LE",
+          "group": "L.lactating"
+        },
+        {
+          "column": "MCL1-LF_BC2CTUACXX_CTTGTA_L001_R1",
+          "sample": "MCL1-LF",
+          "group": "L.lactating"
+        }
+      ]
+    }
   },
   "airway2015": {
     "title": "RNA-Seq workflow: gene-level exploratory analysis and differential expression",

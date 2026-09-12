@@ -2,7 +2,7 @@ import copy
 
 import pytest
 
-from workbench.adapters import Adapter, registry, resolve
+from workbench.adapters import Adapter, datasets, registry, resolve, validate_dataset
 from workbench.artifacts import digest
 from workbench.schemas import PlanCreate
 from workbench.service import Problem
@@ -39,3 +39,14 @@ def test_plan_seals_manifest_and_validates_recipe(service):
     assert plan["body"]["parameters"]["min_samples"] == 3
     with pytest.raises(Problem):
         service.new_plan("alice", PlanCreate(workspace_id=workspace, title="Bad", recipe="execute"))
+
+
+def test_registered_sample_inputs_reject_aliases_and_paths():
+    data = copy.deepcopy(datasets()["law2018"])
+    data["legacy_input"]["sample_map"][1]["sample"] = data["legacy_input"]["sample_map"][0]["sample"]
+    with pytest.raises(ValueError):
+        validate_dataset("example", data)
+    data = copy.deepcopy(datasets()["law2018"])
+    data["legacy_input"]["sample_map"][0]["file"] = "../outside"
+    with pytest.raises(ValueError):
+        validate_dataset("example", data)

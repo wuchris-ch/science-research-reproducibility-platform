@@ -80,6 +80,16 @@ def build(settings):
     ]:
         shutil.copyfile(ROOT / src, context / name)
     shutil.copyfile(ROOT / "environments/locked-packages.json", context / "locked-packages.json")
+    from .adapters import datasets
+
+    declarations = {
+        identity: data["legacy_input"] for identity, data in datasets().items() if "legacy_input" in data
+    }
+    recipe = (context / "run.R").read_text()
+    recipe = recipe.replace(
+        "# @dataset-registry", "dataset_registry <- fromJSON(" + json.dumps(json.dumps(declarations)) + ")"
+    )
+    (context / "run.R").write_text(recipe)
     docker = Docker(settings)
     subprocess.run(
         docker.prefix + ["build", "--platform", "linux/amd64", "-t", settings.image, str(context)], check=True
