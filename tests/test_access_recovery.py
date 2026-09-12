@@ -117,6 +117,8 @@ def test_other_docker_host_cannot_recover_ephemeral_sandbox(service):
 
 
 def test_backup_restore_validates_blobs_and_separates_active_jobs(service, tmp_path):
+    if service.db.engine.dialect.name != "sqlite":
+        pytest.skip("Local SQLite backup command; PostgreSQL uses pg_dump")
     r = queued(service)
     blob = service.store.put(b"durable result")
     with service.db.transaction() as c:
