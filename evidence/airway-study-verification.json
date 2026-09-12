@@ -1,0 +1,1383 @@
+{
+  "date": "2026-09-11",
+  "study_id": "cac85a78946925f8c8084f4f1496ef9a",
+  "protocol": {
+    "title": "Airway donor-adjusted sensitivity",
+    "hypothesis": "The direction and substantial dexamethasone response persist across low-count filtering, size-factor estimation and independent filtering.",
+    "base_plan_id": "441223e5a9f44222a64a976e292f70ae",
+    "base_plan_hash": "aac05b343d5c52d13ebc5d5991b8b5027bce7e2ea2696895fef417b26f5b2d36",
+    "input_hash": "1482bd8c21c9e52ae8e37f7c7730b0355cecc481332845ab36e705ffdaeb7eb3",
+    "adapter_sha256": "1d9a6df01b663589499503cb1a9c3452921c5ceae07453e33ba8445d9ed96aa6",
+    "image_id": "sha256:1832e8a44c3c2e8ebdf9e33b26e30fd721ce3d67fe33eee1b3607b562d233f13",
+    "axes": {
+      "independent_filtering": [
+        true,
+        false
+      ],
+      "min_total_count": [
+        2,
+        10
+      ],
+      "size_factor": [
+        "ratio",
+        "poscounts"
+      ]
+    },
+    "matrix": [
+      {
+        "independent_filtering": true,
+        "min_total_count": 2,
+        "size_factor": "ratio"
+      },
+      {
+        "independent_filtering": true,
+        "min_total_count": 2,
+        "size_factor": "poscounts"
+      },
+      {
+        "independent_filtering": true,
+        "min_total_count": 10,
+        "size_factor": "ratio"
+      },
+      {
+        "independent_filtering": true,
+        "min_total_count": 10,
+        "size_factor": "poscounts"
+      },
+      {
+        "independent_filtering": false,
+        "min_total_count": 2,
+        "size_factor": "ratio"
+      },
+      {
+        "independent_filtering": false,
+        "min_total_count": 2,
+        "size_factor": "poscounts"
+      },
+      {
+        "independent_filtering": false,
+        "min_total_count": 10,
+        "size_factor": "ratio"
+      },
+      {
+        "independent_filtering": false,
+        "min_total_count": 10,
+        "size_factor": "poscounts"
+      }
+    ],
+    "min_abs_log2fc": 1.0,
+    "alpha": 0.05,
+    "limits": {
+      "wall_seconds": 600,
+      "memory_mib": 4096,
+      "cpu": 2
+    },
+    "multiplicity": "BY across every input gene and preregistered variant; missing tests count as P=1",
+    "robustness_rule": "All planned variants completed, estimated in every variant, consistent sign, minimum absolute log2 fold change reached, and every family-adjusted P below alpha",
+    "registered_by": "local",
+    "registered_at": 1789188757.0304189,
+    "protocol_hash": "f8b7274d5e5bfc96ff1a85932e2f9584e1de1f7d4621ad17b90a416c82dfdb8c",
+    "request_hash": "14dbabffb47cee2df1eae545619693ea306452493665c065770253eb8756cbe4"
+  },
+  "reference_run_id": "3f4459d3e99247e58a1aec3cdaa41a9b",
+  "reference_comparison": {
+    "status": "mismatch",
+    "checks": [
+      {
+        "key": "input_genes",
+        "expected": 64102,
+        "basis": "Love v1 PDF page 14",
+        "kind": "published",
+        "document": "airway2015.pdf",
+        "page": 14,
+        "actual": 64102,
+        "passed": true
+      },
+      {
+        "key": "samples",
+        "expected": 8,
+        "basis": "Love v1 PDF page 14",
+        "kind": "published",
+        "document": "airway2015.pdf",
+        "page": 14,
+        "actual": 8,
+        "passed": true
+      },
+      {
+        "key": "retained_genes",
+        "expected": 29391,
+        "basis": "Love v1 PDF page 14",
+        "kind": "published",
+        "document": "airway2015.pdf",
+        "page": 14,
+        "when": {
+          "min_total_count": 2,
+          "size_factor": "ratio",
+          "independent_filtering": true,
+          "beta_prior": true,
+          "fdr": 0.1
+        },
+        "actual": 29391,
+        "passed": true
+      },
+      {
+        "key": "significant_genes",
+        "expected": 4897,
+        "basis": "Love v1 PDF page 23",
+        "kind": "published",
+        "document": "airway2015.pdf",
+        "page": 23,
+        "when": {
+          "min_total_count": 2,
+          "size_factor": "ratio",
+          "independent_filtering": true,
+          "beta_prior": true,
+          "fdr": 0.1
+        },
+        "actual": 4822,
+        "passed": false
+      },
+      {
+        "key": "up",
+        "expected": 2647,
+        "basis": "Love v1 PDF page 22",
+        "kind": "published",
+        "document": "airway2015.pdf",
+        "page": 22,
+        "when": {
+          "min_total_count": 2,
+          "size_factor": "ratio",
+          "independent_filtering": true,
+          "beta_prior": true,
+          "fdr": 0.1
+        },
+        "actual": 2617,
+        "passed": false
+      },
+      {
+        "key": "down",
+        "expected": 2250,
+        "basis": "Love v1 PDF page 22",
+        "kind": "published",
+        "document": "airway2015.pdf",
+        "page": 22,
+        "when": {
+          "min_total_count": 2,
+          "size_factor": "ratio",
+          "independent_filtering": true,
+          "beta_prior": true,
+          "fdr": 0.1
+        },
+        "actual": 2205,
+        "passed": false
+      },
+      {
+        "key": "pvalue_genes",
+        "expected": 29391,
+        "basis": "Love v1 PDF page 23",
+        "kind": "published",
+        "document": "airway2015.pdf",
+        "page": 23,
+        "when": {
+          "min_total_count": 2,
+          "size_factor": "ratio",
+          "independent_filtering": true,
+          "beta_prior": true,
+          "fdr": 0.1
+        },
+        "actual": 29391,
+        "passed": true
+      },
+      {
+        "key": "input_genes",
+        "expected": 64102,
+        "actual": 64102,
+        "passed": true,
+        "kind": "input_integrity",
+        "basis": "Validated immutable uploaded inputs"
+      },
+      {
+        "key": "samples",
+        "expected": 8,
+        "actual": 8,
+        "passed": true,
+        "kind": "input_integrity",
+        "basis": "Validated immutable uploaded inputs"
+      },
+      {
+        "key": "all_zero_genes",
+        "expected": 30633,
+        "actual": 30633,
+        "passed": true,
+        "kind": "input_integrity",
+        "basis": "Validated immutable uploaded inputs"
+      },
+      {
+        "key": "library_sizes",
+        "expected": {
+          "SRR1039508": 20637971,
+          "SRR1039509": 18809481,
+          "SRR1039512": 25348649,
+          "SRR1039513": 15163415,
+          "SRR1039516": 24448408,
+          "SRR1039517": 30818215,
+          "SRR1039520": 19126151,
+          "SRR1039521": 21164133
+        },
+        "actual": {
+          "SRR1039508": 20637971,
+          "SRR1039509": 18809481,
+          "SRR1039512": 25348649,
+          "SRR1039513": 15163415,
+          "SRR1039516": 24448408,
+          "SRR1039517": 30818215,
+          "SRR1039520": 19126151,
+          "SRR1039521": 21164133
+        },
+        "passed": true,
+        "kind": "input_integrity",
+        "basis": "Validated immutable uploaded inputs"
+      }
+    ],
+    "limitations": [
+      "Counts and sample identities match the historical airway package. DESeq2 1.38.3 replaces 1.8.1, including changes in independent filtering and numerical fitting.",
+      "The paper reports selected gene examples and aggregate results. Fresh-run consistency is evaluated separately."
+    ],
+    "claim": "Checked observables only",
+    "metrics": {
+      "schema_version": 1,
+      "dataset_id": "airway2015",
+      "recipe": "deseq2",
+      "input_genes": 64102,
+      "samples": 8,
+      "all_zero_genes": 30633,
+      "retained_genes": 29391,
+      "library_sizes": {
+        "SRR1039508": 20637971,
+        "SRR1039509": 18809481,
+        "SRR1039512": 25348649,
+        "SRR1039513": 15163415,
+        "SRR1039516": 24448408,
+        "SRR1039517": 30818215,
+        "SRR1039520": 19126151,
+        "SRR1039521": 21164133
+      },
+      "parameters": {
+        "beta_prior": true,
+        "fdr": 0.1,
+        "independent_filtering": true,
+        "min_total_count": 2,
+        "seed": 1,
+        "size_factor": "ratio"
+      },
+      "design": "~ donor + condition",
+      "contrast": "treated versus control",
+      "normalization": "ratio",
+      "multiple_testing": "Benjamini-Hochberg within the independently filtered tested universe",
+      "pvalue_genes": 29391,
+      "tested_genes": 17994,
+      "independent_filtered": 11397,
+      "cook_outliers": 0,
+      "significant_genes": 4822,
+      "up": 2617,
+      "down": 2205,
+      "size_factors": {
+        "SRR1039508": 1.02364764926706,
+        "SRR1039509": 0.896166721793923,
+        "SRR1039512": 1.17948612081678,
+        "SRR1039513": 0.670053829048202,
+        "SRR1039516": 1.17767135405022,
+        "SRR1039517": 1.39903646915342,
+        "SRR1039520": 0.920778683328161,
+        "SRR1039521": 0.944514089340919
+      },
+      "filter_threshold": 4.55887911741645,
+      "dispersion_fit": "parametric",
+      "fold_change_estimator": "normal-prior MAP"
+    }
+  },
+  "input_validation_failure": {
+    "revision": 7,
+    "issues": [
+      "Sample alignment must be an exact bijection; missing=['SRR1039521'], extra=['SRR1039599']"
+    ]
+  },
+  "reference_replay": {
+    "image_id": "sha256:5153d01f0c7c7f02ad052a6f038970e8f3e8ab6a5e20a5c5ef2292c88a2b8918",
+    "original_image_id": "sha256:1832e8a44c3c2e8ebdf9e33b26e30fd721ce3d67fe33eee1b3607b562d233f13",
+    "checks": {
+      "metrics.json": true,
+      "design.tsv": true,
+      "genes.tsv": true,
+      "normalized-counts.tsv": true,
+      "samples.tsv": true,
+      "effects.tsv": true
+    },
+    "same_numeric_bytes": true,
+    "scope": "Fresh bundle rerun; image rebuild may have different build metadata"
+  },
+  "family_variant_replay": {
+    "image_id": "sha256:f3db04951bc9d2d378c12e55d9b40168b6a8e13b7204863e7a3a1ddebb25a71c",
+    "original_image_id": "sha256:1832e8a44c3c2e8ebdf9e33b26e30fd721ce3d67fe33eee1b3607b562d233f13",
+    "checks": {
+      "metrics.json": true,
+      "design.tsv": true,
+      "genes.tsv": true,
+      "normalized-counts.tsv": true,
+      "samples.tsv": true,
+      "effects.tsv": true
+    },
+    "same_numeric_bytes": true,
+    "scope": "Fresh bundle rerun; image rebuild may have different build metadata"
+  },
+  "variants": [
+    {
+      "ordinal": 1,
+      "state": "succeeded",
+      "run_id": "60039d4d4b8d4c1f9ff57cbae4662832",
+      "parameters": {
+        "independent_filtering": true,
+        "min_total_count": 2,
+        "size_factor": "ratio"
+      },
+      "metrics": {
+        "schema_version": 1,
+        "dataset_id": "import_a77fcf543c97400a8d9cf9f425ec7eaf",
+        "recipe": "deseq2",
+        "input_genes": 64102,
+        "samples": 8,
+        "all_zero_genes": 30633,
+        "retained_genes": 29391,
+        "library_sizes": {
+          "SRR1039508": 20637971,
+          "SRR1039509": 18809481,
+          "SRR1039512": 25348649,
+          "SRR1039513": 15163415,
+          "SRR1039516": 24448408,
+          "SRR1039517": 30818215,
+          "SRR1039520": 19126151,
+          "SRR1039521": 21164133
+        },
+        "parameters": {
+          "beta_prior": true,
+          "fdr": 0.1,
+          "independent_filtering": true,
+          "min_total_count": 2,
+          "seed": 1,
+          "size_factor": "ratio"
+        },
+        "design": "~ donor + condition",
+        "contrast": "treated versus control",
+        "normalization": "ratio",
+        "multiple_testing": "Benjamini-Hochberg within the independently filtered tested universe",
+        "pvalue_genes": 29391,
+        "tested_genes": 17994,
+        "independent_filtered": 11397,
+        "cook_outliers": 0,
+        "significant_genes": 4822,
+        "up": 2617,
+        "down": 2205,
+        "size_factors": {
+          "SRR1039508": 1.02364764926706,
+          "SRR1039509": 0.896166721793923,
+          "SRR1039512": 1.17948612081678,
+          "SRR1039513": 0.670053829048202,
+          "SRR1039516": 1.17767135405022,
+          "SRR1039517": 1.39903646915342,
+          "SRR1039520": 0.920778683328161,
+          "SRR1039521": 0.944514089340919
+        },
+        "filter_threshold": 4.55887911741645,
+        "dispersion_fit": "parametric",
+        "fold_change_estimator": "normal-prior MAP"
+      },
+      "artifacts": {
+        "Dockerfile": {
+          "sha256": "5bbcb2a2cfd67ff16e3c4f5728371d000fd046b6e65e722f193d38824966e346",
+          "bytes": 910
+        },
+        "design.tsv": {
+          "sha256": "e59e864f9b240fdc6553a495f48a98114393ea429d99515043564b8340df8172",
+          "bytes": 236
+        },
+        "effects.tsv": {
+          "sha256": "15147886007a441cd7f4b575d8eff328ca917d805a02ee0f25b4c5cfd2f0fd33",
+          "bytes": 5719153
+        },
+        "entrypoint.sh": {
+          "sha256": "8d0afd1db4f9ee48a50d615d8f3f5fad53ede3147c6f73a7a3ebb7c60585a1de",
+          "bytes": 516
+        },
+        "exit-code": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "figure.png": {
+          "sha256": "95debf191cdd9028511ea8af7284e2d35e349611c89f90cdd13876da0b246a42",
+          "bytes": 56043
+        },
+        "genes.tsv": {
+          "sha256": "d2e7b3b710dc16bc41dc432ddae0abb2fef5f9addd3b8513e91dd55c850d0fa5",
+          "bytes": 1377369
+        },
+        "inputs.tar": {
+          "sha256": "c20f9e9c74e65ba4c02ef9dcdd52009c14194d020a7498c07f01533b4e94d124",
+          "bytes": 2304000
+        },
+        "locked-packages.json": {
+          "sha256": "c75577bcaa4f4f568bd04d6920564c187c0d7bcafbd78e2088f1db153453c8c6",
+          "bytes": 555
+        },
+        "metrics.json": {
+          "sha256": "27c95923c45f76b6127341ddf8984350fecd2df1eb67a98511ef6dedce33450c",
+          "bytes": 1414
+        },
+        "normalized-counts.tsv": {
+          "sha256": "e84c58e9687d3dc3cb0723bdbdb99d8360b626a4e1df4a549596d19ff8a5808a",
+          "bytes": 5001160
+        },
+        "recipe.R": {
+          "sha256": "3fa262f957a72a44d72e89c3e5cb4986bab809bbaef1330d053a10d8cf47602b",
+          "bytes": 5014
+        },
+        "samples.tsv": {
+          "sha256": "5baf8789dad6207c5d84fc06fa83830fd83535276aa2e5bf816d7f187bb56dee",
+          "bytes": 564
+        },
+        "session.txt": {
+          "sha256": "75480f8d0fb309de8663edf51cf92e1ef8fe03041ede1322b0b67996398af7e5",
+          "bytes": 2095
+        },
+        "stderr.log": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stdout.log": {
+          "sha256": "8fa6464a753b91b7eb8155ab7b9816b605da5557c433376a1ed07c718f61b774",
+          "bytes": 84
+        },
+        "system-packages.tsv": {
+          "sha256": "de0564a3953d7d09f99c9fa087ff353dc120c801851569f5e2d6ee81b28370e3",
+          "bytes": 6278
+        }
+      }
+    },
+    {
+      "ordinal": 2,
+      "state": "succeeded",
+      "run_id": "71f5a2fc844e43d3a47c7c778e35716d",
+      "parameters": {
+        "independent_filtering": true,
+        "min_total_count": 2,
+        "size_factor": "poscounts"
+      },
+      "metrics": {
+        "schema_version": 1,
+        "dataset_id": "import_a77fcf543c97400a8d9cf9f425ec7eaf",
+        "recipe": "deseq2",
+        "input_genes": 64102,
+        "samples": 8,
+        "all_zero_genes": 30633,
+        "retained_genes": 29391,
+        "library_sizes": {
+          "SRR1039508": 20637971,
+          "SRR1039509": 18809481,
+          "SRR1039512": 25348649,
+          "SRR1039513": 15163415,
+          "SRR1039516": 24448408,
+          "SRR1039517": 30818215,
+          "SRR1039520": 19126151,
+          "SRR1039521": 21164133
+        },
+        "parameters": {
+          "beta_prior": true,
+          "fdr": 0.1,
+          "independent_filtering": true,
+          "min_total_count": 2,
+          "seed": 1,
+          "size_factor": "poscounts"
+        },
+        "design": "~ donor + condition",
+        "contrast": "treated versus control",
+        "normalization": "poscounts",
+        "multiple_testing": "Benjamini-Hochberg within the independently filtered tested universe",
+        "pvalue_genes": 29391,
+        "tested_genes": 18564,
+        "independent_filtered": 10827,
+        "cook_outliers": 0,
+        "significant_genes": 4714,
+        "up": 2360,
+        "down": 2354,
+        "size_factors": {
+          "SRR1039508": 1.0017824218349,
+          "SRR1039509": 0.906572363007984,
+          "SRR1039512": 1.15908175938337,
+          "SRR1039513": 0.686281669853792,
+          "SRR1039516": 1.16018620356109,
+          "SRR1039517": 1.37104881458026,
+          "SRR1039520": 0.923919592632808,
+          "SRR1039521": 0.941874102600155
+        },
+        "filter_threshold": 3.72967371197831,
+        "dispersion_fit": "parametric",
+        "fold_change_estimator": "normal-prior MAP"
+      },
+      "artifacts": {
+        "Dockerfile": {
+          "sha256": "5bbcb2a2cfd67ff16e3c4f5728371d000fd046b6e65e722f193d38824966e346",
+          "bytes": 910
+        },
+        "design.tsv": {
+          "sha256": "e59e864f9b240fdc6553a495f48a98114393ea429d99515043564b8340df8172",
+          "bytes": 236
+        },
+        "effects.tsv": {
+          "sha256": "f0cfaf7a8501b3036ec8cdf258496224a9af44433f6fac6e2df93415d409bbf9",
+          "bytes": 5718338
+        },
+        "entrypoint.sh": {
+          "sha256": "8d0afd1db4f9ee48a50d615d8f3f5fad53ede3147c6f73a7a3ebb7c60585a1de",
+          "bytes": 516
+        },
+        "exit-code": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "figure.png": {
+          "sha256": "76f770b114953f3844435f2302a57f217689a8b77295b24d1fad006530532a35",
+          "bytes": 56600
+        },
+        "genes.tsv": {
+          "sha256": "d2e7b3b710dc16bc41dc432ddae0abb2fef5f9addd3b8513e91dd55c850d0fa5",
+          "bytes": 1377369
+        },
+        "inputs.tar": {
+          "sha256": "2813f9290026729ddc274d9099daa0312f516986eedd35615d4e79c18fb8e450",
+          "bytes": 2304000
+        },
+        "locked-packages.json": {
+          "sha256": "c75577bcaa4f4f568bd04d6920564c187c0d7bcafbd78e2088f1db153453c8c6",
+          "bytes": 555
+        },
+        "metrics.json": {
+          "sha256": "c0b3ca1620dca1679f0310583c18f10b65d881005a2eb7f06b5c6f6f14f92ad9",
+          "bytes": 1421
+        },
+        "normalized-counts.tsv": {
+          "sha256": "92b72a726e3a488daace4622b2c961ffba7d23f86bbc63bf2f0dde73caa3ecef",
+          "bytes": 5019537
+        },
+        "recipe.R": {
+          "sha256": "3fa262f957a72a44d72e89c3e5cb4986bab809bbaef1330d053a10d8cf47602b",
+          "bytes": 5014
+        },
+        "samples.tsv": {
+          "sha256": "7b0c9099ca12db16723f9eff426d629583357d676ce7a930c1d55ea65135a8d8",
+          "bytes": 563
+        },
+        "session.txt": {
+          "sha256": "75480f8d0fb309de8663edf51cf92e1ef8fe03041ede1322b0b67996398af7e5",
+          "bytes": 2095
+        },
+        "stderr.log": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stdout.log": {
+          "sha256": "8fa6464a753b91b7eb8155ab7b9816b605da5557c433376a1ed07c718f61b774",
+          "bytes": 84
+        },
+        "system-packages.tsv": {
+          "sha256": "de0564a3953d7d09f99c9fa087ff353dc120c801851569f5e2d6ee81b28370e3",
+          "bytes": 6278
+        }
+      }
+    },
+    {
+      "ordinal": 3,
+      "state": "succeeded",
+      "run_id": "bfeba8680ff44296a21ebb6d66cc7ae1",
+      "parameters": {
+        "independent_filtering": true,
+        "min_total_count": 10,
+        "size_factor": "ratio"
+      },
+      "metrics": {
+        "schema_version": 1,
+        "dataset_id": "import_a77fcf543c97400a8d9cf9f425ec7eaf",
+        "recipe": "deseq2",
+        "input_genes": 64102,
+        "samples": 8,
+        "all_zero_genes": 30633,
+        "retained_genes": 22369,
+        "library_sizes": {
+          "SRR1039508": 20637971,
+          "SRR1039509": 18809481,
+          "SRR1039512": 25348649,
+          "SRR1039513": 15163415,
+          "SRR1039516": 24448408,
+          "SRR1039517": 30818215,
+          "SRR1039520": 19126151,
+          "SRR1039521": 21164133
+        },
+        "parameters": {
+          "beta_prior": true,
+          "fdr": 0.1,
+          "independent_filtering": true,
+          "min_total_count": 10,
+          "seed": 1,
+          "size_factor": "ratio"
+        },
+        "design": "~ donor + condition",
+        "contrast": "treated versus control",
+        "normalization": "ratio",
+        "multiple_testing": "Benjamini-Hochberg within the independently filtered tested universe",
+        "pvalue_genes": 22369,
+        "tested_genes": 17598,
+        "independent_filtered": 4771,
+        "cook_outliers": 0,
+        "significant_genes": 4846,
+        "up": 2628,
+        "down": 2218,
+        "size_factors": {
+          "SRR1039508": 1.02364764926706,
+          "SRR1039509": 0.896132700214058,
+          "SRR1039512": 1.17951714461297,
+          "SRR1039513": 0.670029053999327,
+          "SRR1039516": 1.17767135405022,
+          "SRR1039517": 1.39905269724417,
+          "SRR1039520": 0.920804564615845,
+          "SRR1039521": 0.944551999557116
+        },
+        "filter_threshold": 5.25085061508196,
+        "dispersion_fit": "parametric",
+        "fold_change_estimator": "normal-prior MAP"
+      },
+      "artifacts": {
+        "Dockerfile": {
+          "sha256": "5bbcb2a2cfd67ff16e3c4f5728371d000fd046b6e65e722f193d38824966e346",
+          "bytes": 910
+        },
+        "design.tsv": {
+          "sha256": "e59e864f9b240fdc6553a495f48a98114393ea429d99515043564b8340df8172",
+          "bytes": 236
+        },
+        "effects.tsv": {
+          "sha256": "a74eed184cc2d3dd0661df048a862ac0336e70c20e75948b43d3250e175e6357",
+          "bytes": 5153509
+        },
+        "entrypoint.sh": {
+          "sha256": "8d0afd1db4f9ee48a50d615d8f3f5fad53ede3147c6f73a7a3ebb7c60585a1de",
+          "bytes": 516
+        },
+        "exit-code": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "figure.png": {
+          "sha256": "145a230c75ab775b3c37cbe6314c769cbd1d01b809562ae993712bdec6bf675f",
+          "bytes": 57816
+        },
+        "genes.tsv": {
+          "sha256": "47f850e8f84d8b22acbff0bc41a7f11171d9d1114064c52ef25aeeee98178887",
+          "bytes": 1384391
+        },
+        "inputs.tar": {
+          "sha256": "7b363ee0493749005d27b8cd8ecdac2e57619c7b4b970194152d82bb37f64726",
+          "bytes": 2304000
+        },
+        "locked-packages.json": {
+          "sha256": "c75577bcaa4f4f568bd04d6920564c187c0d7bcafbd78e2088f1db153453c8c6",
+          "bytes": 555
+        },
+        "metrics.json": {
+          "sha256": "a6889737a0f406042ec32fbea819cd6b16298ea531aff949708698d4c766bc30",
+          "bytes": 1414
+        },
+        "normalized-counts.tsv": {
+          "sha256": "35b89d80db5d26a5b84010f4767c8a370ff96ea8d42169af957a96a31c7f771f",
+          "bytes": 5013960
+        },
+        "recipe.R": {
+          "sha256": "3fa262f957a72a44d72e89c3e5cb4986bab809bbaef1330d053a10d8cf47602b",
+          "bytes": 5014
+        },
+        "samples.tsv": {
+          "sha256": "9e81f0aae3c35dc4d9e83016cb931aba4f1eec0f36df224b179088ed39ad7810",
+          "bytes": 564
+        },
+        "session.txt": {
+          "sha256": "75480f8d0fb309de8663edf51cf92e1ef8fe03041ede1322b0b67996398af7e5",
+          "bytes": 2095
+        },
+        "stderr.log": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stdout.log": {
+          "sha256": "4cec6ccec7781a4ca05a5d46f4df576509bc72cbbe5d25f7528481bb95fb2e79",
+          "bytes": 84
+        },
+        "system-packages.tsv": {
+          "sha256": "de0564a3953d7d09f99c9fa087ff353dc120c801851569f5e2d6ee81b28370e3",
+          "bytes": 6278
+        }
+      }
+    },
+    {
+      "ordinal": 4,
+      "state": "succeeded",
+      "run_id": "6d499b8759a348ae9c568d99b6eea9b1",
+      "parameters": {
+        "independent_filtering": true,
+        "min_total_count": 10,
+        "size_factor": "poscounts"
+      },
+      "metrics": {
+        "schema_version": 1,
+        "dataset_id": "import_a77fcf543c97400a8d9cf9f425ec7eaf",
+        "recipe": "deseq2",
+        "input_genes": 64102,
+        "samples": 8,
+        "all_zero_genes": 30633,
+        "retained_genes": 22369,
+        "library_sizes": {
+          "SRR1039508": 20637971,
+          "SRR1039509": 18809481,
+          "SRR1039512": 25348649,
+          "SRR1039513": 15163415,
+          "SRR1039516": 24448408,
+          "SRR1039517": 30818215,
+          "SRR1039520": 19126151,
+          "SRR1039521": 21164133
+        },
+        "parameters": {
+          "beta_prior": true,
+          "fdr": 0.1,
+          "independent_filtering": true,
+          "min_total_count": 10,
+          "seed": 1,
+          "size_factor": "poscounts"
+        },
+        "design": "~ donor + condition",
+        "contrast": "treated versus control",
+        "normalization": "poscounts",
+        "multiple_testing": "Benjamini-Hochberg within the independently filtered tested universe",
+        "pvalue_genes": 22369,
+        "tested_genes": 17598,
+        "independent_filtered": 4771,
+        "cook_outliers": 0,
+        "significant_genes": 4865,
+        "up": 2680,
+        "down": 2185,
+        "size_factors": {
+          "SRR1039508": 1.01864970319768,
+          "SRR1039509": 0.89055404077143,
+          "SRR1039512": 1.17623668144387,
+          "SRR1039513": 0.667985104128674,
+          "SRR1039516": 1.17547735138324,
+          "SRR1039517": 1.38866123990321,
+          "SRR1039520": 0.917259688348228,
+          "SRR1039521": 0.937023482063828
+        },
+        "filter_threshold": 5.27315184196819,
+        "dispersion_fit": "parametric",
+        "fold_change_estimator": "normal-prior MAP"
+      },
+      "artifacts": {
+        "Dockerfile": {
+          "sha256": "5bbcb2a2cfd67ff16e3c4f5728371d000fd046b6e65e722f193d38824966e346",
+          "bytes": 910
+        },
+        "design.tsv": {
+          "sha256": "e59e864f9b240fdc6553a495f48a98114393ea429d99515043564b8340df8172",
+          "bytes": 236
+        },
+        "effects.tsv": {
+          "sha256": "5b9563f6802656d1284ff2cb814b12fc37e2ca6ed0bfdb465e1d2d3c73a21993",
+          "bytes": 5153651
+        },
+        "entrypoint.sh": {
+          "sha256": "8d0afd1db4f9ee48a50d615d8f3f5fad53ede3147c6f73a7a3ebb7c60585a1de",
+          "bytes": 516
+        },
+        "exit-code": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "figure.png": {
+          "sha256": "f0eb77b889322169b839db56733a736e36d69881c617d55b5f5994ee697627cd",
+          "bytes": 57903
+        },
+        "genes.tsv": {
+          "sha256": "47f850e8f84d8b22acbff0bc41a7f11171d9d1114064c52ef25aeeee98178887",
+          "bytes": 1384391
+        },
+        "inputs.tar": {
+          "sha256": "784522cdd98ca31ebb6dc0f3fc23ebbf217489446c151afb36605ae4c425a5b7",
+          "bytes": 2304000
+        },
+        "locked-packages.json": {
+          "sha256": "c75577bcaa4f4f568bd04d6920564c187c0d7bcafbd78e2088f1db153453c8c6",
+          "bytes": 555
+        },
+        "metrics.json": {
+          "sha256": "6f798d1c9dec0dedba713deb9de06c417a6594def90daaa562c190dd59df7eda",
+          "bytes": 1421
+        },
+        "normalized-counts.tsv": {
+          "sha256": "f548e6d6e5c47bd98f5a0312a47afcc9a9ea6e5e1363b4ee4692b0de5b8c2f3d",
+          "bytes": 5000333
+        },
+        "recipe.R": {
+          "sha256": "3fa262f957a72a44d72e89c3e5cb4986bab809bbaef1330d053a10d8cf47602b",
+          "bytes": 5014
+        },
+        "samples.tsv": {
+          "sha256": "4c3e16146c5d5ec67e4dfe049e98cbd784b1aad7b613c1a7fb81016a56e460cf",
+          "bytes": 563
+        },
+        "session.txt": {
+          "sha256": "75480f8d0fb309de8663edf51cf92e1ef8fe03041ede1322b0b67996398af7e5",
+          "bytes": 2095
+        },
+        "stderr.log": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stdout.log": {
+          "sha256": "4cec6ccec7781a4ca05a5d46f4df576509bc72cbbe5d25f7528481bb95fb2e79",
+          "bytes": 84
+        },
+        "system-packages.tsv": {
+          "sha256": "de0564a3953d7d09f99c9fa087ff353dc120c801851569f5e2d6ee81b28370e3",
+          "bytes": 6278
+        }
+      }
+    },
+    {
+      "ordinal": 5,
+      "state": "succeeded",
+      "run_id": "019baa3ec3b940e580e3534b7dedf372",
+      "parameters": {
+        "independent_filtering": false,
+        "min_total_count": 2,
+        "size_factor": "ratio"
+      },
+      "metrics": {
+        "schema_version": 1,
+        "dataset_id": "import_a77fcf543c97400a8d9cf9f425ec7eaf",
+        "recipe": "deseq2",
+        "input_genes": 64102,
+        "samples": 8,
+        "all_zero_genes": 30633,
+        "retained_genes": 29391,
+        "library_sizes": {
+          "SRR1039508": 20637971,
+          "SRR1039509": 18809481,
+          "SRR1039512": 25348649,
+          "SRR1039513": 15163415,
+          "SRR1039516": 24448408,
+          "SRR1039517": 30818215,
+          "SRR1039520": 19126151,
+          "SRR1039521": 21164133
+        },
+        "parameters": {
+          "beta_prior": true,
+          "fdr": 0.1,
+          "independent_filtering": false,
+          "min_total_count": 2,
+          "seed": 1,
+          "size_factor": "ratio"
+        },
+        "design": "~ donor + condition",
+        "contrast": "treated versus control",
+        "normalization": "ratio",
+        "multiple_testing": "Benjamini-Hochberg within the independently filtered tested universe",
+        "pvalue_genes": 29391,
+        "tested_genes": 29391,
+        "independent_filtered": 0,
+        "cook_outliers": 0,
+        "significant_genes": 4230,
+        "up": 2324,
+        "down": 1906,
+        "size_factors": {
+          "SRR1039508": 1.02364764926706,
+          "SRR1039509": 0.896166721793923,
+          "SRR1039512": 1.17948612081678,
+          "SRR1039513": 0.670053829048202,
+          "SRR1039516": 1.17767135405022,
+          "SRR1039517": 1.39903646915342,
+          "SRR1039520": 0.920778683328161,
+          "SRR1039521": 0.944514089340919
+        },
+        "filter_threshold": 0,
+        "dispersion_fit": "parametric",
+        "fold_change_estimator": "normal-prior MAP"
+      },
+      "artifacts": {
+        "Dockerfile": {
+          "sha256": "5bbcb2a2cfd67ff16e3c4f5728371d000fd046b6e65e722f193d38824966e346",
+          "bytes": 910
+        },
+        "design.tsv": {
+          "sha256": "e59e864f9b240fdc6553a495f48a98114393ea429d99515043564b8340df8172",
+          "bytes": 236
+        },
+        "effects.tsv": {
+          "sha256": "382d2f63d185426e8b7fca2c0e86772ba43c443fb07d585bd1c14138fc975964",
+          "bytes": 5707190
+        },
+        "entrypoint.sh": {
+          "sha256": "8d0afd1db4f9ee48a50d615d8f3f5fad53ede3147c6f73a7a3ebb7c60585a1de",
+          "bytes": 516
+        },
+        "exit-code": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "figure.png": {
+          "sha256": "db912998fca07451247056a5a79938bfbf7b7650feedb5b20fcb553789b50c18",
+          "bytes": 56325
+        },
+        "genes.tsv": {
+          "sha256": "d2e7b3b710dc16bc41dc432ddae0abb2fef5f9addd3b8513e91dd55c850d0fa5",
+          "bytes": 1377369
+        },
+        "inputs.tar": {
+          "sha256": "9ac19f8541c158abc11e3b42279cef4a2d78168e14f86643582381eb0b59dd23",
+          "bytes": 2304000
+        },
+        "locked-packages.json": {
+          "sha256": "c75577bcaa4f4f568bd04d6920564c187c0d7bcafbd78e2088f1db153453c8c6",
+          "bytes": 555
+        },
+        "metrics.json": {
+          "sha256": "0e02f2bdb3ea1ed355e82d678d7f9cdf211e515296f67594102aa5b6b402262a",
+          "bytes": 1396
+        },
+        "normalized-counts.tsv": {
+          "sha256": "e84c58e9687d3dc3cb0723bdbdb99d8360b626a4e1df4a549596d19ff8a5808a",
+          "bytes": 5001160
+        },
+        "recipe.R": {
+          "sha256": "3fa262f957a72a44d72e89c3e5cb4986bab809bbaef1330d053a10d8cf47602b",
+          "bytes": 5014
+        },
+        "samples.tsv": {
+          "sha256": "5baf8789dad6207c5d84fc06fa83830fd83535276aa2e5bf816d7f187bb56dee",
+          "bytes": 564
+        },
+        "session.txt": {
+          "sha256": "75480f8d0fb309de8663edf51cf92e1ef8fe03041ede1322b0b67996398af7e5",
+          "bytes": 2095
+        },
+        "stderr.log": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stdout.log": {
+          "sha256": "8fa6464a753b91b7eb8155ab7b9816b605da5557c433376a1ed07c718f61b774",
+          "bytes": 84
+        },
+        "system-packages.tsv": {
+          "sha256": "de0564a3953d7d09f99c9fa087ff353dc120c801851569f5e2d6ee81b28370e3",
+          "bytes": 6278
+        }
+      }
+    },
+    {
+      "ordinal": 6,
+      "state": "succeeded",
+      "run_id": "da9b894f68434beeaaea14c5c56a654c",
+      "parameters": {
+        "independent_filtering": false,
+        "min_total_count": 2,
+        "size_factor": "poscounts"
+      },
+      "metrics": {
+        "schema_version": 1,
+        "dataset_id": "import_a77fcf543c97400a8d9cf9f425ec7eaf",
+        "recipe": "deseq2",
+        "input_genes": 64102,
+        "samples": 8,
+        "all_zero_genes": 30633,
+        "retained_genes": 29391,
+        "library_sizes": {
+          "SRR1039508": 20637971,
+          "SRR1039509": 18809481,
+          "SRR1039512": 25348649,
+          "SRR1039513": 15163415,
+          "SRR1039516": 24448408,
+          "SRR1039517": 30818215,
+          "SRR1039520": 19126151,
+          "SRR1039521": 21164133
+        },
+        "parameters": {
+          "beta_prior": true,
+          "fdr": 0.1,
+          "independent_filtering": false,
+          "min_total_count": 2,
+          "seed": 1,
+          "size_factor": "poscounts"
+        },
+        "design": "~ donor + condition",
+        "contrast": "treated versus control",
+        "normalization": "poscounts",
+        "multiple_testing": "Benjamini-Hochberg within the independently filtered tested universe",
+        "pvalue_genes": 29391,
+        "tested_genes": 29391,
+        "independent_filtered": 0,
+        "cook_outliers": 0,
+        "significant_genes": 4155,
+        "up": 2100,
+        "down": 2055,
+        "size_factors": {
+          "SRR1039508": 1.0017824218349,
+          "SRR1039509": 0.906572363007984,
+          "SRR1039512": 1.15908175938337,
+          "SRR1039513": 0.686281669853792,
+          "SRR1039516": 1.16018620356109,
+          "SRR1039517": 1.37104881458026,
+          "SRR1039520": 0.923919592632808,
+          "SRR1039521": 0.941874102600155
+        },
+        "filter_threshold": 0,
+        "dispersion_fit": "parametric",
+        "fold_change_estimator": "normal-prior MAP"
+      },
+      "artifacts": {
+        "Dockerfile": {
+          "sha256": "5bbcb2a2cfd67ff16e3c4f5728371d000fd046b6e65e722f193d38824966e346",
+          "bytes": 910
+        },
+        "design.tsv": {
+          "sha256": "e59e864f9b240fdc6553a495f48a98114393ea429d99515043564b8340df8172",
+          "bytes": 236
+        },
+        "effects.tsv": {
+          "sha256": "338d944e1039c619c6dbd99611ac5977573ec945a8cbb812ddd6b6f3daae9f03",
+          "bytes": 5706838
+        },
+        "entrypoint.sh": {
+          "sha256": "8d0afd1db4f9ee48a50d615d8f3f5fad53ede3147c6f73a7a3ebb7c60585a1de",
+          "bytes": 516
+        },
+        "exit-code": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "figure.png": {
+          "sha256": "8b5320a938669d08b61ee95931d43b7c6ab81155ad7a526845122e59db65a766",
+          "bytes": 56809
+        },
+        "genes.tsv": {
+          "sha256": "d2e7b3b710dc16bc41dc432ddae0abb2fef5f9addd3b8513e91dd55c850d0fa5",
+          "bytes": 1377369
+        },
+        "inputs.tar": {
+          "sha256": "bc6b7478ea7be5e13e033118e8bb0f8925a17b092e5e7b1f06343b131b3f3646",
+          "bytes": 2304000
+        },
+        "locked-packages.json": {
+          "sha256": "c75577bcaa4f4f568bd04d6920564c187c0d7bcafbd78e2088f1db153453c8c6",
+          "bytes": 555
+        },
+        "metrics.json": {
+          "sha256": "24e8e18e4a67fa199ebdc98d99164ebc7e6eb784049139952fee3587f05c3f36",
+          "bytes": 1403
+        },
+        "normalized-counts.tsv": {
+          "sha256": "92b72a726e3a488daace4622b2c961ffba7d23f86bbc63bf2f0dde73caa3ecef",
+          "bytes": 5019537
+        },
+        "recipe.R": {
+          "sha256": "3fa262f957a72a44d72e89c3e5cb4986bab809bbaef1330d053a10d8cf47602b",
+          "bytes": 5014
+        },
+        "samples.tsv": {
+          "sha256": "7b0c9099ca12db16723f9eff426d629583357d676ce7a930c1d55ea65135a8d8",
+          "bytes": 563
+        },
+        "session.txt": {
+          "sha256": "75480f8d0fb309de8663edf51cf92e1ef8fe03041ede1322b0b67996398af7e5",
+          "bytes": 2095
+        },
+        "stderr.log": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stdout.log": {
+          "sha256": "8fa6464a753b91b7eb8155ab7b9816b605da5557c433376a1ed07c718f61b774",
+          "bytes": 84
+        },
+        "system-packages.tsv": {
+          "sha256": "de0564a3953d7d09f99c9fa087ff353dc120c801851569f5e2d6ee81b28370e3",
+          "bytes": 6278
+        }
+      }
+    },
+    {
+      "ordinal": 7,
+      "state": "succeeded",
+      "run_id": "f87d23de81a24db8b89143e5c8c56ceb",
+      "parameters": {
+        "independent_filtering": false,
+        "min_total_count": 10,
+        "size_factor": "ratio"
+      },
+      "metrics": {
+        "schema_version": 1,
+        "dataset_id": "import_a77fcf543c97400a8d9cf9f425ec7eaf",
+        "recipe": "deseq2",
+        "input_genes": 64102,
+        "samples": 8,
+        "all_zero_genes": 30633,
+        "retained_genes": 22369,
+        "library_sizes": {
+          "SRR1039508": 20637971,
+          "SRR1039509": 18809481,
+          "SRR1039512": 25348649,
+          "SRR1039513": 15163415,
+          "SRR1039516": 24448408,
+          "SRR1039517": 30818215,
+          "SRR1039520": 19126151,
+          "SRR1039521": 21164133
+        },
+        "parameters": {
+          "beta_prior": true,
+          "fdr": 0.1,
+          "independent_filtering": false,
+          "min_total_count": 10,
+          "seed": 1,
+          "size_factor": "ratio"
+        },
+        "design": "~ donor + condition",
+        "contrast": "treated versus control",
+        "normalization": "ratio",
+        "multiple_testing": "Benjamini-Hochberg within the independently filtered tested universe",
+        "pvalue_genes": 22369,
+        "tested_genes": 22369,
+        "independent_filtered": 0,
+        "cook_outliers": 0,
+        "significant_genes": 4567,
+        "up": 2497,
+        "down": 2070,
+        "size_factors": {
+          "SRR1039508": 1.02364764926706,
+          "SRR1039509": 0.896132700214058,
+          "SRR1039512": 1.17951714461297,
+          "SRR1039513": 0.670029053999327,
+          "SRR1039516": 1.17767135405022,
+          "SRR1039517": 1.39905269724417,
+          "SRR1039520": 0.920804564615845,
+          "SRR1039521": 0.944551999557116
+        },
+        "filter_threshold": 0,
+        "dispersion_fit": "parametric",
+        "fold_change_estimator": "normal-prior MAP"
+      },
+      "artifacts": {
+        "Dockerfile": {
+          "sha256": "5bbcb2a2cfd67ff16e3c4f5728371d000fd046b6e65e722f193d38824966e346",
+          "bytes": 910
+        },
+        "design.tsv": {
+          "sha256": "e59e864f9b240fdc6553a495f48a98114393ea429d99515043564b8340df8172",
+          "bytes": 236
+        },
+        "effects.tsv": {
+          "sha256": "ffe20c2c1573770b5f3cf7dce3a132e22f486ce5dbab88db67675855bf510cc1",
+          "bytes": 5147859
+        },
+        "entrypoint.sh": {
+          "sha256": "8d0afd1db4f9ee48a50d615d8f3f5fad53ede3147c6f73a7a3ebb7c60585a1de",
+          "bytes": 516
+        },
+        "exit-code": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "figure.png": {
+          "sha256": "c91a5ab86b076f5afb5e357620aaefbcccc4eb6f7126e49cd4fab9c0e5c6022c",
+          "bytes": 57842
+        },
+        "genes.tsv": {
+          "sha256": "47f850e8f84d8b22acbff0bc41a7f11171d9d1114064c52ef25aeeee98178887",
+          "bytes": 1384391
+        },
+        "inputs.tar": {
+          "sha256": "89d8fcdae8dc2db8a3c993a8a2cd6f8223b0e684cd4d4a0f908c1427c5c03a1e",
+          "bytes": 2304000
+        },
+        "locked-packages.json": {
+          "sha256": "c75577bcaa4f4f568bd04d6920564c187c0d7bcafbd78e2088f1db153453c8c6",
+          "bytes": 555
+        },
+        "metrics.json": {
+          "sha256": "6348c89d805a2494e8b473bdd61d1d8fbc31c22b092d04ad4439e5ae2e5004d7",
+          "bytes": 1397
+        },
+        "normalized-counts.tsv": {
+          "sha256": "35b89d80db5d26a5b84010f4767c8a370ff96ea8d42169af957a96a31c7f771f",
+          "bytes": 5013960
+        },
+        "recipe.R": {
+          "sha256": "3fa262f957a72a44d72e89c3e5cb4986bab809bbaef1330d053a10d8cf47602b",
+          "bytes": 5014
+        },
+        "samples.tsv": {
+          "sha256": "9e81f0aae3c35dc4d9e83016cb931aba4f1eec0f36df224b179088ed39ad7810",
+          "bytes": 564
+        },
+        "session.txt": {
+          "sha256": "75480f8d0fb309de8663edf51cf92e1ef8fe03041ede1322b0b67996398af7e5",
+          "bytes": 2095
+        },
+        "stderr.log": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stdout.log": {
+          "sha256": "4cec6ccec7781a4ca05a5d46f4df576509bc72cbbe5d25f7528481bb95fb2e79",
+          "bytes": 84
+        },
+        "system-packages.tsv": {
+          "sha256": "de0564a3953d7d09f99c9fa087ff353dc120c801851569f5e2d6ee81b28370e3",
+          "bytes": 6278
+        }
+      }
+    },
+    {
+      "ordinal": 8,
+      "state": "succeeded",
+      "run_id": "c6e5cbd5f6ab4afd8597e0bbfeda3236",
+      "parameters": {
+        "independent_filtering": false,
+        "min_total_count": 10,
+        "size_factor": "poscounts"
+      },
+      "metrics": {
+        "schema_version": 1,
+        "dataset_id": "import_a77fcf543c97400a8d9cf9f425ec7eaf",
+        "recipe": "deseq2",
+        "input_genes": 64102,
+        "samples": 8,
+        "all_zero_genes": 30633,
+        "retained_genes": 22369,
+        "library_sizes": {
+          "SRR1039508": 20637971,
+          "SRR1039509": 18809481,
+          "SRR1039512": 25348649,
+          "SRR1039513": 15163415,
+          "SRR1039516": 24448408,
+          "SRR1039517": 30818215,
+          "SRR1039520": 19126151,
+          "SRR1039521": 21164133
+        },
+        "parameters": {
+          "beta_prior": true,
+          "fdr": 0.1,
+          "independent_filtering": false,
+          "min_total_count": 10,
+          "seed": 1,
+          "size_factor": "poscounts"
+        },
+        "design": "~ donor + condition",
+        "contrast": "treated versus control",
+        "normalization": "poscounts",
+        "multiple_testing": "Benjamini-Hochberg within the independently filtered tested universe",
+        "pvalue_genes": 22369,
+        "tested_genes": 22369,
+        "independent_filtered": 0,
+        "cook_outliers": 0,
+        "significant_genes": 4599,
+        "up": 2552,
+        "down": 2047,
+        "size_factors": {
+          "SRR1039508": 1.01864970319768,
+          "SRR1039509": 0.89055404077143,
+          "SRR1039512": 1.17623668144387,
+          "SRR1039513": 0.667985104128674,
+          "SRR1039516": 1.17547735138324,
+          "SRR1039517": 1.38866123990321,
+          "SRR1039520": 0.917259688348228,
+          "SRR1039521": 0.937023482063828
+        },
+        "filter_threshold": 0,
+        "dispersion_fit": "parametric",
+        "fold_change_estimator": "normal-prior MAP"
+      },
+      "artifacts": {
+        "Dockerfile": {
+          "sha256": "5bbcb2a2cfd67ff16e3c4f5728371d000fd046b6e65e722f193d38824966e346",
+          "bytes": 910
+        },
+        "design.tsv": {
+          "sha256": "e59e864f9b240fdc6553a495f48a98114393ea429d99515043564b8340df8172",
+          "bytes": 236
+        },
+        "effects.tsv": {
+          "sha256": "4cf0a3bce35dcc2934d15e5ae122749208d717d884a41af68fb0ed26483a72a4",
+          "bytes": 5147894
+        },
+        "entrypoint.sh": {
+          "sha256": "8d0afd1db4f9ee48a50d615d8f3f5fad53ede3147c6f73a7a3ebb7c60585a1de",
+          "bytes": 516
+        },
+        "exit-code": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "figure.png": {
+          "sha256": "9b376c523b668bb8eb2ea8b4451816c18c3c0e73038199ab541b9328788878fb",
+          "bytes": 57959
+        },
+        "genes.tsv": {
+          "sha256": "47f850e8f84d8b22acbff0bc41a7f11171d9d1114064c52ef25aeeee98178887",
+          "bytes": 1384391
+        },
+        "inputs.tar": {
+          "sha256": "7743661bcbf195a351a45bc5c78cf29892e8d8f6b6bdac51d94da26e7767b94d",
+          "bytes": 2304000
+        },
+        "locked-packages.json": {
+          "sha256": "c75577bcaa4f4f568bd04d6920564c187c0d7bcafbd78e2088f1db153453c8c6",
+          "bytes": 555
+        },
+        "metrics.json": {
+          "sha256": "3eb8943d8f4581e474cb40c016247e7eaa17ee461a2ff391b08ad37876e54075",
+          "bytes": 1404
+        },
+        "normalized-counts.tsv": {
+          "sha256": "f548e6d6e5c47bd98f5a0312a47afcc9a9ea6e5e1363b4ee4692b0de5b8c2f3d",
+          "bytes": 5000333
+        },
+        "recipe.R": {
+          "sha256": "3fa262f957a72a44d72e89c3e5cb4986bab809bbaef1330d053a10d8cf47602b",
+          "bytes": 5014
+        },
+        "samples.tsv": {
+          "sha256": "4c3e16146c5d5ec67e4dfe049e98cbd784b1aad7b613c1a7fb81016a56e460cf",
+          "bytes": 563
+        },
+        "session.txt": {
+          "sha256": "75480f8d0fb309de8663edf51cf92e1ef8fe03041ede1322b0b67996398af7e5",
+          "bytes": 2095
+        },
+        "stderr.log": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stdout.log": {
+          "sha256": "4cec6ccec7781a4ca05a5d46f4df576509bc72cbbe5d25f7528481bb95fb2e79",
+          "bytes": 84
+        },
+        "system-packages.tsv": {
+          "sha256": "de0564a3953d7d09f99c9fa087ff353dc120c801851569f5e2d6ee81b28370e3",
+          "bytes": 6278
+        }
+      }
+    }
+  ]
+}
