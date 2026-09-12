@@ -5,7 +5,18 @@ from sqlalchemy import func, insert, select, update
 
 from .adapters import resolve
 from .artifacts import digest
-from .database import Database, members, onboardings, plans, revisions, runs, uid, workspaces
+from .database import (
+    Database,
+    members,
+    onboardings,
+    plans,
+    revisions,
+    runs,
+    studies,
+    uid,
+    variants,
+    workspaces,
+)
 from .fixtures import SOURCES
 from .schemas import Correction, LockRequest, PlanCreate, RunCreate
 
@@ -251,6 +262,31 @@ class Service:
                 if existing["request_hash"] != req_hash:
                     raise Problem(409, "Idempotency key already used for a different request")
                 return dict(existing)
+            study_id = plan["body"].get("study_id")
+            if study_id:
+                study = (
+                    c.execute(select(studies).where(studies.c.id == study_id).with_for_update())
+                    .mappings()
+                    .one()
+                )
+                variant = (
+                    c.execute(
+                        select(variants).where(
+                            variants.c.study_id == study_id, variants.c.plan_id == plan["id"]
+                        )
+                    )
+                    .mappings()
+                    .one()
+                )
+                if study["state"] != "running":
+                    raise Problem(409, "Study is not accepting new executions")
+                if (
+                    key != f"study:{study_id}:{variant['ordinal']}"
+                    or image_id != study["body"]["image_id"]
+                    or request.limits.model_dump() != study["body"]["limits"]
+                    or request.use_cache
+                ):
+                    raise Problem(422, "Variant execution must match its preregistered protocol")
             pending = c.execute(
                 select(func.count())
                 .select_from(runs)
@@ -304,6 +340,12 @@ class Service:
                     updated=now,
                 )
             )
+            if study_id:
+                c.execute(
+                    update(variants)
+                    .where(variants.c.study_id == study_id, variants.c.plan_id == plan["id"])
+                    .values(run_id=identity)
+                )
             self.db.emit(
                 c,
                 plan["workspace_id"],

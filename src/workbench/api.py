@@ -435,6 +435,9 @@ def create_app(settings=None, docker=None):
     from .onboarding import register_onboarding
 
     register_onboarding(app, service, actor)
+    from .studies import register_studies
+
+    register_studies(app, service, actor)
     dist = ROOT / "web/dist"
     if dist.exists():
         app.mount("/", StaticFiles(directory=dist, html=True), name="web")
