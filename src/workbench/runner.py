@@ -19,6 +19,8 @@ class Docker:
         if check and r.returncode:
             raise RuntimeError(r.stderr[-2000:] or 'Docker command failed')
         return r
+    def engine_id(self):
+        return self.command(['info','--format','{{.ID}}']).stdout.strip()
     def image_id(self):
         return self.command(['image','inspect',self.settings.image,'--format','{{.Id}}']).stdout.strip()
     def inspect(self,name):
@@ -85,20 +87,23 @@ class Worker:
         self.service,self.db,self.settings=service,service.db,service.settings
         self.docker=docker or Docker(self.settings)
         self.identity=identity or 'worker-'+uid()
+        self.engine_id=self.docker.engine_id() if hasattr(self.docker,'engine_id') else 'test-runtime'
     def name(self,run):
         return f"research-{run['id']}-{run['epoch']}"
     def claim(self):
         now=time.time()
         with self.db.transaction() as c:
             q=select(runs).where(or_(runs.c.state=='queued',and_(runs.c.state.in_(['running','cancel_requested']),
-                    or_(runs.c.owner==self.identity,runs.c.lease_until < now)))).order_by(runs.c.created).limit(1).with_for_update(skip_locked=True)
+                    or_(runs.c.owner==self.identity,runs.c.lease_until < now),runs.c.body['runtime_id'].as_string()==self.engine_id))).order_by(runs.c.created).limit(1).with_for_update(skip_locked=True)
             run=c.execute(q).mappings().first()
             if not run:return None
             run=dict(run)
             queued=run['state']=='queued'
             epoch=run['epoch']+1 if queued else run['epoch']
             values={'owner':self.identity,'epoch':epoch,'lease_until':now+self.settings.lease_seconds,'updated':now}
-            if queued:values['state']='running'
+            if queued:
+                values['state']='running'
+                values['body']={**run['body'],'runtime_id':self.engine_id}
             changed=c.execute(update(runs).where(runs.c.id==run['id'],runs.c.epoch==run['epoch'],
                     runs.c.state==run['state'],runs.c.lease_until==run['lease_until']).values(**values)).rowcount
             if changed!=1:return None

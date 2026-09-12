@@ -56,7 +56,7 @@ def compare_fresh(store,left,right):
         a,b=store.read(left[name]['sha256']),store.read(right[name]['sha256'])
         if name in ('density.tsv','differential.tsv','mds.tsv','genes.tsv','samples.tsv','design.tsv','metrics.json'):
             results.append({'artifact':name,'byte_equal':a==b})
-    return {'checks':results,'same_numeric_bytes':all(x['byte_equal'] for x in results),
+    return {'checks':results,'same_numeric_bytes':bool(results) and all(x['byte_equal'] for x in results) and set(left)==set(right),
             'scope':'Fresh run artifact consistency; not independent scientific validation'}
 
 
