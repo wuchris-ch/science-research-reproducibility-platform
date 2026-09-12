@@ -1,5 +1,7 @@
+import hashlib
 import io
 import json
+import tarfile
 import zipfile
 from pathlib import PurePosixPath
 
@@ -9,8 +11,31 @@ from sqlalchemy import select
 
 from .artifacts import canonical
 from .config import ROOT
-from .database import events, revisions
+from .database import events, reviews, revisions
 from .service import Problem
+
+
+def sealed_inputs(data, dataset):
+    result = {}
+    total = 0
+    with tarfile.open(fileobj=io.BytesIO(data)) as archive:
+        for member in archive:
+            path = PurePosixPath(member.name)
+            if path.is_absolute() or ".." in path.parts:
+                raise ValueError("Unsafe sealed input path")
+            if member.isdir():
+                continue
+            total += member.size
+            if not member.isfile() or len(path.parts) != 2 or total > 30_000_000:
+                raise ValueError("Unsafe sealed input archive")
+            if path.parts[0] == dataset:
+                name = "build/data/" + str(path)
+                if name in result:
+                    raise ValueError("Duplicate sealed input")
+                result[name] = archive.extractfile(member).read()
+    if not result:
+        raise ValueError("No sealed inputs for this dataset")
+    return result
 
 
 def bundle(service, run):
@@ -25,9 +50,23 @@ def bundle(service, run):
     for name, item in run["body"]["artifacts"].items():
         add("outputs/" + name, service.store.read(item["sha256"]))
     dataset = run["body"]["plan"]["dataset_id"]
-    for path in (service.settings.data_dir / "datasets" / dataset).glob("*"):
-        if path.is_file():
-            add("build/data/" + dataset + "/" + path.name, path.read_bytes())
+    captured = run["body"]["artifacts"].get("inputs.tar")
+    reproducible = bool(captured and "recipe.R" in run["body"]["artifacts"])
+    if run["state"] == "succeeded" and not reproducible:
+        raise Problem(409, "This older run lacks sealed input files. Execute a fresh run before exporting.")
+    if captured:
+        files.update(sealed_inputs(service.store.read(captured["sha256"]), dataset))
+    add(
+        "replay-status.json",
+        canonical(
+            {
+                "reproducible": reproducible,
+                "scope": "Sealed runtime inputs"
+                if reproducible
+                else "Diagnostic bundle without complete runtime inputs",
+            }
+        ),
+    )
     for relative, name in [
         ("recipes/run.R", "build/run.R"),
         ("recipes/ADAPTATIONS.md", "ADAPTATIONS.md"),
@@ -48,18 +87,24 @@ def bundle(service, run):
     for suffix in ("xml", "json", "pdf"):
         path = service.settings.data_dir / f"sources/{dataset}.{suffix}"
         if path.exists():
-            add("source/" + path.name, path.read_bytes())
+            data = path.read_bytes()
+            if suffix == "xml" and hashlib.sha256(data).hexdigest() != run["body"]["plan"]["source_sha256"]:
+                raise Problem(
+                    409,
+                    "The source cache differs from this plan. Restore its verified source before exporting.",
+                )
+            add("source/" + path.name, data)
     with service.db.transaction() as c:
         rows = c.execute(select(revisions).where(revisions.c.plan_id == run["plan_id"])).mappings()
         add("plan-history.json", canonical([dict(row) for row in rows]))
         rows = c.execute(select(events).where(events.c.run_id == run["id"]).order_by(events.c.id)).mappings()
         add("run-events.json", canonical([dict(row) for row in rows]))
+        rows = c.execute(select(reviews).where(reviews.c.run_id == run["id"])).mappings()
+        add("reviews.json", canonical([dict(row) for row in rows]))
     add(
         "README.txt",
         b"Research Workbench result bundle\n\nRun: python3 reproduce.py --verify-only\nRerun: python3 reproduce.py --context colima-research\nRequires Python 3 and Docker. Rebuild downloads only hash-pinned R package archives.\nThe script verifies bundle hashes before execution and creates a fresh isolated container.\n\nPublic GEO counts retain source attribution and access terms. Papers are CC BY.\nSee source metadata, ADAPTATIONS.md and comparison.json for limits.\nExecution success and checked-observable agreement do not establish all conclusions of the paper.\n",
     )
-    import hashlib
-
     manifest = {
         "schema_version": 1,
         "run_id": run["id"],
@@ -76,8 +121,6 @@ def bundle(service, run):
 
 
 def verify_bundle(data: bytes):
-    import hashlib
-
     with zipfile.ZipFile(io.BytesIO(data)) as z:
         names = z.namelist()
         if len(names) != len(set(names)) or len(names) > 1000:

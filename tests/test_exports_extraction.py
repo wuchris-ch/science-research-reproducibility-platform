@@ -18,6 +18,63 @@ def test_bundle_rejects_traversal_and_unlisted_files():
             verify_bundle(data.getvalue())
 
 
+def test_sealed_inputs_preserve_bytes_and_reject_unsafe_archive_members():
+    import tarfile
+
+    from workbench.exports import sealed_inputs
+
+    def archive(name, content=b"original count data", symlink=False):
+        data = io.BytesIO()
+        with tarfile.open(fileobj=data, mode="w") as tar:
+            item = tarfile.TarInfo(name)
+            item.size = len(content)
+            if symlink:
+                item.type = tarfile.SYMTYPE
+                item.linkname = "/private/file"
+            tar.addfile(item, io.BytesIO(content))
+        return data.getvalue()
+
+    result = sealed_inputs(archive("./law2018/counts.tsv"), "law2018")
+    assert result == {"build/data/law2018/counts.tsv": b"original count data"}
+    for name in ("../law2018/counts.tsv", "/law2018/counts.tsv"):
+        with pytest.raises(ValueError):
+            sealed_inputs(archive(name), "law2018")
+    with pytest.raises(ValueError):
+        sealed_inputs(archive("law2018/counts.tsv", symlink=True), "law2018")
+    with pytest.raises(ValueError):
+        sealed_inputs(archive("chen2016/counts.tsv"), "law2018")
+
+
+def test_export_uses_executed_inputs_after_local_cache_changes(service):
+    import tarfile
+
+    from test_plans import locked
+
+    from workbench.exports import bundle
+    from workbench.schemas import RunCreate
+
+    plan = locked(service)
+    run = service.submit("alice", RunCreate(plan_id=plan["id"]), "export-inputs", "image")
+    original = b"gene\tcount\n1\t42\n"
+    archive = io.BytesIO()
+    with tarfile.open(fileobj=archive, mode="w") as tar:
+        item = tarfile.TarInfo("law2018/counts.tsv")
+        item.size = len(original)
+        tar.addfile(item, io.BytesIO(original))
+    run["state"] = "succeeded"
+    run["body"]["artifacts"] = {
+        name: {"sha256": service.store.put(data), "bytes": len(data)}
+        for name, data in {"inputs.tar": archive.getvalue(), "recipe.R": b"# executed recipe"}.items()
+    }
+    cache = service.settings.data_dir / "datasets/law2018"
+    cache.mkdir()
+    (cache / "counts.tsv").write_bytes(b"changed cached counts")
+    with zipfile.ZipFile(io.BytesIO(bundle(service, run))) as export:
+        assert export.read("build/data/law2018/counts.tsv") == original
+        assert export.read("build/run.R") == b"# executed recipe"
+        assert json.loads(export.read("replay-status.json"))["reproducible"]
+
+
 def test_extraction_requires_real_quote_and_evidence():
     source = {"segments": [{"id": "s:1", "text": "The data are GSE63310 and use TMM."}]}
     result = validate_proposals(lexical(source), source)

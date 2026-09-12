@@ -2,6 +2,7 @@
 
 import json
 import time
+import uuid
 
 from sqlalchemy import select
 
@@ -21,6 +22,7 @@ with s.db.transaction() as c:
 if not w:
     w = s.workspace("local", "Mammary transcriptomics")
 image = docker.image_id()
+verification_id = uuid.uuid4().hex
 submitted = []
 baseline = None
 for recipe, dataset, title, parameters in [
@@ -52,10 +54,10 @@ for recipe, dataset, title, parameters in [
         )
     if recipe == "density" and parameters.filter_policy == "published":
         baseline = p["id"]
-    r = s.submit("local", RunCreate(plan_id=p["id"]), f"verify-{image}-{p['id']}", image)
+    r = s.submit("local", RunCreate(plan_id=p["id"]), f"verify-{verification_id}-{p['id']}", image)
     submitted.append(r["id"])
     if p["id"] == baseline:
-        r = s.submit("local", RunCreate(plan_id=p["id"]), f"verify-fresh-{image}-{p['id']}", image)
+        r = s.submit("local", RunCreate(plan_id=p["id"]), f"verify-fresh-{verification_id}-{p['id']}", image)
         submitted.append(r["id"])
 print("Verifying", len(submitted), "fresh recipe executions", flush=True)
 deadline = time.time() + 600

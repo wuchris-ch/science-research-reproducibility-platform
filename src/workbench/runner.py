@@ -134,6 +134,14 @@ class Docker:
         if len(recipe) > 100_000:
             raise ValueError("Unexpected recipe size")
         (dest / "recipe.R").write_bytes(recipe)
+        inputs = subprocess.run(
+            self.prefix + ["exec", name, "tar", "-C", "/data", "-cf", "-", "."],
+            capture_output=True,
+            timeout=30,
+        )
+        if inputs.returncode or len(inputs.stdout) > 30_000_000:
+            raise ValueError("Runtime input capture failed or exceeded its limit")
+        (dest / "inputs.tar").write_bytes(inputs.stdout)
         for filename in ("locked-packages.json", "Dockerfile", "entrypoint.sh", "law-samples.csv"):
             result = self.command(["exec", name, "cat", "/app/" + filename], check=False)
             if result.returncode == 0:

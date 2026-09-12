@@ -29,6 +29,9 @@ def main():
     print("Verified", len(manifest["files"]), "bundle files", flush=True)
     if args.verify_only:
         return
+    replay_status = root / "replay-status.json"
+    if replay_status.exists() and not json.loads(replay_status.read_text())["reproducible"]:
+        raise ValueError("This diagnostic bundle does not contain complete sealed execution inputs")
     docker = ["docker"] + (["--context", args.context] if args.context else [])
     packages = root / "build/packages"
     packages.mkdir(exist_ok=True)
@@ -53,6 +56,8 @@ def main():
     name = "research-replay-" + uuid.uuid4().hex
     out = root / "rerun"
     out.mkdir(exist_ok=True)
+    if any(out.iterdir()):
+        raise ValueError("Rerun output directory must be empty; use a fresh extracted bundle")
     limits = json.loads((root / "run.json").read_text())["body"]["limits"]
     command = docker + [
         "create",
@@ -123,18 +128,21 @@ def main():
         if code:
             raise RuntimeError("R exited " + str(code) + ": " + (out / "stderr.log").read_text())
         checks = {}
-        for p in out.iterdir():
-            if p.suffix in (".tsv", ".json") and (root / "outputs" / p.name).exists():
-                checks[p.name] = p.read_bytes() == (root / "outputs" / p.name).read_bytes()
+        for original in (root / "outputs").iterdir():
+            if original.suffix in (".tsv", ".json"):
+                p = out / original.name
+                checks[original.name] = p.is_file() and p.read_bytes() == original.read_bytes()
         receipt = {
             "image_id": image,
             "original_image_id": json.loads((root / "run.json").read_text())["body"]["image_id"],
             "checks": checks,
-            "same_numeric_bytes": all(checks.values()),
+            "same_numeric_bytes": bool(checks) and all(checks.values()),
             "scope": "Fresh bundle rerun; image rebuild may have different build metadata",
         }
         (out / "rerun-receipt.json").write_text(json.dumps(receipt, indent=2))
         print(json.dumps(receipt, indent=2))
+        if not receipt["same_numeric_bytes"]:
+            raise RuntimeError("Fresh numerical files differ or are missing; inspect rerun-receipt.json")
     finally:
         subprocess.run(docker + ["rm", "-f", name], capture_output=True)
 

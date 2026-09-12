@@ -1,9 +1,9 @@
 {
   "checked_date": "2026-09-11",
-  "image_id": "sha256:382463699c5a44e96648f8768e7a69f7cd4019f2e9fec331c33a8e8154265df0",
+  "image_id": "sha256:970fbfeff3053b4eb85e7d7fb42164ed67b26518722fa2640e1aa6d9c75553f2",
   "runs": [
     {
-      "id": "16995656b7514688944df3d1da833556",
+      "id": "93d0d7f7eedf468fbc53c9dc9b92c368",
       "plan_id": "83a1faed6c324cf2b0be12cf1b8bd765",
       "recipe": "density",
       "dataset": "law2018",
@@ -266,6 +266,10 @@
           "sha256": "5321862b1c2e9760c8b6bfc8c79853faf4a259e102bf594758966dee1a689ff2",
           "bytes": 333925
         },
+        "inputs.tar": {
+          "sha256": "ea43f9c2894d8ba354be22ca59d7805da13a3a851afe1175c0e0cadf6f9b5367",
+          "bytes": 6113280
+        },
         "law-samples.csv": {
           "sha256": "fa0c7d1e29b2d242f30413524fa00f898266c1c8861a0006e1b07cb9ccf307a0",
           "bytes": 385
@@ -301,7 +305,7 @@
       }
     },
     {
-      "id": "e18e75dfeeea487da7ae6920c0f38c99",
+      "id": "0aa04b06c1e94c43992e98af44542200",
       "plan_id": "83a1faed6c324cf2b0be12cf1b8bd765",
       "recipe": "density",
       "dataset": "law2018",
@@ -564,6 +568,10 @@
           "sha256": "5321862b1c2e9760c8b6bfc8c79853faf4a259e102bf594758966dee1a689ff2",
           "bytes": 333925
         },
+        "inputs.tar": {
+          "sha256": "ea43f9c2894d8ba354be22ca59d7805da13a3a851afe1175c0e0cadf6f9b5367",
+          "bytes": 6113280
+        },
         "law-samples.csv": {
           "sha256": "fa0c7d1e29b2d242f30413524fa00f898266c1c8861a0006e1b07cb9ccf307a0",
           "bytes": 385
@@ -599,7 +607,7 @@
       }
     },
     {
-      "id": "619e16eec5db4746abb77927250bdc76",
+      "id": "2cee4c2b0bb3450a84afb6f29c609883",
       "plan_id": "e736c7e0e0e348ccb5f9a8ea27a91acb",
       "recipe": "density",
       "dataset": "law2018",
@@ -862,6 +870,10 @@
           "sha256": "091fb07d984c3ee3b4f2917a2603c7740723d6228beaf00c6d35138aa2547036",
           "bytes": 336384
         },
+        "inputs.tar": {
+          "sha256": "ea43f9c2894d8ba354be22ca59d7805da13a3a851afe1175c0e0cadf6f9b5367",
+          "bytes": 6113280
+        },
         "law-samples.csv": {
           "sha256": "fa0c7d1e29b2d242f30413524fa00f898266c1c8861a0006e1b07cb9ccf307a0",
           "bytes": 385
@@ -897,7 +909,7 @@
       }
     },
     {
-      "id": "d502a85424f2436bb89129477d2dcd78",
+      "id": "ab9b9ee9fd2d4ce0813562f03664f03e",
       "plan_id": "1aa162ca09c54098a5a305a7ac591a59",
       "recipe": "differential",
       "dataset": "law2018",
@@ -1033,6 +1045,10 @@
           "sha256": "5321862b1c2e9760c8b6bfc8c79853faf4a259e102bf594758966dee1a689ff2",
           "bytes": 333925
         },
+        "inputs.tar": {
+          "sha256": "ea43f9c2894d8ba354be22ca59d7805da13a3a851afe1175c0e0cadf6f9b5367",
+          "bytes": 6113280
+        },
         "law-samples.csv": {
           "sha256": "fa0c7d1e29b2d242f30413524fa00f898266c1c8861a0006e1b07cb9ccf307a0",
           "bytes": 385
@@ -1068,7 +1084,7 @@
       }
     },
     {
-      "id": "f94f49e5fcc1426b909c046f201a946f",
+      "id": "2ec05a625bf34e5294a0ed156aa6d6ca",
       "plan_id": "0abc3764a2064aeda66ae252401b1274",
       "recipe": "mds",
       "dataset": "chen2016",
@@ -1179,6 +1195,10 @@
         "genes.tsv": {
           "sha256": "6ffeb2fda018630524f636fa831194e392eb9027bd0ea2183b0f28eb929d15ee",
           "bytes": 334896
+        },
+        "inputs.tar": {
+          "sha256": "ea43f9c2894d8ba354be22ca59d7805da13a3a851afe1175c0e0cadf6f9b5367",
+          "bytes": 6113280
         },
         "law-samples.csv": {
           "sha256": "fa0c7d1e29b2d242f30413524fa00f898266c1c8861a0006e1b07cb9ccf307a0",
