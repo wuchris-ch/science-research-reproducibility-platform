@@ -48,7 +48,7 @@ def test_oidc_signature_issuer_audience_and_expiry(service,monkeypatch):
         for changes,status in [({},200),({'iss':'https://other.example'},401),({'aud':'other'},401),({'exp':0},401)]:
             token=jwt.encode({**base,**changes},key,algorithm='RS256')
             assert c.get('/api/me',headers={'Authorization':'Bearer '+token}).status_code==status
-        bad=jwt.encode(base,'wrong-key',algorithm='HS256')
+        bad=jwt.encode(base,'wrong-key'*5,algorithm='HS256')
         assert c.get('/api/me',headers={'Authorization':'Bearer '+bad}).status_code==401
 
 def test_receipt_survives_crash_after_termination(service):

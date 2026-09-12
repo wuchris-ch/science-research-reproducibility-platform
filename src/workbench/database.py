@@ -58,7 +58,9 @@ class Database:
 
     def migrate(self):
         # The first additive schema migration; version checked before serving.
-        with self.engine.begin() as c:
+        with self.transaction() as c:
+            if self.engine.dialect.name=='postgresql':
+                c.execute(text('SELECT pg_advisory_xact_lock(83717001)'))
             c.execute(text('CREATE TABLE IF NOT EXISTS schema_version (version INTEGER PRIMARY KEY)'))
             version = c.execute(text('SELECT version FROM schema_version')).scalar()
             if version not in (None, 1):

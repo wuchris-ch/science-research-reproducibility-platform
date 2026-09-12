@@ -82,8 +82,10 @@ def restore(settings,source:Path,target:Path):
         for r in c.execute(select(runs)).mappings():
             for a in r['body'].get('artifacts',{}).values():service.store.read(a['sha256'])
         # A restored install must not assume ownership of the source installation's active containers.
-        c.execute(update(runs).where(runs.c.state.in_(['running','queued','cancel_requested'])).values(
-            state='failed',owner=None,lease_until=0))
+        for r in c.execute(select(runs).where(runs.c.state.in_(['running','queued','cancel_requested']))).mappings():
+            c.execute(update(runs).where(runs.c.id==r['id']).values(state='failed',owner=None,lease_until=0,
+                body={**r['body'],'diagnostic':'Restored from backup; source runtime ownership was not transferred'}))
+            service.db.emit(c,r['workspace_id'],'run.restore_interrupted','restore',{'reason':'Submit a fresh run after review'},r['id'])
     print('Verified restored artifacts. Active jobs marked failed; submit fresh runs after review.')
 
 def main():

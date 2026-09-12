@@ -1,12 +1,13 @@
 from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import model_validator
 
 ROOT = Path(__file__).resolve().parents[2]
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="WORKBENCH_", env_file=".env", extra="ignore")
     data_dir: Path = ROOT / ".runtime"
-    database_url: str = "sqlite:///" + str(ROOT / ".runtime/workbench.db")
+    database_url: str = ""
     docker_context: str = "colima-research"
     image: str = "research-workbench-r:reference"
     origins: list[str] = ["http://localhost:8317", "http://127.0.0.1:8317", "http://localhost:3000", "http://127.0.0.1:3000"]
@@ -21,6 +22,12 @@ class Settings(BaseSettings):
     model_budget_usd: float = 2
     lease_seconds: int = 30
     max_attempts: int = 3
+
+    @model_validator(mode="after")
+    def database_default(self):
+        if not self.database_url:
+            self.database_url = "sqlite:///" + str(self.data_dir / "workbench.db")
+        return self
 
     def initialize(self):
         self.data_dir.mkdir(parents=True, exist_ok=True, mode=0o700)

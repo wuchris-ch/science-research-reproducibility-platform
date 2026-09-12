@@ -35,6 +35,12 @@ class Auth:
         self.check_origin(request)
         if self.jwks:
             raise Problem(401,'Use an OIDC access token for this installation')
+        existing=request.cookies.get('research_session','')
+        try:
+            claims=jwt.decode(existing,self.key,algorithms=['HS256'],audience='research-local',options={'require':['exp','sub','csrf']})
+            return existing,claims['csrf']
+        except jwt.PyJWTError:
+            pass
         csrf=secrets.token_urlsafe(32)
         token=jwt.encode({'sub':'local','csrf':csrf,'exp':int(time.time())+86400,'aud':'research-local'},self.key,algorithm='HS256')
         return token,csrf
