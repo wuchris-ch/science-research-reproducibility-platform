@@ -1,0 +1,35 @@
+{
+  "date": "2026-09-11",
+  "base_image_id": "sha256:970fbfeff3053b4eb85e7d7fb42164ed67b26518722fa2640e1aa6d9c75553f2",
+  "scope": "Actual Docker budget faults using temporary curated test images; no application runtime registration changed",
+  "results": {
+    "timeout": {
+      "state": "failed",
+      "diagnostic": "Time limit exceeded",
+      "attempts": 1,
+      "container_removed": true,
+      "exit_code": 124,
+      "container_state": null
+    },
+    "oom": {
+      "state": "failed",
+      "diagnostic": "Memory limit exceeded",
+      "attempts": 1,
+      "container_removed": true,
+      "exit_code": null,
+      "container_state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": true,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 137,
+        "Error": "",
+        "StartedAt": "2026-09-12T00:44:48.526678289Z",
+        "FinishedAt": "2026-09-12T00:44:49.078919502Z"
+      }
+    }
+  }
+}

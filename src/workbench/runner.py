@@ -391,8 +391,4 @@ class Worker:
             if self.finish(run, "failed", {"diagnostic": diagnostic, "container_state": info["State"]}):
                 self.docker.remove(name)
             return True
-        if time.time() - attempt["started"] > run["body"]["limits"]["wall_seconds"] + 60:
-            self.docker.stop(name)
-            if self.finish(run, "failed", {"diagnostic": "Supervisor wall-clock limit exceeded"}):
-                self.docker.remove(name)
         return True
