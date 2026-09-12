@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     database_url: str = ""
     docker_context: str = "colima-research"
     image: str = "research-workbench-r:reference"
+    image_id: str = ""
     origins: list[str] = [
         "http://localhost:8317",
         "http://127.0.0.1:8317",

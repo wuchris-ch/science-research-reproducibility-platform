@@ -13,6 +13,10 @@ from .comparison import compare, validate_metrics, validate_tables
 from .database import attempts, runs, uid
 
 
+class UnavailableImage(Exception):
+    pass
+
+
 class Docker:
     def __init__(self, settings):
         self.settings = settings
@@ -39,6 +43,13 @@ class Docker:
         return json.loads(r.stdout)[0]
 
     def launch(self, name, run):
+        available = self.command(["image", "inspect", run["body"]["image_id"]], check=False)
+        if available.returncode:
+            if "no such image" in available.stderr.lower():
+                raise UnavailableImage(
+                    "The registered image is absent on this worker. Rebuild or load its exact revision."
+                )
+            raise RuntimeError(available.stderr[-2000:])
         limits = run["body"]["limits"]
         args = [
             "create",
@@ -306,7 +317,11 @@ class Worker:
             return True
         if info is None:
             if attempt["phase"] == "intent":
-                self.docker.launch(name, run)
+                try:
+                    self.docker.launch(name, run)
+                except UnavailableImage as error:
+                    self.finish(run, "failed", {"diagnostic": str(error)})
+                    return True
                 self.save_attempt(run, {**attempt, "phase": "created"})
                 self.docker.start(name)
             else:
@@ -317,14 +332,25 @@ class Worker:
             or info["Image"] != run["body"]["image_id"]
         ):
             raise RuntimeError("Sandbox identity does not match durable intent")
+        if time.time() - attempt["started"] > run["body"]["limits"]["wall_seconds"] + 60:
+            self.docker.stop(name)
+            if self.finish(run, "failed", {"diagnostic": "Supervisor wall-clock limit exceeded"}):
+                self.docker.remove(name)
+            return True
         if info["State"]["Status"] == "created":
             self.docker.start(name)
             return True
         if info["State"]["Running"] and self.docker.done(name):
             dest = self.settings.data_dir / "attempts" / name
-            self.docker.collect(name, dest)
-            code = int((dest / "exit-code").read_text().strip())
-            artifacts = self.service.store.collect(dest)
+            try:
+                self.docker.collect(name, dest)
+                code = int((dest / "exit-code").read_text().strip())
+                artifacts = self.service.store.collect(dest)
+            except (ValueError, FileNotFoundError) as error:
+                self.docker.stop(name)
+                if self.finish(run, "failed", {"diagnostic": "Unsafe or incomplete outputs: " + str(error)}):
+                    self.docker.remove(name)
+                return True
             receipt = {
                 "artifacts": artifacts,
                 "exit_code": code,

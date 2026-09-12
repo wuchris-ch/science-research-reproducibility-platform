@@ -97,3 +97,22 @@ def test_deterministic_intent_survives_restart(service):
     assert len(sandbox.objects) == 1
     with service.db.transaction() as c:
         assert len(c.execute(select(attempts)).all()) == 1
+
+
+def test_invalid_output_collection_is_a_terminal_failure(service):
+    r = queued(service)
+    sandbox = Sandbox()
+    worker = Worker(service, sandbox)
+    worker.tick()
+    sandbox.done = lambda name: True
+
+    def invalid(name, dest):
+        raise ValueError("symlink output rejected")
+
+    sandbox.collect = invalid
+    worker.tick()
+    with service.db.transaction() as c:
+        result = service.get_run(c, "alice", r["id"])
+    assert result["state"] == "failed"
+    assert "symlink" in result["body"]["diagnostic"]
+    assert sandbox.stopped
