@@ -250,7 +250,24 @@ def register_onboarding(app, service, actor):
     def get(identity: str, who=Depends(actor)):
         with service.db.transaction() as c:
             row = onboarding.get(c, who, identity)
-            return {**row, "graph": graph(row["body"])}
+            history = [
+                {
+                    "revision": r["revision"],
+                    "actor": r["actor"],
+                    "created": r["created"],
+                    "issues": r["body"].get("issues", []),
+                    "validated": bool(r["body"].get("validation")),
+                    "accepted_fields": sum(f["status"] == "accepted" for f in r["body"]["fields"].values()),
+                    "input_hashes": {k: v["sha256"] for k, v in r["body"].get("inputs", {}).items()},
+                }
+                for r in c.execute(
+                    select(onboarding_revisions)
+                    .where(onboarding_revisions.c.onboarding_id == identity)
+                    .order_by(onboarding_revisions.c.revision.desc())
+                    .limit(200)
+                ).mappings()
+            ]
+            return {**row, "graph": graph(row["body"]), "history": history}
 
     @app.post("/api/onboardings/{identity}/files")
     def upload(
