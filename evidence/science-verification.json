@@ -1,9 +1,9 @@
 {
   "checked_date": "2026-09-11",
-  "image_id": "sha256:970fbfeff3053b4eb85e7d7fb42164ed67b26518722fa2640e1aa6d9c75553f2",
+  "image_id": "sha256:557803ca864f3046fe0b1c13594c3421d76f8732b21434773d928e92575e3b3d",
   "runs": [
     {
-      "id": "93d0d7f7eedf468fbc53c9dc9b92c368",
+      "id": "0791ce4819de40179464b41fc9a68289",
       "plan_id": "83a1faed6c324cf2b0be12cf1b8bd765",
       "recipe": "density",
       "dataset": "law2018",
@@ -15,30 +15,40 @@
           {
             "key": "input_genes",
             "expected": 27179,
+            "basis": "Published count matrix",
+            "kind": "published",
             "actual": 27179,
-            "passed": true,
-            "basis": "Public count matrix and paper"
+            "passed": true
           },
           {
             "key": "samples",
             "expected": 9,
+            "basis": "Paper sample mapping",
+            "kind": "published",
             "actual": 9,
-            "passed": true,
-            "basis": "Paper sample mapping"
+            "passed": true
           },
           {
             "key": "all_zero_genes",
             "expected": 5153,
+            "basis": "Paper and independent count probe",
+            "kind": "published",
             "actual": 5153,
-            "passed": true,
-            "basis": "Paper and independent input probe"
+            "passed": true
           },
           {
             "key": "retained_genes",
             "expected": 16624,
+            "basis": "Law v3 filtered universe",
+            "kind": "published",
+            "when": {
+              "filter_policy": "published",
+              "min_count": 10,
+              "min_total_count": 15,
+              "min_samples": 3
+            },
             "actual": 16624,
-            "passed": true,
-            "basis": "Paper v3 reported filtered universe"
+            "passed": true
           },
           {
             "key": "library_sizes",
@@ -53,6 +63,8 @@
               "JMS9-P7c": 21311068,
               "JMS9-P8c": 19958838
             },
+            "basis": "Pinned GEO input totals",
+            "kind": "input_probe",
             "actual": {
               "10_6_5_11": 32863052,
               "9_6_5_11": 35335491,
@@ -64,13 +76,12 @@
               "JMS9-P7c": 21311068,
               "JMS9-P8c": 19958838
             },
-            "passed": true,
-            "basis": "Pinned GEO sample totals"
+            "passed": true
           }
         ],
         "limitations": [
-          "Paper supplies no density grid, so numerical curve agreement with the published plot is unverified.",
-          "Scalar agreement is not evidence that every scientific conclusion reproduces."
+          "The paper supplies scalar checks and a rendered density plot; no numerical density grid is published.",
+          "The limma contrast result is compared to fresh executions; a complete external DE table is unavailable."
         ],
         "claim": "Checked observables only",
         "metrics": {
@@ -251,8 +262,8 @@
           "bytes": 471282
         },
         "entrypoint.sh": {
-          "sha256": "00bfb01bbe2ddd56df692a75f179cdee8db17876d246576ea939e2df70e839e2",
-          "bytes": 399
+          "sha256": "8d0afd1db4f9ee48a50d615d8f3f5fad53ede3147c6f73a7a3ebb7c60585a1de",
+          "bytes": 516
         },
         "exit-code": {
           "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
@@ -283,8 +294,8 @@
           "bytes": 2804
         },
         "recipe.R": {
-          "sha256": "b622fd19fe8056465495d1f6b48ca31d633838baabababcc8c457c7d1bbbae66",
-          "bytes": 6380
+          "sha256": "c019f90e71017a70d2e3a4ca23277d58877c957e45940eeb1859560e245ec774",
+          "bytes": 9343
         },
         "samples.tsv": {
           "sha256": "07ceb718ce16410632c49816fc6307f7e6c45e2874f80127db860a4b2a94141d",
@@ -305,7 +316,7 @@
       }
     },
     {
-      "id": "0aa04b06c1e94c43992e98af44542200",
+      "id": "42b42109723a464da852e4cef142a94f",
       "plan_id": "83a1faed6c324cf2b0be12cf1b8bd765",
       "recipe": "density",
       "dataset": "law2018",
@@ -317,30 +328,40 @@
           {
             "key": "input_genes",
             "expected": 27179,
+            "basis": "Published count matrix",
+            "kind": "published",
             "actual": 27179,
-            "passed": true,
-            "basis": "Public count matrix and paper"
+            "passed": true
           },
           {
             "key": "samples",
             "expected": 9,
+            "basis": "Paper sample mapping",
+            "kind": "published",
             "actual": 9,
-            "passed": true,
-            "basis": "Paper sample mapping"
+            "passed": true
           },
           {
             "key": "all_zero_genes",
             "expected": 5153,
+            "basis": "Paper and independent count probe",
+            "kind": "published",
             "actual": 5153,
-            "passed": true,
-            "basis": "Paper and independent input probe"
+            "passed": true
           },
           {
             "key": "retained_genes",
             "expected": 16624,
+            "basis": "Law v3 filtered universe",
+            "kind": "published",
+            "when": {
+              "filter_policy": "published",
+              "min_count": 10,
+              "min_total_count": 15,
+              "min_samples": 3
+            },
             "actual": 16624,
-            "passed": true,
-            "basis": "Paper v3 reported filtered universe"
+            "passed": true
           },
           {
             "key": "library_sizes",
@@ -355,6 +376,8 @@
               "JMS9-P7c": 21311068,
               "JMS9-P8c": 19958838
             },
+            "basis": "Pinned GEO input totals",
+            "kind": "input_probe",
             "actual": {
               "10_6_5_11": 32863052,
               "9_6_5_11": 35335491,
@@ -366,13 +389,12 @@
               "JMS9-P7c": 21311068,
               "JMS9-P8c": 19958838
             },
-            "passed": true,
-            "basis": "Pinned GEO sample totals"
+            "passed": true
           }
         ],
         "limitations": [
-          "Paper supplies no density grid, so numerical curve agreement with the published plot is unverified.",
-          "Scalar agreement is not evidence that every scientific conclusion reproduces."
+          "The paper supplies scalar checks and a rendered density plot; no numerical density grid is published.",
+          "The limma contrast result is compared to fresh executions; a complete external DE table is unavailable."
         ],
         "claim": "Checked observables only",
         "metrics": {
@@ -553,8 +575,8 @@
           "bytes": 471282
         },
         "entrypoint.sh": {
-          "sha256": "00bfb01bbe2ddd56df692a75f179cdee8db17876d246576ea939e2df70e839e2",
-          "bytes": 399
+          "sha256": "8d0afd1db4f9ee48a50d615d8f3f5fad53ede3147c6f73a7a3ebb7c60585a1de",
+          "bytes": 516
         },
         "exit-code": {
           "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
@@ -585,8 +607,8 @@
           "bytes": 2804
         },
         "recipe.R": {
-          "sha256": "b622fd19fe8056465495d1f6b48ca31d633838baabababcc8c457c7d1bbbae66",
-          "bytes": 6380
+          "sha256": "c019f90e71017a70d2e3a4ca23277d58877c957e45940eeb1859560e245ec774",
+          "bytes": 9343
         },
         "samples.tsv": {
           "sha256": "07ceb718ce16410632c49816fc6307f7e6c45e2874f80127db860a4b2a94141d",
@@ -607,7 +629,7 @@
       }
     },
     {
-      "id": "2cee4c2b0bb3450a84afb6f29c609883",
+      "id": "9b8a137bafdb438ea83f7dde6a3b3bd6",
       "plan_id": "e736c7e0e0e348ccb5f9a8ea27a91acb",
       "recipe": "density",
       "dataset": "law2018",
@@ -619,30 +641,38 @@
           {
             "key": "input_genes",
             "expected": 27179,
+            "basis": "Published count matrix",
+            "kind": "published",
             "actual": 27179,
-            "passed": true,
-            "basis": "Public count matrix and paper"
+            "passed": true
           },
           {
             "key": "samples",
             "expected": 9,
+            "basis": "Paper sample mapping",
+            "kind": "published",
             "actual": 9,
-            "passed": true,
-            "basis": "Paper sample mapping"
+            "passed": true
           },
           {
             "key": "all_zero_genes",
             "expected": 5153,
+            "basis": "Paper and independent count probe",
+            "kind": "published",
             "actual": 5153,
-            "passed": true,
-            "basis": "Paper and independent input probe"
+            "passed": true
           },
           {
             "key": "retained_genes",
             "expected": 14165,
+            "basis": "Independent Python filter probe",
+            "kind": "input_probe",
+            "when": {
+              "filter_policy": "cpm1",
+              "min_samples": 3
+            },
             "actual": 14165,
-            "passed": true,
-            "basis": "Independent Python filter probe; not a published result"
+            "passed": true
           },
           {
             "key": "library_sizes",
@@ -657,6 +687,8 @@
               "JMS9-P7c": 21311068,
               "JMS9-P8c": 19958838
             },
+            "basis": "Pinned GEO input totals",
+            "kind": "input_probe",
             "actual": {
               "10_6_5_11": 32863052,
               "9_6_5_11": 35335491,
@@ -668,13 +700,12 @@
               "JMS9-P7c": 21311068,
               "JMS9-P8c": 19958838
             },
-            "passed": true,
-            "basis": "Pinned GEO sample totals"
+            "passed": true
           }
         ],
         "limitations": [
-          "Paper supplies no density grid, so numerical curve agreement with the published plot is unverified.",
-          "Scalar agreement is not evidence that every scientific conclusion reproduces."
+          "The paper supplies scalar checks and a rendered density plot; no numerical density grid is published.",
+          "The limma contrast result is compared to fresh executions; a complete external DE table is unavailable."
         ],
         "claim": "Checked observables only",
         "metrics": {
@@ -855,8 +886,8 @@
           "bytes": 471410
         },
         "entrypoint.sh": {
-          "sha256": "00bfb01bbe2ddd56df692a75f179cdee8db17876d246576ea939e2df70e839e2",
-          "bytes": 399
+          "sha256": "8d0afd1db4f9ee48a50d615d8f3f5fad53ede3147c6f73a7a3ebb7c60585a1de",
+          "bytes": 516
         },
         "exit-code": {
           "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
@@ -887,8 +918,8 @@
           "bytes": 2772
         },
         "recipe.R": {
-          "sha256": "b622fd19fe8056465495d1f6b48ca31d633838baabababcc8c457c7d1bbbae66",
-          "bytes": 6380
+          "sha256": "c019f90e71017a70d2e3a4ca23277d58877c957e45940eeb1859560e245ec774",
+          "bytes": 9343
         },
         "samples.tsv": {
           "sha256": "7a3b4bc16b7773c913369cb8071e6f89a21abdee9256915b5143da181629146e",
@@ -909,7 +940,7 @@
       }
     },
     {
-      "id": "ab9b9ee9fd2d4ce0813562f03664f03e",
+      "id": "5c1aa3a6be064dc6afe99c0981728507",
       "plan_id": "1aa162ca09c54098a5a305a7ac591a59",
       "recipe": "differential",
       "dataset": "law2018",
@@ -921,30 +952,40 @@
           {
             "key": "input_genes",
             "expected": 27179,
+            "basis": "Published count matrix",
+            "kind": "published",
             "actual": 27179,
-            "passed": true,
-            "basis": "Public count matrix and paper"
+            "passed": true
           },
           {
             "key": "samples",
             "expected": 9,
+            "basis": "Paper sample mapping",
+            "kind": "published",
             "actual": 9,
-            "passed": true,
-            "basis": "Paper sample mapping"
+            "passed": true
           },
           {
             "key": "all_zero_genes",
             "expected": 5153,
+            "basis": "Paper and independent count probe",
+            "kind": "published",
             "actual": 5153,
-            "passed": true,
-            "basis": "Paper and independent input probe"
+            "passed": true
           },
           {
             "key": "retained_genes",
             "expected": 16624,
+            "basis": "Law v3 filtered universe",
+            "kind": "published",
+            "when": {
+              "filter_policy": "published",
+              "min_count": 10,
+              "min_total_count": 15,
+              "min_samples": 3
+            },
             "actual": 16624,
-            "passed": true,
-            "basis": "Paper v3 reported filtered universe"
+            "passed": true
           },
           {
             "key": "library_sizes",
@@ -959,6 +1000,8 @@
               "JMS9-P7c": 21311068,
               "JMS9-P8c": 19958838
             },
+            "basis": "Pinned GEO input totals",
+            "kind": "input_probe",
             "actual": {
               "10_6_5_11": 32863052,
               "9_6_5_11": 35335491,
@@ -970,14 +1013,12 @@
               "JMS9-P7c": 21311068,
               "JMS9-P8c": 19958838
             },
-            "passed": true,
-            "basis": "Pinned GEO sample totals"
+            "passed": true
           }
         ],
         "limitations": [
-          "Paper supplies no density grid, so numerical curve agreement with the published plot is unverified.",
-          "Scalar agreement is not evidence that every scientific conclusion reproduces.",
-          "Full gene-level reference table is unavailable; FDR and effect sizes are exported for review."
+          "The paper supplies scalar checks and a rendered density plot; no numerical density grid is published.",
+          "The limma contrast result is compared to fresh executions; a complete external DE table is unavailable."
         ],
         "claim": "Checked observables only",
         "metrics": {
@@ -1030,8 +1071,8 @@
           "bytes": 1925121
         },
         "entrypoint.sh": {
-          "sha256": "00bfb01bbe2ddd56df692a75f179cdee8db17876d246576ea939e2df70e839e2",
-          "bytes": 399
+          "sha256": "8d0afd1db4f9ee48a50d615d8f3f5fad53ede3147c6f73a7a3ebb7c60585a1de",
+          "bytes": 516
         },
         "exit-code": {
           "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
@@ -1062,8 +1103,8 @@
           "bytes": 816
         },
         "recipe.R": {
-          "sha256": "b622fd19fe8056465495d1f6b48ca31d633838baabababcc8c457c7d1bbbae66",
-          "bytes": 6380
+          "sha256": "c019f90e71017a70d2e3a4ca23277d58877c957e45940eeb1859560e245ec774",
+          "bytes": 9343
         },
         "samples.tsv": {
           "sha256": "07ceb718ce16410632c49816fc6307f7e6c45e2874f80127db860a4b2a94141d",
@@ -1084,7 +1125,7 @@
       }
     },
     {
-      "id": "2ec05a625bf34e5294a0ed156aa6d6ca",
+      "id": "aa6c54858d504cf999bd3b0fa82df02f",
       "plan_id": "0abc3764a2064aeda66ae252401b1274",
       "recipe": "mds",
       "dataset": "chen2016",
@@ -1096,35 +1137,41 @@
           {
             "key": "input_genes",
             "expected": 27179,
+            "basis": "Chen v2 with original annotation",
+            "kind": "published",
             "actual": 27179,
-            "passed": true,
-            "basis": "Public count matrix and paper"
+            "passed": true
           },
           {
             "key": "samples",
             "expected": 12,
+            "basis": "Chen v2 with original annotation",
+            "kind": "published",
             "actual": 12,
-            "passed": true,
-            "basis": "Paper sample mapping"
+            "passed": true
           },
           {
             "key": "annotated_genes",
             "expected": 26357,
+            "basis": "Chen v2 with original annotation",
+            "kind": "published",
             "actual": 26357,
-            "passed": true,
-            "basis": "Paper with org.Mm.eg.db 3.3.0"
+            "passed": true
           },
           {
             "key": "retained_genes",
             "expected": 15653,
+            "basis": "Chen v2 with original annotation",
+            "kind": "published",
+            "when": {
+              "filter_policy": "published"
+            },
             "actual": 15653,
-            "passed": true,
-            "basis": "Paper CPM > 0.5 in two samples"
+            "passed": true
           }
         ],
         "limitations": [
-          "Adapted R and edgeR versions; no published numerical MDS coordinates are available.",
-          "MDS axis signs are arbitrary. Compare pairwise distances for fresh-run consistency."
+          "R and edgeR versions are adapted. Published MDS coordinates are unavailable; compare fresh pairwise distances."
         ],
         "claim": "Checked observables only",
         "metrics": {
@@ -1136,18 +1183,18 @@
           "all_zero_genes": 5787,
           "retained_genes": 15653,
           "library_sizes": {
-            "MCL1.DG": 23227641,
-            "MCL1.DH": 21777891,
-            "MCL1.DI": 24100765,
-            "MCL1.DJ": 22665371,
-            "MCL1.DK": 21529331,
-            "MCL1.DL": 20015386,
-            "MCL1.LA": 20392113,
-            "MCL1.LB": 21708152,
-            "MCL1.LC": 22241607,
-            "MCL1.LD": 21988240,
-            "MCL1.LE": 24723827,
-            "MCL1.LF": 24657293
+            "MCL1-DG": 23227641,
+            "MCL1-DH": 21777891,
+            "MCL1-DI": 24100765,
+            "MCL1-DJ": 22665371,
+            "MCL1-DK": 21529331,
+            "MCL1-DL": 20015386,
+            "MCL1-LA": 20392113,
+            "MCL1-LB": 21708152,
+            "MCL1-LC": 22241607,
+            "MCL1-LD": 21988240,
+            "MCL1-LE": 24723827,
+            "MCL1-LF": 24657293
           },
           "parameters": {
             "contrast": "BasalvsLP",
@@ -1181,8 +1228,8 @@
           "bytes": 756
         },
         "entrypoint.sh": {
-          "sha256": "00bfb01bbe2ddd56df692a75f179cdee8db17876d246576ea939e2df70e839e2",
-          "bytes": 399
+          "sha256": "8d0afd1db4f9ee48a50d615d8f3f5fad53ede3147c6f73a7a3ebb7c60585a1de",
+          "bytes": 516
         },
         "exit-code": {
           "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
@@ -1209,19 +1256,19 @@
           "bytes": 1315
         },
         "mds.tsv": {
-          "sha256": "e928aad95e2dfff110e97ba1c57bfeca0226b0276d6ce8fc622d436f17539eb2",
+          "sha256": "7999b8ff9103ecc074f4e0b2ac0c7ccf5d208d62fc3855c22fe72af9b5ec89d8",
           "bytes": 665
         },
         "metrics.json": {
-          "sha256": "f44df95396894810a4361631921ff75f1031537e2cda2e39adfad29d7a64a301",
+          "sha256": "1944c9622cf8a5103330f482260f9cb7a9b6619d8a5c60c9589b4466a6693e90",
           "bytes": 1006
         },
         "recipe.R": {
-          "sha256": "b622fd19fe8056465495d1f6b48ca31d633838baabababcc8c457c7d1bbbae66",
-          "bytes": 6380
+          "sha256": "c019f90e71017a70d2e3a4ca23277d58877c957e45940eeb1859560e245ec774",
+          "bytes": 9343
         },
         "samples.tsv": {
-          "sha256": "efdc1adadb0e0d75b4b6a2f7c44e698e86c1dc73c04eada81adba601e8f91ef5",
+          "sha256": "e1e5d98e8f209c0ccaaf690600e73fa9685eed3408b927b1566544eca2213f42",
           "bytes": 488
         },
         "session.txt": {
