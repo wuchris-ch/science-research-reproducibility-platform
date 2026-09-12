@@ -92,7 +92,8 @@ export function StudyPanel({
     act(list);
   }, [workspace.id]);
   useEffect(() => {
-    if (!study) return;
+    if (!study || ["complete", "incomplete", "cancelled"].includes(study.state))
+      return;
     let live = true;
     const timer = setInterval(
       () =>
@@ -111,7 +112,7 @@ export function StudyPanel({
       live = false;
       clearInterval(timer);
     };
-  }, [study?.id]);
+  }, [study?.id, study?.state]);
   const terminal =
     study && ["complete", "incomplete", "cancelled"].includes(study.state);
   useEffect(() => {

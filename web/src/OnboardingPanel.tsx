@@ -106,6 +106,27 @@ export function OnboardingPanel({
       if (url) URL.revokeObjectURL(url);
     };
   }, [current?.id, selected?.id]);
+  useEffect(() => {
+    if (!current || current.history) return;
+    let live = true;
+    api<Onboard>(`/onboardings/${current.id}`)
+      .then((latest) => {
+        if (live)
+          setCurrent((row) =>
+            row?.id === latest.id && row?.revision === latest.revision
+              ? { ...row, history: latest.history }
+              : row,
+          );
+      })
+      .catch((error) =>
+        act(async () => {
+          throw error;
+        }),
+      );
+    return () => {
+      live = false;
+    };
+  }, [current?.id, current?.revision]);
   const segments =
     current?.body.segments
       .filter(
@@ -171,6 +192,33 @@ export function OnboardingPanel({
           </form>
         )}
       </div>
+      {current?.history && (
+        <details className="card">
+          <summary>Review history and validation corrections</summary>
+          <div className="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Revision</th>
+                  <th>Input validation</th>
+                  <th>Reviewed fields</th>
+                  <th>Issues</th>
+                </tr>
+              </thead>
+              <tbody>
+                {current.history.map((h) => (
+                  <tr key={h.revision}>
+                    <td>{h.revision}</td>
+                    <td>{h.validated ? "Passed" : "Pending or rejected"}</td>
+                    <td>{h.accepted_fields} / 6</td>
+                    <td>{h.issues.join("; ") || "None recorded"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
+      )}
       {current ? (
         <>
           <div className="status-strip">
