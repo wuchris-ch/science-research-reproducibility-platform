@@ -204,9 +204,10 @@ def create_app(settings=None, docker=None):
 
     @app.get("/api/sources/{identity}/asset/{kind}")
     def source_asset(identity: str, kind: str, who=Depends(actor)):
+        figure_format = SOURCES.get(identity, {}).get("figure_format", "gif")
         allowed = {
             "pdf": f"{identity}.pdf",
-            "figure": f"{identity}-figure.gif",
+            "figure": f"{identity}-figure.{figure_format}",
             "xml": f"{identity}.xml",
             "page": f"{identity}-page.png",
         }
@@ -219,7 +220,7 @@ def create_app(settings=None, docker=None):
             path,
             media_type={
                 "pdf": "application/pdf",
-                "figure": "image/gif",
+                "figure": "image/" + figure_format,
                 "xml": "application/xml",
                 "page": "image/png",
             }[kind],
@@ -438,6 +439,12 @@ def create_app(settings=None, docker=None):
     from .studies import register_studies
 
     register_studies(app, service, actor)
+    from .exploration import register_exploration
+
+    register_exploration(app, service, actor)
+    from .study_exports import register_study_exports
+
+    register_study_exports(app, service, actor)
     dist = ROOT / "web/dist"
     if dist.exists():
         app.mount("/", StaticFiles(directory=dist, html=True), name="web")
