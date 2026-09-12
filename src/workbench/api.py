@@ -51,7 +51,7 @@ def create_app(settings=None, docker=None):
         yield
         db.engine.dispose()
 
-    app = FastAPI(title="Research Workbench", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(title="Research Workbench", version="0.2.0", lifespan=lifespan)
     app.state.service = service
     app.state.auth = auth
     app.add_middleware(
@@ -89,7 +89,7 @@ def create_app(settings=None, docker=None):
                 c.execute(text("SELECT 1"))
         except SQLAlchemyError:
             return JSONResponse({"status": "unavailable", "database": "unreachable"}, status_code=503)
-        return {"status": "ok", "version": "0.1.0", "identity_mode": "oidc" if auth.jwks else "local"}
+        return {"status": "ok", "version": "0.2.0", "identity_mode": "oidc" if auth.jwks else "local"}
 
     @app.get("/api/session")
     def session(request: Request):
