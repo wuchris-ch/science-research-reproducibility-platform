@@ -382,10 +382,28 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get?: never;
+    /** Imported Sources */
+    get: operations["imported_sources_api_workspaces__identity__sources_get"];
     put?: never;
     /** Upload */
     post: operations["upload_api_workspaces__identity__sources_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/workspaces/{identity}/sources/{source_id}/download": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Imported Source */
+    get: operations["imported_source_api_workspaces__identity__sources__source_id__download_get"];
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -1364,6 +1382,37 @@ export interface operations {
       };
     };
   };
+  imported_sources_api_workspaces__identity__sources_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        identity: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   upload_api_workspaces__identity__sources_post: {
     parameters: {
       query?: never;
@@ -1378,6 +1427,38 @@ export interface operations {
         "multipart/form-data": components["schemas"]["Body_upload_api_workspaces__identity__sources_post"];
       };
     };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  imported_source_api_workspaces__identity__sources__source_id__download_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        identity: string;
+        source_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
     responses: {
       /** @description Successful Response */
       200: {
