@@ -51,6 +51,13 @@ export function SourceViewer({
   source: Source;
   close: () => void;
 }) {
+  const document =
+    source.documents?.find((d) => d.role === "paper" && d.kind === "pdf") ||
+    source.documents?.find((d) => d.role === "paper");
+  const documentPath =
+    source.onboarding_id && document
+      ? `/onboardings/${source.onboarding_id}/documents/${document.id}`
+      : undefined;
   const [url, setUrl] = useState(""),
     [error, setError] = useState(""),
     [region, setRegion] = useState<
@@ -62,7 +69,12 @@ export function SourceViewer({
     first.current?.focus();
     let live = true;
     let value = "";
-    asset("/sources/" + source.id + "/asset/page")
+    if (documentPath && document?.kind !== "pdf") return;
+    asset(
+      documentPath
+        ? documentPath + "?page=1"
+        : "/sources/" + source.id + "/asset/page",
+    )
       .then((u) => {
         value = u;
         if (live) setUrl(u);
@@ -91,9 +103,14 @@ export function SourceViewer({
       >
         <div className="card-heading">
           <div>
-            <div className="eyebrow">VERIFIED SOURCE REGION</div>
+            <div className="eyebrow">
+              {document ? "REVIEWED SOURCE DOCUMENT" : "VERIFIED SOURCE REGION"}
+            </div>
             <h2 id="source-viewer-title">
-              {source.authors} · page {g?.page || "unavailable"}
+              {source.authors || source.title}
+              {g?.page || document?.kind === "pdf"
+                ? ` · page ${g?.page || 1}`
+                : ""}
             </h2>
           </div>
           <button
@@ -128,19 +145,25 @@ export function SourceViewer({
           <button
             onClick={() =>
               download(
-                "/sources/" + source.id + "/asset/pdf",
+                documentPath || "/sources/" + source.id + "/asset/pdf",
                 "source-paper.pdf",
               ).catch((e) => setError(e.message))
             }
           >
             <Download size={14} />
-            Complete PDF
+            {document ? "Download source" : "Complete PDF"}
           </button>
         </div>
         {error && <p className="error-banner">{error}</p>}
         <div className="source-page-scroll">
           <div className="source-page">
-            {url ? (
+            {document && document.kind !== "pdf" ? (
+              <div className="source-text">
+                {source.segments.slice(0, 200).map((segment) => (
+                  <p key={segment.id}>{segment.text}</p>
+                ))}
+              </div>
+            ) : url ? (
               <img
                 src={url}
                 alt={`Verified page ${g?.page} from ${source.authors}, including the original figure and surrounding text`}
@@ -168,9 +191,14 @@ export function SourceViewer({
           </div>
         </div>
         <div className="source-viewer-note">
-          Article version {source.version} · DOI {source.doi}. Highlight
-          positions were checked against this exact PDF; the publisher's footer
-          may reflect a later PDF update.
+          {document ? (
+            "Open the onboarding record to inspect individual cited regions and review decisions."
+          ) : (
+            <>
+              Article version {source.version} · DOI {source.doi}. Highlight
+              positions were checked against this exact PDF.
+            </>
+          )}
         </div>
       </section>
     </div>

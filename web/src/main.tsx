@@ -45,15 +45,10 @@ import {
 import "./style.css";
 import { SourceViewer, useDialog } from "./SourceViewer";
 import { LibraryImports } from "./LibraryImports";
-const defaults: Parameters = {
-  filter_policy: "published",
-  min_count: 10,
-  min_total_count: 15,
-  min_samples: 3,
-  contrast: "BasalvsLP",
-  fdr: 0.05,
-  seed: 1,
-};
+import { ParameterEditor } from "./ParameterEditor";
+import { OnboardingPanel } from "./OnboardingPanel";
+import { StudyPanel } from "./StudyPanel";
+import { GeneExplorer } from "./GeneExplorer";
 const reviewFields = [
   "dataset",
   "samples",
@@ -95,7 +90,7 @@ function App() {
     [selectedRun, setSelectedRun] = useState<string | null>(null),
     [source, setSource] = useState<Source | null>(null);
   const [section, setSection] = useState<
-      "workbench" | "library" | "activity" | "team"
+      "workbench" | "library" | "activity" | "team" | "onboarding" | "studies"
     >("workbench"),
     [tab, setTab] = useState("Overview"),
     [ready, setReady] = useState(false),
@@ -302,6 +297,8 @@ function App() {
           {[
             ["workbench", "Workbench", FlaskConical],
             ["library", "Paper library", BookOpen],
+            ["onboarding", "Onboard a study", Plus],
+            ["studies", "Sensitivity studies", Layers],
             ["activity", "Activity", History],
             ["team", "Team & settings", Users],
           ].map(([key, label, Icon]) => (
@@ -348,7 +345,7 @@ function App() {
                 {p.body.title}
                 <small>
                   {p.body.parent_id ? "Variation · " : ""}
-                  {p.body.dataset_id === "law2018" ? "Law 2018" : "Chen 2016"}
+                  {p.body.adapter?.title || p.body.recipe}
                 </small>
               </span>
             </button>
@@ -384,7 +381,11 @@ function App() {
                   ? "Paper library"
                   : section === "team"
                     ? "Team & settings"
-                    : "Activity"}
+                    : section === "onboarding"
+                      ? "Study onboarding"
+                      : section === "studies"
+                        ? "Sensitivity studies"
+                        : "Activity"}
             </strong>
           </div>
           <div className="header-right">
@@ -453,9 +454,9 @@ function App() {
                       <span>CC BY</span>
                     </div>
                     <p className="muted">
-                      {s.id === "law2018"
-                        ? "9 samples · 27,179 genes · Density + differential expression"
-                        : "12 samples · 27,179 genes · MDS exploration"}
+                      {s.input_shape?.samples} samples ·{" "}
+                      {s.input_shape?.genes.toLocaleString()} genes ·{" "}
+                      {s.recipes.join(" / ")}
                     </p>
                     <button
                       onClick={() => {
@@ -479,6 +480,24 @@ function App() {
               </div>
               {workspace && <LibraryImports workspace={workspace} act={act} />}
             </>
+          ) : section === "onboarding" ? (
+            <OnboardingPanel
+              key={workspaceId}
+              workspace={workspace!}
+              act={act}
+              onPlan={async (p) => {
+                await refresh();
+                choose(p);
+                setTab("Methods");
+              }}
+            />
+          ) : section === "studies" ? (
+            <StudyPanel
+              key={workspaceId}
+              workspace={workspace!}
+              plans={plans}
+              act={act}
+            />
           ) : section === "activity" ? (
             <>
               <PageTitle
@@ -525,8 +544,10 @@ function App() {
                       ? "Figure 1 · Expression filtering"
                       : plan.body.recipe === "mds"
                         ? "Figure 1 · Sample relationships"
-                        : "Differential expression · " +
-                          plan.body.parameters.contrast}
+                        : plan.body.recipe === "deseq2"
+                          ? "Donor-adjusted treatment response"
+                          : "Differential expression · " +
+                            plan.body.parameters.contrast}
                   </p>
                 </div>
                 <div className="actions">
@@ -558,7 +579,11 @@ function App() {
                   ) : (
                     <button
                       className="primary"
-                      disabled={plan.state !== "locked" || busy}
+                      disabled={
+                        plan.state !== "locked" ||
+                        busy ||
+                        Boolean(plan.body.study_id)
+                      }
                       onClick={start}
                     >
                       <Play size={15} />
@@ -803,18 +828,22 @@ function Overview({
       <div className="stats-grid">
         <Stat
           label="INPUT GENES"
-          value={m ? fmt(m.input_genes) : "27,179"}
-          note="Pinned public count matrix"
+          value={fmt(
+            m?.input_genes ??
+              plan.body.input_summary?.input_genes ??
+              source?.input_shape?.genes,
+          )}
+          note="Immutable count matrix"
           icon={<Layers size={17} />}
         />
         <Stat
           label="SAMPLES"
-          value={plan.body.dataset_id === "law2018" ? "9" : "12"}
-          note={
-            plan.body.dataset_id === "law2018"
-              ? "3 cell populations · 3 replicates"
-              : "2 cell types · 3 biological states"
-          }
+          value={fmt(
+            m?.samples ??
+              plan.body.input_summary?.samples ??
+              source?.input_shape?.samples,
+          )}
+          note={source?.sample_description || "Validated sample mapping"}
           icon={<FlaskConical size={17} />}
         />
         <Stat
@@ -858,25 +887,32 @@ function Overview({
             <span className="pill">VERSION {source?.version || "–"}</span>
           </div>
           <div className="figure-area">
-            <ImageAsset
-              path={"/sources/" + plan.body.dataset_id + "/asset/figure"}
-              alt="Published Figure 1 from the source paper"
-            />
+            {plan.body.onboarding_id ? (
+              <div className="source-evidence-preview">
+                <FileText size={32} />
+                <h3>Reviewed paper and supplements</h3>
+                <p>
+                  {source?.segments.length.toLocaleString()} linked source
+                  regions
+                </p>
+              </div>
+            ) : (
+              <ImageAsset
+                path={"/sources/" + plan.body.dataset_id + "/asset/figure"}
+                alt={source?.figure_title || "Published source figure"}
+              />
+            )}
           </div>
           <div className="source-caption">
-            <h3>
-              {plan.body.dataset_id === "law2018"
-                ? "Figure 1. Expression before and after filtering"
-                : "Figure 1. Sample relationships"}
-            </h3>
+            <h3>{source?.figure_title || "Reviewed source evidence"}</h3>
             <p>
-              {plan.body.dataset_id === "law2018"
-                ? "Density of log-CPM values in the raw and filtered data. Dotted lines mark the expression threshold."
-                : "Multidimensional scaling of expression profiles across cell types and biological states."}
+              {source?.sample_description ||
+                "Open the source-linked onboarding record to inspect methods and evidence."}
             </p>
             <div className="source-citation">
               <FileText size={14} />
-              {source?.authors}, {source?.year} ·{" "}
+              {source?.authors || "Reviewed study"}
+              {source?.year ? `, ${source.year}` : ""} ·{" "}
               {source?.geometry
                 ? "Page " + source.geometry.page
                 : "Versioned source"}
@@ -997,9 +1033,12 @@ function Overview({
               [
                 "02",
                 "Expression filter",
-                plan.body.parameters.filter_policy === "published"
-                  ? "Published policy"
-                  : "CPM > 1 variation",
+                plan.body.recipe === "deseq2"
+                  ? "Minimum total count: " +
+                    plan.body.parameters.min_total_count
+                  : plan.body.parameters.filter_policy === "published"
+                    ? "Published policy"
+                    : "CPM > 1 variation",
               ],
               [
                 "03",
@@ -1007,7 +1046,9 @@ function Overview({
                   ? "Log-CPM density"
                   : plan.body.recipe === "mds"
                     ? "TMM + MDS"
-                    : "TMM + voom",
+                    : plan.body.recipe === "deseq2"
+                      ? "Donor-adjusted DESeq2"
+                      : "TMM + voom",
                 "Curated R recipe",
               ],
               ["04", "Compare & review", "Sealed artifacts"],
@@ -1029,9 +1070,8 @@ function Overview({
             <h3>Know what this result establishes</h3>
           </div>
           <p>
-            Matching counts is one piece of evidence. The paper has no numerical
-            density grid for an exact curve comparison, and a successful run
-            does not validate every scientific conclusion.
+            {c?.limitations[0] ||
+              "Published numerical checks, differences in methods, and fresh rerun consistency are recorded alongside the result."}
           </p>
           <button className="text-button" onClick={results}>
             Read the comparison limits
@@ -1082,7 +1122,9 @@ function NewPlan({
   busy: boolean;
   onCreate: (b: unknown) => void;
 }) {
-  const [dataset, setDataset] = useState(parent?.body.dataset_id || "law2018");
+  const [dataset, setDataset] = useState(
+    parent?.body.dataset_id || initialDataset || sources[0]?.id || "",
+  );
   return (
     <form
       onSubmit={(e) => {
@@ -1094,14 +1136,20 @@ function NewPlan({
           dataset_id: dataset,
           recipe: parent?.body.recipe || f.get("recipe"),
           parameters: parent
-            ? {
-                ...parent.body.parameters,
-                filter_policy:
-                  parent.body.parameters.filter_policy === "published"
-                    ? "cpm1"
-                    : "published",
-              }
-            : { ...defaults, min_samples: dataset === "chen2016" ? 2 : 3 },
+            ? parent.body.recipe === "deseq2"
+              ? {
+                  ...parent.body.parameters,
+                  min_total_count:
+                    parent.body.parameters.min_total_count === 2 ? 10 : 2,
+                }
+              : {
+                  ...parent.body.parameters,
+                  filter_policy:
+                    parent.body.parameters.filter_policy === "published"
+                      ? "cpm1"
+                      : "published",
+                }
+            : {},
           parent_id: parent?.id || null,
           reason: f.get("reason") || "",
         });
@@ -1144,16 +1192,15 @@ function NewPlan({
           <label>
             Workflow
             <select name="recipe" key={dataset}>
-              {dataset === "law2018" ? (
-                <>
-                  <option value="density">Figure 1: log-CPM density</option>
-                  <option value="differential">
-                    Differential expression: TMM + voom
+              {sources
+                .find((s) => s.id === dataset)
+                ?.recipes.map((recipe) => (
+                  <option key={recipe} value={recipe}>
+                    {recipe === "deseq2"
+                      ? "Donor-adjusted DESeq2"
+                      : recipe.replaceAll("_", " ")}
                   </option>
-                </>
-              ) : (
-                <option value="mds">Figure 1: MDS sample relationships</option>
-              )}
+                ))}
             </select>
           </label>
         </>
@@ -1162,15 +1209,20 @@ function NewPlan({
         <>
           <div className="change-preview">
             <span>
-              {parent.body.parameters.filter_policy === "published"
-                ? "Published filter"
-                : "CPM > 1"}
+              {parent.body.recipe === "deseq2"
+                ? "Minimum total: " + parent.body.parameters.min_total_count
+                : parent.body.parameters.filter_policy === "published"
+                  ? "Published filter"
+                  : "CPM > 1"}
             </span>
             <ChevronRight size={16} />
             <strong>
-              {parent.body.parameters.filter_policy === "published"
-                ? "CPM > 1"
-                : "Published filter"}
+              {parent.body.recipe === "deseq2"
+                ? "Minimum total: " +
+                  (parent.body.parameters.min_total_count === 2 ? 10 : 2)
+                : parent.body.parameters.filter_policy === "published"
+                  ? "CPM > 1"
+                  : "Published filter"}
             </strong>
           </div>
           <label>
@@ -1221,22 +1273,14 @@ function Methods({
       }[];
     } | null>(null);
   const draft = plan.state === "draft",
-    chen = plan.body.dataset_id === "chen2016",
     changed =
       JSON.stringify(parameters) !== JSON.stringify(plan.body.parameters);
   const passages =
     source?.segments
-      .filter(
-        (s) =>
-          s.kind === "p" &&
-          (search
-            ? s.text.toLowerCase().includes(search.toLowerCase())
-            : [
-                chen ? "chen2016:37" : "law2018:49",
-                "law2018:50",
-                "law2018:9",
-                "law2018:76",
-              ].includes(s.id)),
+      .filter((s) =>
+        search
+          ? s.text.toLowerCase().includes(search.toLowerCase())
+          : /filter|design|raw counts|paired|dexamethasone/i.test(s.text),
       )
       .slice(0, 30) || [];
   return (
@@ -1258,14 +1302,13 @@ function Methods({
             </h3>
             <p>
               <strong>{source?.accession}</strong> ·{" "}
-              {chen
-                ? "12 mouse mammary samples, six groups with two replicates"
-                : "9 mouse mammary samples, three groups with three replicates"}
+              {source?.sample_description ||
+                `${plan.body.input_summary?.samples || "Reviewed"} samples`}
             </p>
             <p className="muted">
-              {chen
-                ? "Basal and luminal cells across virgin, pregnant and lactating states. Original gene-symbol availability filter is retained."
-                : "LP, ML and Basal. Sequencing lanes L004, L006 and L008 follow the paper mapping. All sample checksums are verified."}
+              {plan.body.input_summary
+                ? `${plan.body.input_summary.donors} donor pairs. Counts and sample metadata are sealed with this plan.`
+                : "Sample identities and source archives follow the registered dataset contract."}
             </p>
             <code className="digest">
               Source SHA-256: {plan.body.source_sha256}
@@ -1273,141 +1316,28 @@ function Methods({
           </div>
           <div className="method-section">
             <h3>
-              <span>02</span>Expression filtering
+              <span>02</span>Adapter parameters
             </h3>
-            <label>
-              Filtering policy
-              <select
-                disabled={!draft}
-                value={parameters.filter_policy}
-                onChange={(e) =>
-                  setParameters({
-                    ...parameters,
-                    filter_policy: e.target
-                      .value as Parameters["filter_policy"],
-                  })
-                }
-              >
-                <option value="published">
-                  Published method{" "}
-                  {chen
-                    ? "(CPM > 0.5 in 2 samples)"
-                    : "(approximately 10 counts)"}
-                </option>
-                <option value="cpm1">Controlled variation: CPM &gt; 1</option>
-              </select>
-            </label>
-            <div className="field-grid">
-              <label>
-                Minimum samples
-                <input
-                  type="number"
-                  min={2}
-                  max={chen ? 2 : 9}
-                  disabled={!draft || chen}
-                  value={parameters.min_samples}
-                  onChange={(e) =>
-                    setParameters({
-                      ...parameters,
-                      min_samples: Number(e.target.value),
-                    })
-                  }
-                />
-              </label>
-              {!chen && (
-                <>
-                  <label>
-                    Minimum count
-                    <input
-                      type="number"
-                      min={1}
-                      max={100}
-                      disabled={!draft || parameters.filter_policy === "cpm1"}
-                      value={parameters.min_count}
-                      onChange={(e) =>
-                        setParameters({
-                          ...parameters,
-                          min_count: Number(e.target.value),
-                        })
-                      }
-                    />
-                  </label>
-                  <label>
-                    Minimum total count
-                    <input
-                      type="number"
-                      min={1}
-                      max={1000}
-                      disabled={!draft || parameters.filter_policy === "cpm1"}
-                      value={parameters.min_total_count}
-                      onChange={(e) =>
-                        setParameters({
-                          ...parameters,
-                          min_total_count: Number(e.target.value),
-                        })
-                      }
-                    />
-                  </label>
-                </>
-              )}
-            </div>
-            <p className="field-hint">
-              {chen
-                ? "The published Chen filter is fixed at two samples. Count-based fields do not apply."
-                : "Minimum count and total count apply to the published filtering policy. Library sizes are recalculated after filtering."}
-            </p>
+            <ParameterEditor
+              recipe={plan.body.recipe}
+              adapter={plan.body.adapter}
+              values={parameters}
+              onChange={setParameters}
+              disabled={!draft}
+            />
+            {plan.body.adapter && (
+              <dl className="method-definitions">
+                {Object.entries(plan.body.adapter.methods).map(
+                  ([key, value]) => (
+                    <div key={key}>
+                      <dt>{friendly(key)}</dt>
+                      <dd>{value}</dd>
+                    </div>
+                  ),
+                )}
+              </dl>
+            )}
           </div>
-          {plan.body.recipe === "differential" && (
-            <div className="method-section">
-              <h3>
-                <span>03</span>Differential expression
-              </h3>
-              <p>
-                <code>~0+group+lane</code> · TMM · voom · empirical Bayes
-              </p>
-              <div className="field-grid">
-                <label>
-                  Contrast
-                  <select
-                    disabled={!draft}
-                    value={parameters.contrast}
-                    onChange={(e) =>
-                      setParameters({
-                        ...parameters,
-                        contrast: e.target.value as Parameters["contrast"],
-                      })
-                    }
-                  >
-                    {["BasalvsLP", "BasalvsML", "LPvsML"].map((v) => (
-                      <option key={v}>{v}</option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  FDR threshold
-                  <input
-                    disabled={!draft}
-                    type="number"
-                    min={0.001}
-                    max={0.2}
-                    step={0.001}
-                    value={parameters.fdr}
-                    onChange={(e) =>
-                      setParameters({
-                        ...parameters,
-                        fdr: Number(e.target.value),
-                      })
-                    }
-                  />
-                </label>
-              </div>
-              <p className="field-hint">
-                Benjamini-Hochberg across all tested genes for the selected
-                contrast. This workflow uses the paper's eBayes analysis; its
-                later TREAT test is a separate method.
-              </p>
-            </div>
-          )}
           <div className="method-section">
             <h3>
               <span>{plan.body.recipe === "differential" ? "04" : "03"}</span>
@@ -1704,6 +1634,9 @@ function Results({
           {run.body.diagnostic}
         </div>
       )}
+      {run.state === "succeeded" && run.body.plan.recipe === "deseq2" && (
+        <GeneExplorer run={run} act={act} />
+      )}
       {comparison && (
         <>
           <div className="card">
@@ -1729,7 +1662,7 @@ function Results({
                 </thead>
                 <tbody>
                   {comparison.checks.map((c) => (
-                    <tr key={c.key}>
+                    <tr key={c.key + ":" + c.basis}>
                       <td>{friendly(c.key)}</td>
                       <td>{fmt(c.expected)}</td>
                       <td>{fmt(c.actual)}</td>

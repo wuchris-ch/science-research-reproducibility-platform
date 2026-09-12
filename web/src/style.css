@@ -2431,3 +2431,433 @@ footer span {
 .imported-sources input[hidden] {
   display: none;
 }
+/* Connected study review and sensitivity exploration. */
+.study-picker,
+.study-picker form,
+.upload-row,
+.protocol-facts,
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.study-picker {
+  margin: 0 0 24px;
+}
+.study-picker select {
+  min-width: 240px;
+  flex: 1;
+}
+.study-picker form {
+  flex: 1;
+}
+.study-picker input {
+  flex: 1;
+  min-width: 160px;
+}
+.onboarding-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 24px;
+}
+.onboarding-grid > section > .card,
+.study-panel > .card {
+  margin-bottom: 24px;
+}
+.evidence-pane {
+  align-self: start;
+  position: sticky;
+  top: 24px;
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+}
+.evidence-pane .note-card {
+  margin-top: 20px;
+}
+.evidence-scroll {
+  max-height: 420px;
+  overflow: auto;
+  margin-top: 20px;
+  border-top: 1px solid var(--border, #dce2de);
+}
+.evidence-item {
+  display: block;
+  text-align: left;
+  width: 100%;
+  padding: 14px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #e1e6e2;
+  border-radius: 0;
+  color: #354b43;
+  white-space: normal;
+}
+.evidence-item span {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #617a6e;
+}
+.evidence-item p {
+  line-height: 1.6;
+  margin: 6px 0;
+  font-weight: 400;
+}
+.evidence-item.active,
+.selected-evidence {
+  background: #edf5ef;
+}
+.selected-evidence {
+  padding: 16px;
+  margin-top: 18px;
+  border-left: 3px solid #20786b;
+  border-radius: 4px;
+}
+.selected-evidence > p {
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.selected-evidence code,
+.gene-detail code,
+.protocol-card code {
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  display: block;
+  margin-top: 5px;
+}
+.evidence-page {
+  position: relative;
+  margin-top: 16px;
+  background: white;
+}
+.evidence-page img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.evidence-page > span {
+  position: absolute;
+  border: 2px solid #b38320;
+  background: #eccf5340;
+  pointer-events: none;
+}
+.upload-row {
+  margin-top: 20px;
+}
+.upload-row select {
+  width: 140px;
+}
+.upload-row input {
+  min-width: 0;
+  max-width: 100%;
+  flex: 1;
+}
+.file-list {
+  padding: 0;
+  list-style: none;
+  margin: 20px 0;
+}
+.file-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px 0;
+  border-bottom: 1px solid #e4e9e5;
+}
+.file-list strong {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+.file-list code,
+.file-list span {
+  font-size: 12px;
+  color: #657b70;
+}
+.validation-success {
+  color: #196443;
+  background: #edf6ef;
+  padding: 12px;
+  border-radius: 6px;
+}
+.method-review {
+  padding: 20px 0;
+  border-top: 1px solid #dde5df;
+}
+.method-review-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.method-review-heading h3 {
+  margin: 0;
+}
+.method-review label {
+  margin: 14px 0;
+}
+.candidate-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.candidate-list button {
+  font-size: 13px;
+  text-align: left;
+  display: block;
+  white-space: normal;
+  background: #f4f7f4;
+}
+.candidate-list small {
+  display: block;
+  font-weight: 400;
+  margin-top: 4px;
+  color: #698072;
+}
+.evidence-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.evidence-links button {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.badge.accepted,
+.badge.sealed,
+.badge.complete,
+.badge.family_supported {
+  background: #e4f2e8;
+  color: #216945;
+}
+.badge.conflicting,
+.badge.incomplete {
+  background: #fff0d7;
+  color: #846014;
+}
+.badge.proposed,
+.badge.registered {
+  background: #edf0f7;
+  color: #506887;
+}
+.badge.missing {
+  background: #f4e9e7;
+  color: #8c5048;
+}
+.protocol-form {
+  padding: 26px;
+  max-width: 800px;
+  margin: 24px 0;
+}
+.protocol-form fieldset {
+  border: 1px solid #dce5de;
+  border-radius: 6px;
+  padding: 16px;
+  margin: 20px 0;
+}
+.protocol-form .check-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 400;
+}
+.protocol-form .check-label input {
+  width: auto;
+}
+.protocol-facts {
+  padding: 12px 0;
+  margin-bottom: 12px;
+  color: #4a6858;
+}
+.protocol-facts > span {
+  background: #f0f5f1;
+  padding: 8px 12px;
+  border-radius: 5px;
+}
+.protocol-card details {
+  margin: 16px 0;
+}
+.sensitivity-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 24px 0;
+}
+.sensitivity-stats button {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: 20px;
+  background: white;
+  text-align: left;
+  white-space: normal;
+}
+.sensitivity-stats strong {
+  font-family: Georgia, serif;
+  font-size: 30px;
+  color: #234c3c;
+  font-weight: 400;
+}
+.sensitivity-stats span {
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 8px;
+  color: #668072;
+}
+.gene-explorer {
+  margin: 24px 0;
+}
+.gene-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+}
+.gene-layout > div > .table-scroll {
+  max-height: 540px;
+  overflow: auto;
+}
+.gene-layout th {
+  position: sticky;
+  top: 0;
+  background: #f3f6f3;
+}
+.gene-detail {
+  padding: 24px;
+  background: #f7f9f6;
+  border-left: 1px solid #e0e7df;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.gene-detail h3 {
+  font-size: 18px;
+  margin: 0 0 14px;
+}
+.gene-detail p {
+  line-height: 1.65;
+}
+.gene-detail details {
+  margin-top: 25px;
+}
+.gene-detail table {
+  font-size: 13px;
+}
+.gene-explorer .card-heading input,
+.study-panel .card-heading input {
+  max-width: 270px;
+}
+.expression-bars > div {
+  margin: 12px 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 5px 10px;
+  font-size: 12px;
+}
+.expression-bars > div > div {
+  grid-row: 2;
+  grid-column: 1/-1;
+  background: #e4ebe5;
+  height: 10px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.expression-bars i {
+  display: block;
+  height: 10px;
+}
+.expression-bars b {
+  font-weight: 500;
+  color: #426052;
+}
+.pagination {
+  padding: 16px;
+  justify-content: space-between;
+  font-size: 13px;
+}
+.pagination button {
+  padding: 7px 12px;
+}
+.effect-plot {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.effect-plot text {
+  font: 12px system-ui;
+  fill: #3b5447;
+}
+.method-definitions {
+  margin: 18px 0;
+}
+.method-definitions > div {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 14px;
+  padding: 8px 0;
+}
+.method-definitions dt {
+  color: #718378;
+  text-transform: capitalize;
+}
+.method-definitions dd {
+  margin: 0;
+  line-height: 1.5;
+}
+@media (max-width: 1100px) {
+  .gene-layout,
+  .onboarding-grid {
+    grid-template-columns: 1fr;
+  }
+  .evidence-pane {
+    position: static;
+    max-height: none;
+  }
+  .gene-detail {
+    border-left: 0;
+    border-top: 1px solid #e0e7df;
+  }
+  .evidence-page {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+@media (max-width: 640px) {
+  .study-picker,
+  .study-picker form,
+  .upload-row {
+    align-items: stretch;
+    flex-direction: column;
+    width: 100%;
+  }
+  .study-picker select {
+    min-width: 0;
+    width: 100%;
+  }
+  .card-heading {
+    flex-wrap: wrap;
+  }
+  .protocol-form {
+    padding: 18px;
+  }
+  .study-panel .card-heading input,
+  .gene-explorer .card-heading input {
+    max-width: none;
+    width: 100%;
+  }
+  .gene-layout {
+    display: block;
+  }
+  .method-definitions > div {
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+  .pagination {
+    gap: 8px;
+  }
+  .upload-row input {
+    width: 100%;
+  }
+}
