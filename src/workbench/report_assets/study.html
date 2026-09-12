@@ -463,7 +463,7 @@
     <main id="app" class="hide">
       <section class="hero">
         <div>
-          <span class="eyebrow">Completed study · paired RNA-seq</span>
+          <span class="eyebrow">Registered study · paired RNA-seq</span>
           <h1 id="title"></h1>
           <p class="lead" id="hypothesis"></p>
         </div>
@@ -499,8 +499,8 @@
         <p class="caption">
           * Within-run Benjamini-Hochberg at the plan's FDR threshold. The gene
           explorer applies the separately registered family criteria. Variants
-          were frozen before their execution, after the initial reference result
-          was available.
+          were frozen before their execution.
+          <span id="registration-context"></span>
         </p>
       </section>
       <section class="panel" id="explore">
@@ -591,10 +591,10 @@
         </div>
         <div class="grid">
           <div>
-            <h3>Published Figure 10</h3>
+            <h3 id="source-figure-title">Published source</h3>
             <img
               id="source-picture"
-              alt="MA plot extracted from page 25 of the version 1 source paper"
+              alt="Figure extracted from the reviewed source paper"
             />
             <p class="caption">
               <span id="source-citation"
@@ -937,6 +937,7 @@
             $("alignment").innerHTML =
               `<div class="discrepancy"><strong>Sample alignment correction preserved.</strong> ${esc(D.public_notes.alignment)}</div>`;
           if (D.public_notes?.figure) {
+            $("source-figure-title").textContent = "Published Figure 10";
             $("source-picture").src = D.public_notes.figure;
             $("source-citation").innerHTML =
               'Love, Anders, Kim and Huber (2015), version 1, page 25. CC BY 4.0. <a href="https://f1000research.com/articles/4-1070/v1">Read the source article</a>.';
@@ -947,6 +948,8 @@
                   "Open the linked source article to inspect the published figure.",
               }),
             );
+          $("registration-context").textContent =
+            D.public_notes?.registration || "";
           if (D.public_notes?.published_genes) {
             $("published-genes").innerHTML =
               '<h3 style="margin-top:24px">Independent published gene examples</h3><table><thead><tr><th>Gene</th><th>Published log2 FC</th><th>Computed log2 FC</th><th>Difference</th></tr></thead><tbody>' +
