@@ -1675,6 +1675,7 @@ tr:last-child td {
 }
 @media (max-width: 700px) {
   .sidebar {
+    visibility: hidden;
     transform: translateX(-100%);
     width: 246px;
     z-index: 15;
@@ -1682,6 +1683,7 @@ tr:last-child td {
     transition: transform 0.2s;
   }
   .sidebar.open {
+    visibility: visible;
     transform: translateX(0);
   }
   .body {

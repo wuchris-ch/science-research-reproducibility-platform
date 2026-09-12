@@ -16,10 +16,16 @@ export function LibraryImports({
     }[]
   >([]);
   const input = useRef<HTMLInputElement>(null);
+  const activeWorkspace = useRef(workspace.id);
+  activeWorkspace.current = workspace.id;
   async function refresh() {
-    setItems(await api("/workspaces/" + workspace.id + "/sources"));
+    const result = await api<typeof items>(
+      "/workspaces/" + workspace.id + "/sources",
+    );
+    if (activeWorkspace.current === workspace.id) setItems(result);
   }
   useEffect(() => {
+    setItems([]);
     act(refresh);
   }, [workspace.id]);
   return (

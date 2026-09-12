@@ -8,6 +8,11 @@ export function useDialog(active: boolean, close: () => void) {
   useEffect(() => {
     if (!active) return;
     const previous = document.activeElement as HTMLElement | null;
+    document
+      .querySelector<HTMLElement>(
+        '[role="dialog"] input, [role="dialog"] button',
+      )
+      ?.focus();
     const handler = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();

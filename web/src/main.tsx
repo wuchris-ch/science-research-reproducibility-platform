@@ -129,7 +129,8 @@ function App() {
     if (activeWorkspace.current !== workspaceId) return;
     setPlans(data.plans);
     setRuns(data.runs);
-    setEvents(await api<Event[]>(`/workspaces/${workspaceId}/events`));
+    const nextEvents = await api<Event[]>(`/workspaces/${workspaceId}/events`);
+    if (activeWorkspace.current === workspaceId) setEvents(nextEvents);
   }, [workspaceId]);
   async function act(fn: () => Promise<void>) {
     setBusy(true);
@@ -694,7 +695,6 @@ function App() {
                 <label>
                   Workspace name
                   <input
-                    autoFocus
                     name="name"
                     required
                     maxLength={120}
@@ -1121,7 +1121,6 @@ function NewPlan({
         <input
           name="title"
           required
-          autoFocus
           maxLength={160}
           defaultValue={parent ? "Stricter expression filter" : ""}
           placeholder="Figure 1: expression filtering"
