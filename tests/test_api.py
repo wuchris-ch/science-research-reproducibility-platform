@@ -76,6 +76,42 @@ def test_session_reuse_does_not_invalidate_another_tab(client):
     )
 
 
+def test_gene_explorer_paginates_missing_values_and_rechecks_access_after_cache(client):
+    from sqlalchemy import delete, update
+
+    from workbench.database import members, runs
+
+    w = client.post("/api/workspaces", json={"name": "Gene results"}).json()["id"]
+    p = client.post("/api/plans", json={"workspace_id": w, "title": "Gene effects"}).json()
+    client.post(
+        f"/api/plans/{p['id']}/lock", json={"expected_revision": 1, "reviewed_fields": REQUIRED_REVIEW}
+    )
+    run = client.post("/api/runs", json={"plan_id": p["id"]}, headers={"Idempotency-Key": "genes"}).json()
+    service = client.app.state.service
+    files = {
+        "effects.tsv": b"gene_id\tlog2FoldChange\tpvalue\tpadj\tstatus\ng2\tNA\tNA\tNA\tprefiltered\ng1\t2\t0.01\t0.02\ttested\n",
+        "normalized-counts.tsv": b"gene_id\ts1\ts2\ng1\t10\t40\ng2\t0\t0\n",
+        "samples.tsv": b"sample\tdonor\tgroup\ns1\td1\tcontrol\ns2\td1\ttreated\n",
+    }
+    run["body"]["artifacts"] = {
+        name: {"sha256": service.store.put(data), "bytes": len(data)} for name, data in files.items()
+    }
+    with service.db.transaction() as c:
+        c.execute(update(runs).where(runs.c.id == run["id"]).values(state="succeeded", body=run["body"]))
+    route = f"/api/runs/{run['id']}/genes"
+    result = client.get(route, params={"limit": 1}).json()
+    assert result["total"] == 2 and result["rows"][0]["gene_id"] == "g1"
+    assert client.get(route, params={"offset": 1}).json()["rows"][0]["padj"] is None
+    detail = client.get(route + "/g1").json()
+    assert [s["normalized_count"] for s in detail["samples"]] == [10, 40]
+    assert detail["effects_sha256"] == run["body"]["artifacts"]["effects.tsv"]["sha256"]
+    assert client.get(route + "/absent").status_code == 404
+    with service.db.transaction() as c:
+        c.execute(delete(members).where(members.c.workspace_id == w))
+    assert client.get(route).status_code == 403
+    assert client.get(route + "/g1").status_code == 403
+
+
 def test_review_survives_workspace_poll(client):
     from sqlalchemy import update
 
