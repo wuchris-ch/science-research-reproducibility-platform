@@ -1,6 +1,6 @@
 {
-  "image_id": "sha256:131a1fe10222107f890d5b581f90e01ad41f5c3dbad0b04dd61743f877a3c5fa",
-  "original_image_id": "sha256:382463699c5a44e96648f8768e7a69f7cd4019f2e9fec331c33a8e8154265df0",
+  "image_id": "sha256:6f1a21a6d95aa9b8ee10fd6c9c19a2a1904c56ab635c74bbcfb13e17648112e6",
+  "original_image_id": "sha256:970fbfeff3053b4eb85e7d7fb42164ed67b26518722fa2640e1aa6d9c75553f2",
   "checks": {
     "metrics.json": true,
     "density.tsv": true,

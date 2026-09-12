@@ -12,6 +12,24 @@ import uuid
 from pathlib import Path
 
 
+def compare_numeric(originals, outputs):
+    names = {
+        "metrics.json",
+        "density.tsv",
+        "differential.tsv",
+        "mds.tsv",
+        "genes.tsv",
+        "samples.tsv",
+        "design.tsv",
+    }
+    checks = {}
+    for original in originals.iterdir():
+        if original.name in names:
+            current = outputs / original.name
+            checks[original.name] = current.is_file() and current.read_bytes() == original.read_bytes()
+    return checks
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--context", default=os.environ.get("DOCKER_CONTEXT", ""))
@@ -127,11 +145,7 @@ def main():
         code = int((out / "exit-code").read_text())
         if code:
             raise RuntimeError("R exited " + str(code) + ": " + (out / "stderr.log").read_text())
-        checks = {}
-        for original in (root / "outputs").iterdir():
-            if original.suffix in (".tsv", ".json"):
-                p = out / original.name
-                checks[original.name] = p.is_file() and p.read_bytes() == original.read_bytes()
+        checks = compare_numeric(root / "outputs", out)
         receipt = {
             "image_id": image,
             "original_image_id": json.loads((root / "run.json").read_text())["body"]["image_id"],
