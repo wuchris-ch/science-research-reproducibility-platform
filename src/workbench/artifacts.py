@@ -7,11 +7,16 @@ from pathlib import Path
 
 MAX_BLOB = 100 * 1024 * 1024
 
+
 def canonical(value):
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode()
+    return json.dumps(
+        value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False
+    ).encode()
+
 
 def digest(value):
     return hashlib.sha256(canonical(value)).hexdigest()
+
 
 class ArtifactStore:
     def __init__(self, root: Path):
@@ -34,8 +39,10 @@ class ArtifactStore:
                 os.fsync(stream.fileno())
             os.replace(temp, target)
             directory = os.open(self.root, os.O_RDONLY)
-            try: os.fsync(directory)
-            finally: os.close(directory)
+            try:
+                os.fsync(directory)
+            finally:
+                os.close(directory)
         finally:
             Path(temp).unlink(missing_ok=True)
         return sha
@@ -59,10 +66,15 @@ class ArtifactStore:
         for file in sorted(path.rglob("*")):
             if file.is_symlink():
                 raise ValueError("symlink output rejected")
-            if file.is_dir(): continue
+            if file.is_dir():
+                continue
             if not stat.S_ISREG(file.lstat().st_mode):
                 raise ValueError("special output rejected")
             total += file.stat().st_size
-            if total > MAX_BLOB: raise ValueError("outputs exceed limit")
-            result[str(file.relative_to(path))] = {"sha256": self.put(file.read_bytes()), "bytes": file.stat().st_size}
+            if total > MAX_BLOB:
+                raise ValueError("outputs exceed limit")
+            result[str(file.relative_to(path))] = {
+                "sha256": self.put(file.read_bytes()),
+                "bytes": file.stat().st_size,
+            }
         return result

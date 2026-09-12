@@ -1,8 +1,10 @@
 from pathlib import Path
-from pydantic_settings import BaseSettings, SettingsConfigDict
+
 from pydantic import model_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ROOT = Path(__file__).resolve().parents[2]
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="WORKBENCH_", env_file=".env", extra="ignore")
@@ -10,7 +12,12 @@ class Settings(BaseSettings):
     database_url: str = ""
     docker_context: str = "colima-research"
     image: str = "research-workbench-r:reference"
-    origins: list[str] = ["http://localhost:8317", "http://127.0.0.1:8317", "http://localhost:3000", "http://127.0.0.1:3000"]
+    origins: list[str] = [
+        "http://localhost:8317",
+        "http://127.0.0.1:8317",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ]
     oidc_issuer: str = ""
     oidc_audience: str = ""
     oidc_jwks_url: str = ""
