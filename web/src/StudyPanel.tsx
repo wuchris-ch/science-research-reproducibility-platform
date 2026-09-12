@@ -55,12 +55,12 @@ type Results = {
   total: number;
   genes: Gene[];
 };
-const fmt = (value: number | null | undefined) =>
+const fmt = (value: number | null | undefined, digits = 4) =>
   value == null
     ? "Unavailable"
     : value !== 0 && Math.abs(value) < 0.0001
       ? value.toExponential(3)
-      : value.toLocaleString(undefined, { maximumSignificantDigits: 4 });
+      : value.toLocaleString(undefined, { maximumSignificantDigits: digits });
 export function StudyPanel({
   workspace,
   plans,
@@ -420,10 +420,13 @@ export function StudyPanel({
                         )}
                       </td>
                       <td>
-                        {fmt(v.run?.body.comparison?.metrics.retained_genes)}
+                        {fmt(v.run?.body.comparison?.metrics.retained_genes, 8)}
                       </td>
                       <td>
-                        {fmt(v.run?.body.comparison?.metrics.significant_genes)}
+                        {fmt(
+                          v.run?.body.comparison?.metrics.significant_genes,
+                          8,
+                        )}
                       </td>
                     </tr>
                   ))}
