@@ -538,8 +538,14 @@ function App() {
                   </div>
                   <h1>{plan.body.title}</h1>
                   <p className="subtitle">
-                    {source?.authors} · {source?.year} <span>·</span>{" "}
-                    {source?.accession} <span>·</span>{" "}
+                    {[
+                      source?.authors || "Reviewed study",
+                      source?.year,
+                      source?.accession,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}{" "}
+                    <span>·</span>{" "}
                     {plan.body.recipe === "density"
                       ? "Figure 1 · Expression filtering"
                       : plan.body.recipe === "mds"
@@ -1029,7 +1035,13 @@ function Overview({
           </div>
           <div className="workflow">
             {[
-              ["01", "Count matrix", "GEO · " + (source?.accession || "")],
+              [
+                "01",
+                "Count matrix",
+                source?.accession
+                  ? "GEO · " + source.accession
+                  : "Validated uploaded counts",
+              ],
               [
                 "02",
                 "Expression filter",
