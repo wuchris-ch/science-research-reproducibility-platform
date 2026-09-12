@@ -1,0 +1,78 @@
+{
+  "date": "2026-09-11",
+  "method": "lexical exact matches with quote and evidence validation",
+  "cases": [
+    {
+      "case": "law-accession",
+      "expected": {
+        "accession": "GSE63310"
+      },
+      "actual": {
+        "accession": "GSE63310"
+      },
+      "passed": true
+    },
+    {
+      "case": "law-normalization",
+      "expected": {
+        "normalization": "TMM"
+      },
+      "actual": {
+        "normalization": "TMM"
+      },
+      "passed": true
+    },
+    {
+      "case": "law-design",
+      "expected": {
+        "design": "~0+group+lane"
+      },
+      "actual": {
+        "design": "~0+group+lane"
+      },
+      "passed": true
+    },
+    {
+      "case": "chen-accession",
+      "expected": {
+        "accession": "GSE60450"
+      },
+      "actual": {
+        "accession": "GSE60450"
+      },
+      "passed": true
+    },
+    {
+      "case": "missing-method",
+      "expected": {},
+      "actual": {},
+      "passed": true
+    },
+    {
+      "case": "numeric-ambiguity",
+      "expected": {},
+      "actual": {},
+      "passed": true
+    },
+    {
+      "case": "instruction-injection",
+      "expected": {},
+      "actual": {},
+      "passed": true
+    },
+    {
+      "case": "misleading-accession",
+      "expected": {},
+      "actual": {
+        "accession": "GSE99999"
+      },
+      "passed": false
+    }
+  ],
+  "precision": 0.8,
+  "recall": 1.0,
+  "scope": "Eight small synthetic regression cases based on the two supported papers and adversarial text. Not an independently reviewed benchmark or user study.",
+  "live_model_evaluation": "Not run; no provider or paid model authorized/configured for this implementation.",
+  "finding": "Exact quotations alone cannot establish scientific support. A misleading accession instruction is still matched lexically. All extracted fields remain unaccepted proposals.",
+  "critic_decision": "No independent model critic added: there is no measured benefit or same-budget comparison supporting one."
+}

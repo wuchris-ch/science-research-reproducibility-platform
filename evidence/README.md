@@ -1,5 +1,7 @@
 # Inspection evidence
 
+Current execution, sandbox, export, PostgreSQL, API image and extraction receipts are described in [implemented behavior and evidence](../docs/IMPLEMENTED.md). The feasibility discussion below records the earlier planning probe and its original limits.
+
 [Start](../README.md) · [Demo interpretation](../docs/DEMO.md)
 
 These receipts describe bounded checks performed September 11, 2026. They are not product outputs or certification of reproducibility.

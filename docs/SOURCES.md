@@ -1,5 +1,7 @@
 # Source register
 
+> Design record from the planning phase. See [implemented behavior and evidence](IMPLEMENTED.md) and the [current operating guide](RUNBOOK.md) for delivered capabilities and remaining gates.
+
 [Start](../README.md) · [Product](PRODUCT.md) · [Demo](DEMO.md) · [Repository evidence](REUSE.md)
 
 Sources were checked September 11, 2026. Publication dates below come from page/article metadata, not search-engine “crawled” dates. Mutable documentation is identified as such. Official documentation establishes intended behavior; local observations and source inspection establish only the specific things inspected. No vendor's performance or security claim was independently benchmarked.

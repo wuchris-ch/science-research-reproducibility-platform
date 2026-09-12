@@ -1,5 +1,7 @@
 # Testing and evaluation plan
 
+> Design record from the planning phase. See [implemented behavior and evidence](IMPLEMENTED.md) and the [current operating guide](RUNBOOK.md) for delivered capabilities and remaining gates.
+
 [Start](../README.md) · [Architecture](ARCHITECTURE.md) · [Implementation](IMPLEMENTATION.md)
 
 ## Evidence levels

@@ -1,0 +1,34 @@
+{
+  "date": "2026-09-11",
+  "method": "Observed in-app browser walkthrough, backed by persisted run and export events. Not an automated browser test suite.",
+  "runs": {
+    "b2e0e44d": {
+      "id": "b2e0e44d5c4a4589b49d50231c3658d2",
+      "state": "succeeded",
+      "retained_genes": 14165,
+      "image_id": "sha256:382463699c5a44e96648f8768e7a69f7cd4019f2e9fec331c33a8e8154265df0"
+    },
+    "ce1045e8": {
+      "id": "ce1045e8b72b4924945d53bad7801590",
+      "state": "succeeded",
+      "retained_genes": 16624,
+      "image_id": "sha256:970fbfeff3053b4eb85e7d7fb42164ed67b26518722fa2640e1aa6d9c75553f2"
+    }
+  },
+  "observations": [
+    "Created a controlled variation through the interface, checked five required method fields, locked it and ran it successfully",
+    "Recorded a scientific review; it remained visible after refresh",
+    "Selected analysis, execution and tab remained selected after reload",
+    "Viewed the verified Law page-8 figure overlay; Escape closed the viewer and restored focus to Open paper",
+    "At a 390 by 844 viewport, Overview and Results had no document-level horizontal overflow (375 CSS pixels content width); closed navigation was hidden from keyboard focus",
+    "At a 1440 by 1000 viewport, reference and regenerated figures were readable side by side with no document-level overflow (1425 CSS pixels content width)",
+    "Variation dialog took focus and returned focus to Create variation on Escape",
+    "Submitted a fresh reference execution after restarting the API and worker; it succeeded and exposed sealed inputs.tar",
+    "Clicked Export reproducibility bundle for the fresh run; the server persisted the export event and the interface displayed no error"
+  ],
+  "limitations": [
+    "No live OIDC tenant or model provider was exercised",
+    "Imported PDF storage and workspace boundaries were verified by API tests; no browser file-picker test was performed"
+  ],
+  "viewport_override_restored": true
+}

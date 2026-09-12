@@ -1,0 +1,45 @@
+name: research-workbench
+services:
+  database:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: workbench
+      POSTGRES_DB: workbench
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a database password}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-8318}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U workbench -d workbench"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  api:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: research-workbench-api:local
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      WORKBENCH_DATA_DIR: /data
+      WORKBENCH_DATABASE_URL: postgresql+psycopg://workbench:${POSTGRES_PASSWORD}@database:5432/workbench
+      WORKBENCH_ORIGINS: ${WORKBENCH_ORIGINS:?Set the exact HTTPS public origin as a JSON list}
+      WORKBENCH_OIDC_ISSUER: ${WORKBENCH_OIDC_ISSUER:?Configure OIDC issuer}
+      WORKBENCH_OIDC_AUDIENCE: ${WORKBENCH_OIDC_AUDIENCE:?Configure OIDC audience}
+      WORKBENCH_OIDC_JWKS_URL: ${WORKBENCH_OIDC_JWKS_URL:?Configure OIDC JWKS URL}
+    ports:
+      - "127.0.0.1:8317:8317"
+    volumes:
+      - ${WORKBENCH_DATA_DIR:?Set the absolute shared data path}:/data
+    read_only: true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=32m
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+volumes:
+  postgres_data:

@@ -1,5 +1,7 @@
 # Repository reuse assessment
 
+> Design record from the planning phase. See [implemented behavior and evidence](IMPLEMENTED.md) and the [current operating guide](RUNBOOK.md) for delivered capabilities and remaining gates.
+
 [Start](../README.md) · [Architecture](ARCHITECTURE.md) · [Inspection receipts](../evidence/repository-inspection.json)
 
 ## Inspection boundary

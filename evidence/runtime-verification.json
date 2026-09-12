@@ -1,0 +1,20 @@
+{
+  "date": "2026-09-11",
+  "image_id": "sha256:382463699c5a44e96648f8768e7a69f7cd4019f2e9fec331c33a8e8154265df0",
+  "engine_id": "92cee3d2-ce8a-4480-82cc-f3947877f5e9",
+  "checks": {
+    "network_none": true,
+    "read_only_root": true,
+    "non_root_user": true,
+    "capabilities_dropped": true,
+    "no_new_privileges": true,
+    "memory_bound": true,
+    "pids_bound": true,
+    "no_host_mounts": true,
+    "bounded_tmpfs": true,
+    "root_write_denied": true,
+    "network_probe_denied": true,
+    "cancelled_after_termination": true
+  },
+  "scope": "Observed curated-code confinement in the dedicated Colima VM. Not certification for hostile arbitrary code."
+}

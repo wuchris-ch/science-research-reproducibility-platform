@@ -1,5 +1,7 @@
 # Local operation, team path and learning
 
+> Design record from the planning phase. See [implemented behavior and evidence](IMPLEMENTED.md) and the [current operating guide](RUNBOOK.md) for delivered capabilities and remaining gates.
+
 [Start](../README.md) · [Backlog](IMPLEMENTATION.md) · [Architecture](ARCHITECTURE.md) · [Evaluation](VERIFICATION.md)
 
 ## Mac environment

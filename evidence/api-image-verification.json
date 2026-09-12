@@ -1,0 +1,13 @@
+{
+  "date": "2026-09-11",
+  "image_id": "sha256:15c53fea952ba7a367fbc83690a910360c3c5986d55fb1ec5db4cd6b5facedc5",
+  "checks": {
+    "health_and_database": true,
+    "static_ui": true,
+    "no_docker_cli_or_socket": true,
+    "non_root": true,
+    "read_only_root": true,
+    "no_host_mounts": true
+  },
+  "scope": "Local container image smoke test using ephemeral SQLite. Does not verify a live OIDC tenant or production deployment."
+}

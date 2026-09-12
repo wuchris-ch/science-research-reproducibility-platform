@@ -1,0 +1,22 @@
+[
+  {
+    "file": "law2018.pdf",
+    "url": "https://f1000research.com/articles/5-1408/v3/pdf?article_uuid=57a262b2-2e9b-44e8-980c-0cd90381c9fe",
+    "sha256": "65ad336492e083c9507428abd802b7f65db2ecaef3ffef176878e9e12a18e5f7"
+  },
+  {
+    "file": "law2018-figure.gif",
+    "url": "https://f1000research-files.f1000.com/manuscripts/18347/b4b83be9-b49a-4c20-a8a7-70e2b35f226b_figure1.gif",
+    "sha256": "3b73585d8e6aa01f1e524faacc2b8e9a3c41fcc8e6c44dd1019d72e525f8562c"
+  },
+  {
+    "file": "chen2016-figure.gif",
+    "url": "https://f1000research-files.f1000.com/manuscripts/9996/16888710-6725-433b-ab2a-13c04bfe6cb5_figure1.gif",
+    "sha256": "c94c547331ca67da90f16e4078684e6fdfc6786a8987b72165b08239b37a3812"
+  },
+  {
+    "file": "chen2016.pdf",
+    "url": "https://f1000research.com/articles/5-1438/v2/pdf?article_uuid=b7ade5e0-5dca-4900-b151-12f8fb223993",
+    "sha256": "dfd67412e2e2701e263cd8736ed06f0a64d83f965902711b37e4c2df03d17d76"
+  }
+]

@@ -1,5 +1,7 @@
 # Architecture and contracts
 
+> Design record from the planning phase. See [implemented behavior and evidence](IMPLEMENTED.md) and the [current operating guide](RUNBOOK.md) for delivered capabilities and remaining gates.
+
 [Start](../README.md) · [Demo](DEMO.md) · [Backlog](IMPLEMENTATION.md) · [Verification](VERIFICATION.md)
 
 ## System shape
