@@ -1,0 +1,209 @@
+{
+  "law2018": {
+    "title": "RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR",
+    "authors": "Law et al.",
+    "year": 2018,
+    "doi": "10.12688/f1000research.9005.3",
+    "version": 3,
+    "accession": "GSE63310",
+    "figure": "Figure 1",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4937821/fullTextXML",
+    "sha256": "83b6485c4f7e2951ac684ff8456b8c51dfd0887ce949b0972b626eb36e58bdee",
+    "license": "CC BY 4.0",
+    "recipes": [
+      "density",
+      "differential"
+    ],
+    "input_shape": {
+      "genes": 27179,
+      "samples": 9
+    },
+    "sample_description": "Three cell populations, three replicates each",
+    "figure_title": "Figure 1. Expression before and after filtering",
+    "geometry_file": "law-geometry.json",
+    "legacy_input": {
+      "reader": "count-files",
+      "filter": "group-rule",
+      "sample_map": [
+        {
+          "file": "GSM1545535_10_6_5_11.txt",
+          "sample": "10_6_5_11",
+          "group": "LP",
+          "lane": "L004"
+        },
+        {
+          "file": "GSM1545536_9_6_5_11.txt",
+          "sample": "9_6_5_11",
+          "group": "ML",
+          "lane": "L004"
+        },
+        {
+          "file": "GSM1545538_purep53.txt",
+          "sample": "purep53",
+          "group": "Basal",
+          "lane": "L004"
+        },
+        {
+          "file": "GSM1545539_JMS8-2.txt",
+          "sample": "JMS8-2",
+          "group": "Basal",
+          "lane": "L006"
+        },
+        {
+          "file": "GSM1545540_JMS8-3.txt",
+          "sample": "JMS8-3",
+          "group": "ML",
+          "lane": "L006"
+        },
+        {
+          "file": "GSM1545541_JMS8-4.txt",
+          "sample": "JMS8-4",
+          "group": "LP",
+          "lane": "L006"
+        },
+        {
+          "file": "GSM1545542_JMS8-5.txt",
+          "sample": "JMS8-5",
+          "group": "Basal",
+          "lane": "L006"
+        },
+        {
+          "file": "GSM1545544_JMS9-P7c.txt",
+          "sample": "JMS9-P7c",
+          "group": "ML",
+          "lane": "L008"
+        },
+        {
+          "file": "GSM1545545_JMS9-P8c.txt",
+          "sample": "JMS9-P8c",
+          "group": "LP",
+          "lane": "L008"
+        }
+      ]
+    }
+  },
+  "chen2016": {
+    "title": "From reads to genes to pathways: differential expression analysis of RNA-Seq experiments using Rsubread and the edgeR quasi-likelihood pipeline",
+    "authors": "Chen et al.",
+    "year": 2016,
+    "doi": "10.12688/f1000research.8987.2",
+    "version": 2,
+    "accession": "GSE60450",
+    "figure": "Figure 1",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4934518/fullTextXML",
+    "sha256": "d0922133ec1126302fe84e84a19d8695616be59c5603c60779907e2434b68db4",
+    "license": "CC BY 4.0",
+    "recipes": [
+      "mds"
+    ],
+    "parameter_defaults": {
+      "min_samples": 2
+    },
+    "parameter_constraints": {
+      "min_samples": [
+        2
+      ]
+    },
+    "input_shape": {
+      "genes": 27179,
+      "samples": 12
+    },
+    "sample_description": "Two cell types across three biological states",
+    "figure_title": "Figure 1. Sample relationships",
+    "geometry_file": "chen-geometry.json",
+    "legacy_input": {
+      "reader": "annotated-matrix",
+      "filter": "annotated-cpm",
+      "sample_map": [
+        {
+          "column": "MCL1-DG_BC2CTUACXX_ACTTGA_L002_R1",
+          "sample": "MCL1-DG",
+          "group": "B.virgin"
+        },
+        {
+          "column": "MCL1-DH_BC2CTUACXX_CAGATC_L002_R1",
+          "sample": "MCL1-DH",
+          "group": "B.virgin"
+        },
+        {
+          "column": "MCL1-DI_BC2CTUACXX_ACAGTG_L002_R1",
+          "sample": "MCL1-DI",
+          "group": "B.pregnant"
+        },
+        {
+          "column": "MCL1-DJ_BC2CTUACXX_CGATGT_L002_R1",
+          "sample": "MCL1-DJ",
+          "group": "B.pregnant"
+        },
+        {
+          "column": "MCL1-DK_BC2CTUACXX_TTAGGC_L002_R1",
+          "sample": "MCL1-DK",
+          "group": "B.lactating"
+        },
+        {
+          "column": "MCL1-DL_BC2CTUACXX_ATCACG_L002_R1",
+          "sample": "MCL1-DL",
+          "group": "B.lactating"
+        },
+        {
+          "column": "MCL1-LA_BC2CTUACXX_GATCAG_L001_R1",
+          "sample": "MCL1-LA",
+          "group": "L.virgin"
+        },
+        {
+          "column": "MCL1-LB_BC2CTUACXX_TGACCA_L001_R1",
+          "sample": "MCL1-LB",
+          "group": "L.virgin"
+        },
+        {
+          "column": "MCL1-LC_BC2CTUACXX_GCCAAT_L001_R1",
+          "sample": "MCL1-LC",
+          "group": "L.pregnant"
+        },
+        {
+          "column": "MCL1-LD_BC2CTUACXX_GGCTAC_L001_R1",
+          "sample": "MCL1-LD",
+          "group": "L.pregnant"
+        },
+        {
+          "column": "MCL1-LE_BC2CTUACXX_TAGCTT_L001_R1",
+          "sample": "MCL1-LE",
+          "group": "L.lactating"
+        },
+        {
+          "column": "MCL1-LF_BC2CTUACXX_CTTGTA_L001_R1",
+          "sample": "MCL1-LF",
+          "group": "L.lactating"
+        }
+      ]
+    }
+  },
+  "airway2015": {
+    "title": "RNA-Seq workflow: gene-level exploratory analysis and differential expression",
+    "authors": "Love, Anders, Kim and Huber",
+    "year": 2015,
+    "doi": "10.12688/f1000research.7035.1",
+    "version": 1,
+    "accession": "GSE52778",
+    "figure": "Figure 10",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4670015/fullTextXML",
+    "sha256": "e2a006eb119941122e9712ec1423d89222a05f72aade452e81d17e677bc1a6da",
+    "license": "CC BY 4.0",
+    "recipes": [
+      "deseq2"
+    ],
+    "parameter_defaults": {},
+    "input_shape": {
+      "genes": 64102,
+      "samples": 8
+    },
+    "sample_description": "Four donor pairs, dexamethasone versus control",
+    "figure_title": "Figure 10. Treatment response",
+    "geometry_file": "airway-geometry.json",
+    "figure_format": "png",
+    "input_hashes": {
+      "counts.tsv": "92141360e6c4d2df11c8a22dca8634a324abb6bb88f1114d3ff9c53b4da3df70",
+      "samples.tsv": "a2ef7a8f12c2d1ba148426ea7c2ec41c391eaa4198ed5cde7c1a62b52c9c9859"
+    }
+  }
+}

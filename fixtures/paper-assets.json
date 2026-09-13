@@ -18,5 +18,10 @@
     "file": "chen2016.pdf",
     "url": "https://f1000research.com/articles/5-1438/v2/pdf?article_uuid=b7ade5e0-5dca-4900-b151-12f8fb223993",
     "sha256": "dfd67412e2e2701e263cd8736ed06f0a64d83f965902711b37e4c2df03d17d76"
+  },
+  {
+    "file": "airway2015.pdf",
+    "url": "https://f1000research.com/articles/4-1070/v1/pdf?article_uuid=0108415d-9a11-464d-94cb-632b5b75694d",
+    "sha256": "f0715ad6a13e2715a76ee5ce77778c2afc0c5f0304a6e101b2810eb98e8b3938"
   }
 ]

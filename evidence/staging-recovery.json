@@ -1,0 +1,7 @@
+{
+  "date": "2026-09-11",
+  "interruption": "After staging read-only files, before ready marker",
+  "resume_succeeded": true,
+  "counts_sha256": "92141360e6c4d2df11c8a22dca8634a324abb6bb88f1114d3ff9c53b4da3df70",
+  "image_id": "sha256:1832e8a44c3c2e8ebdf9e33b26e30fd721ce3d67fe33eee1b3607b562d233f13"
+}

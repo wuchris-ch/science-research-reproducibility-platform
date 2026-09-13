@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Explore a completed, source-linked RNA-seq sensitivity study with all variants, gene effects and portable evidence."
+    />
+    <title>{{TITLE}} | Research Workbench</title>
+    <style>
+      :root {
+        --ink: #24382f;
+        --muted: #69746a;
+        --line: #dce2d8;
+        --paper: #f4f4ec;
+        --card: #fffef8;
+        --sage: #317461;
+        --accent: #dfead9;
+        --amber: #936130;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          16px/1.55 system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      header {
+        border-bottom: 1px solid var(--line);
+        padding: 20px max(24px, calc((100vw - 1360px) / 2));
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        background: var(--card);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 650;
+        letter-spacing: -0.3px;
+      }
+      .mark {
+        background: var(--sage);
+        color: white;
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border-radius: 10px;
+        font-size: 22px;
+      }
+      nav {
+        display: flex;
+        gap: 22px;
+        flex-wrap: wrap;
+      }
+      a {
+        color: var(--sage);
+        text-underline-offset: 3px;
+      }
+      nav a {
+        text-decoration: none;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      main {
+        max-width: 1408px;
+        margin: auto;
+        padding: 52px 24px;
+      }
+      h1 {
+        font:
+          500 clamp(30px, 4vw, 47px) / 1.12 Georgia,
+          serif;
+        letter-spacing: -1px;
+        max-width: 850px;
+        margin: 14px 0;
+      }
+      h2 {
+        font:
+          500 25px/1.2 Georgia,
+          serif;
+        margin: 6px 0 18px;
+      }
+      h3 {
+        margin: 0 0 12px;
+        font-size: 15px;
+      }
+      .eyebrow {
+        color: var(--sage);
+        font: 600 11px system-ui;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+      }
+      .lead {
+        max-width: 790px;
+        color: var(--muted);
+        font-size: 16px;
+      }
+      .badge {
+        border: 1px solid #bfd2bc;
+        background: #e6efdf;
+        padding: 5px 10px;
+        border-radius: 30px;
+        font-size: 11px;
+        white-space: nowrap;
+      }
+      .hero {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        align-items: start;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin: 30px 0;
+      }
+      .stat,
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+      }
+      .stat {
+        padding: 20px;
+      }
+      .stat strong {
+        display: block;
+        font:
+          500 32px Georgia,
+          serif;
+        margin: 7px 0;
+      }
+      .stat p {
+        font-size: 12px;
+        margin: 0;
+        color: var(--muted);
+      }
+      .panel {
+        padding: 25px;
+        margin: 20px 0;
+      }
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 15px;
+      }
+      .section-head h2 {
+        margin: 0;
+      }
+      .note {
+        color: var(--muted);
+        font-size: 13px;
+        max-width: 900px;
+      }
+      .discrepancy {
+        border-left: 3px solid var(--amber);
+        background: #f5eee1;
+        padding: 15px 20px;
+        margin: 22px 0;
+      }
+      .discrepancy strong {
+        color: #754b26;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.18fr) minmax(0, 1fr);
+        gap: 24px;
+      }
+      .gene-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 25px;
+      }
+      .scroll {
+        overflow: auto;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 14px;
+        white-space: nowrap;
+      }
+      th {
+        text-align: left;
+        color: var(--muted);
+        font-weight: 550;
+        padding: 10px;
+        border-bottom: 1px solid var(--line);
+        background: #f2f4ed;
+      }
+      td {
+        padding: 10px;
+        border-bottom: 1px solid #e9ece4;
+      }
+      tbody tr.selected {
+        background: #e9f1e2;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+        border: 1px solid #bdcdbc;
+        border-radius: 6px;
+        background: #fafbf5;
+        color: var(--sage);
+        padding: 8px 12px;
+        font-size: 14px;
+      }
+      button:hover {
+        background: var(--accent);
+      }
+      button:disabled {
+        opacity: 0.45;
+        cursor: default;
+      }
+      button:focus-visible,
+      a:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid #2b7566;
+        outline-offset: 3px;
+      }
+      .link {
+        border: 0;
+        padding: 0;
+        background: none;
+        font: inherit;
+        color: var(--sage);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      input,
+      select {
+        border: 1px solid #cdd6c9;
+        border-radius: 6px;
+        padding: 9px;
+        background: white;
+        font-size: 13px;
+        max-width: 100%;
+      }
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 14px 0;
+      }
+      .filters input {
+        flex: 1;
+        min-width: 160px;
+      }
+      .pager {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        margin-top: 14px;
+      }
+      .pager div {
+        display: flex;
+        gap: 6px;
+      }
+      .chart {
+        width: 100%;
+        height: 300px;
+        display: block;
+        background: #fafbf6;
+        border-radius: 8px;
+      }
+      .plot-label {
+        font: 11px system-ui;
+        fill: var(--muted);
+      }
+      .plot-title {
+        font: 11px system-ui;
+        fill: var(--ink);
+      }
+      .gene-title {
+        font-family: monospace;
+        font-size: 17px;
+        margin-top: 8px;
+        overflow-wrap: anywhere;
+      }
+      .subtle {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .method-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .method {
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 15px;
+        min-width: 0;
+      }
+      .method p {
+        font-size: 13px;
+        margin: 5px 0;
+        overflow-wrap: anywhere;
+      }
+      summary {
+        cursor: pointer;
+        color: var(--sage);
+        font-size: 12px;
+      }
+      blockquote {
+        font-size: 12px;
+        margin: 12px 0;
+        padding: 10px;
+        border-left: 2px solid #9dbb99;
+        background: #f2f5ec;
+        max-height: 240px;
+        overflow: auto;
+      }
+      .hash {
+        font:
+          11px/1.8 ui-monospace,
+          monospace;
+        overflow-wrap: anywhere;
+      }
+      .lineage {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+      }
+      .lineage > div {
+        padding: 12px 0;
+        border-top: 2px solid #acbea5;
+      }
+      details pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        font-size: 11px;
+        background: #f3f5ef;
+        padding: 15px;
+      }
+      .caption {
+        margin: 8px 0 18px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .status {
+        padding: 80px 24px;
+        text-align: center;
+      }
+      .footer {
+        margin-top: 32px;
+        font-size: 12px;
+        color: var(--muted);
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+      }
+      .hide {
+        display: none;
+      }
+      #ma {
+        cursor: crosshair;
+      }
+      #source-picture {
+        max-width: 100%;
+        max-height: 420px;
+        object-fit: contain;
+      }
+      #reference-picture {
+        max-width: 100%;
+        max-height: 420px;
+        object-fit: contain;
+      }
+      @media (max-width: 1000px) {
+        .grid,
+        .gene-grid {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .method-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .lineage {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 580px) {
+        header {
+          align-items: start;
+          flex-direction: column;
+          padding: 16px 20px;
+        }
+        main {
+          padding: 28px 14px;
+        }
+        .hero {
+          display: block;
+        }
+        .hero > .badge {
+          display: inline-block;
+          margin-top: 12px;
+        }
+        .panel {
+          padding: 17px;
+        }
+        .stats {
+          gap: 10px;
+        }
+        .stat {
+          padding: 14px;
+        }
+        .stat strong {
+          font-size: 29px;
+        }
+        .method-grid,
+        .lineage {
+          grid-template-columns: 1fr;
+        }
+        .section-head {
+          align-items: start;
+          flex-wrap: wrap;
+        }
+        .pager {
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .footer {
+          display: block;
+        }
+        .chart {
+          height: 270px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <span class="mark" aria-hidden="true">⌁</span>Research Workbench
+      </div>
+      <nav aria-label="Report sections">
+        <a href="#explore">Gene explorer</a><a href="#variants">Variants</a
+        ><a href="#evidence">Source evidence</a
+        ><a href="#provenance">Provenance</a>
+      </nav>
+    </header>
+    <div id="loading" class="status" role="status">
+      Opening the complete study results…
+    </div>
+    <main id="app" class="hide">
+      <section class="hero">
+        <div>
+          <span class="eyebrow">Registered study · paired RNA-seq</span>
+          <h1 id="title"></h1>
+          <p class="lead" id="hypothesis"></p>
+        </div>
+        <span class="badge" id="completion"></span>
+      </section>
+      <div id="stats" class="stats"></div>
+      <div id="discrepancy" class="discrepancy"></div>
+      <section class="panel" id="variants">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">01 / Prespecified analysis family</span>
+            <h2>Every variant, one shared input</h2>
+          </div>
+          <button id="download">Download study data</button>
+        </div>
+        <p class="note" id="rule"></p>
+        <div class="scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Variant</th>
+                <th>Total-count minimum</th>
+                <th>Size factors</th>
+                <th>Independent filtering</th>
+                <th>Retained genes</th>
+                <th>Significant genes *</th>
+                <th>State</th>
+              </tr>
+            </thead>
+            <tbody id="variant-rows"></tbody>
+          </table>
+        </div>
+        <p class="caption">
+          * Within-run Benjamini-Hochberg at the plan's FDR threshold. The gene
+          explorer applies the separately registered family criteria. Variants
+          were frozen before their execution.
+          <span id="registration-context"></span>
+        </p>
+      </section>
+      <section class="panel" id="explore">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">02 / Effect sizes and stability</span>
+            <h2>Follow a gene through the full family</h2>
+          </div>
+          <span class="badge">All input genes retained in the record</span>
+        </div>
+        <div class="gene-grid">
+          <div>
+            <label for="search" class="subtle"
+              >Search the complete input universe</label
+            >
+            <div class="filters">
+              <input
+                id="search"
+                type="search"
+                placeholder="Gene identifier"
+                autocomplete="off"
+              /><select
+                id="class"
+                aria-label="Stability classification"
+              ></select>
+            </div>
+            <div class="scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Gene</th>
+                    <th>Classification</th>
+                    <th>Detections *</th>
+                  </tr>
+                </thead>
+                <tbody id="gene-rows"></tbody>
+              </table>
+            </div>
+            <div class="pager">
+              <span id="page-label" aria-live="polite"></span>
+              <div>
+                <button id="previous">Previous</button
+                ><button id="next">Next</button>
+              </div>
+            </div>
+            <p class="caption">
+              * Within-variant adjusted P below the family's alpha. Family
+              support additionally requires all variant-adjusted results to pass
+              the family-wide correction and effect threshold.
+            </p>
+          </div>
+          <div>
+            <h3 id="gene-title" class="gene-title"></h3>
+            <p id="gene-status" class="subtle"></p>
+            <svg
+              id="forest"
+              class="chart"
+              viewBox="0 0 500 300"
+              role="img"
+              aria-label="Selected gene effects and pointwise 95 percent intervals across variants"
+            ></svg>
+            <p class="caption">
+              Log2 fold change, treated versus control. Intervals are
+              approximate, pointwise 95% intervals from coefficient standard
+              errors; they are not simultaneous family intervals.
+            </p>
+            <svg
+              id="donors"
+              class="chart"
+              viewBox="0 0 500 300"
+              role="img"
+              aria-label="Selected gene normalized counts by donor and condition"
+            ></svg>
+            <p class="caption">
+              Reference-run normalized counts on log2(count + 1), linked by
+              donor. Statistical inference adjusts for donor.
+            </p>
+            <div id="gene-numbers" class="scroll"></div>
+          </div>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">03 / Published and regenerated results</span>
+            <h2>Inspect agreement and discrepancies</h2>
+          </div>
+        </div>
+        <div class="grid">
+          <div>
+            <h3 id="source-figure-title">Published source</h3>
+            <img
+              id="source-picture"
+              alt="Figure extracted from the reviewed source paper"
+            />
+            <p class="caption">
+              <span id="source-citation"
+                >Source documents and exact hashes are recorded below.</span
+              >
+            </p>
+          </div>
+          <div>
+            <h3>Reference result, linked to gene details</h3>
+            <canvas
+              id="ma"
+              class="chart"
+              width="700"
+              height="420"
+              role="img"
+              aria-label="Reference MA plot. Select a point to inspect the nearest gene."
+            ></canvas>
+            <p class="caption">
+              Select a point to inspect the nearest gene. Green points pass the
+              registered criteria across every variant. Other estimated genes
+              are gray.
+            </p>
+          </div>
+        </div>
+        <div id="checks" class="scroll"></div>
+        <div id="published-genes" class="scroll"></div>
+        <p class="note" id="adaptations"></p>
+      </section>
+      <section class="panel" id="evidence">
+        <span class="eyebrow">04 / Source to method</span>
+        <h2>Trace each reviewed decision</h2>
+        <p class="note">
+          Each accepted method retains its source regions, original proposals
+          and review rationale. Input validation and source interpretation are
+          separate records.
+        </p>
+        <div id="methods" class="method-grid"></div>
+        <details>
+          <summary>Inspect complete evidence graph and source hashes</summary>
+          <pre id="graph"></pre>
+        </details>
+        <div id="alignment"></div>
+      </section>
+      <section class="panel" id="provenance">
+        <span class="eyebrow">05 / Portable execution record</span>
+        <h2>One result, an inspectable chain of evidence</h2>
+        <div id="lineage" class="lineage"></div>
+        <p id="replay" class="note"></p>
+        <details>
+          <summary>Open the frozen study protocol</summary>
+          <pre id="protocol"></pre>
+        </details>
+        <p class="note">
+          This report runs entirely in your browser. The family bundle includes
+          every variant's inputs, numerical outputs, runtime recipe and replay
+          instructions.
+        </p>
+        <p>
+          <a id="bundle-link" class="hide" download
+            >Download the replayable family bundle</a
+          >
+        </p>
+      </section>
+      <footer class="footer">
+        <span>Research Workbench · source-linked computational research</span
+        ><a
+          href="https://github.com/wuchris-ch/science-research-reproducibility-platform"
+          >Code, adapters and verification</a
+        >
+      </footer>
+    </main>
+    <script id="study-data" type="application/octet-stream">
+      {{DATA}}
+    </script>
+    <script>
+      (async () => {
+        "use strict";
+        const $ = (id) => document.getElementById(id),
+          esc = (s) =>
+            String(s ?? "").replace(
+              /[&<>"']/g,
+              (c) =>
+                ({
+                  "&": "&amp;",
+                  "<": "&lt;",
+                  ">": "&gt;",
+                  '"': "&quot;",
+                  "'": "&#39;",
+                })[c],
+            ),
+          fmt = (v, d = 4) =>
+            v == null
+              ? "Unavailable"
+              : v !== 0 && Math.abs(Number(v)) < 0.0001
+                ? Number(v).toExponential(d - 1)
+                : Number(v).toLocaleString(undefined, {
+                    maximumSignificantDigits: d,
+                  }),
+          label = (s) => s.replaceAll("_", " ");
+        try {
+          const bytes = Uint8Array.from(
+            atob($("study-data").textContent.trim()),
+            (c) => c.charCodeAt(0),
+          );
+          const raw = await new Response(
+            new Blob([bytes])
+              .stream()
+              .pipeThrough(new DecompressionStream("gzip")),
+          ).text();
+          const D = JSON.parse(raw);
+          const S = D.summary,
+            P = D.protocol;
+          let page = 0,
+            selected = null,
+            shown = [],
+            maPoints = [];
+          const pageSize = 18;
+          $("title").textContent = D.title;
+          $("hypothesis").textContent = P.hypothesis;
+          $("completion").textContent =
+            `${S.completed_variants} / ${S.planned_variants} variants completed`;
+          $("stats").innerHTML = [
+            ["Input genes", D.genes.length, "Complete shared input universe"],
+            [
+              "Donor pairs",
+              D.samples.length / 2,
+              "One control and one treated per donor",
+            ],
+            [
+              "Family-supported",
+              S.counts.family_supported || 0,
+              "Every variant passes the registered criteria",
+            ],
+            [
+              "Family hypotheses",
+              S.family_hypotheses,
+              "Input genes × planned variants",
+            ],
+          ]
+            .map(
+              ([a, b, c]) =>
+                `<div class="stat"><span class="eyebrow">${esc(a)}</span><strong>${Number(b).toLocaleString()}</strong><p>${esc(c)}</p></div>`,
+            )
+            .join("");
+          const checks = D.reference.comparison?.checks || [];
+          const mismatches = checks.filter((c) => !c.passed);
+          $("discrepancy").innerHTML =
+            `<strong>${mismatches.length ? "Published comparison contains numerical differences." : "Published numerical checks agree."}</strong> ${esc(D.public_notes?.discrepancy || "Inspect each checked observable below, together with the pinned runtime adaptations.")}`;
+          $("rule").textContent =
+            `${P.robustness_rule}. Alpha ${P.alpha}; minimum absolute log2 fold change ${P.min_abs_log2fc}. ${P.multiplicity}.`;
+          $("variant-rows").innerHTML = S.variants
+            .map(
+              (v) =>
+                `<tr><td>V${v.ordinal}</td><td>${esc(v.parameters.min_total_count ?? "Fixed")}</td><td>${esc(v.parameters.size_factor ?? "Fixed")}</td><td>${esc(v.parameters.independent_filtering ?? "Fixed")}</td><td>${fmt(v.metrics?.retained_genes, 8)}</td><td>${fmt(v.metrics?.significant_genes, 8)}</td><td>${esc(v.state)}</td></tr>`,
+            )
+            .join("");
+          $("class").innerHTML =
+            '<option value="">All classifications</option>' +
+            Object.entries(S.counts)
+              .map(
+                ([k, v]) =>
+                  `<option value="${esc(k)}">${esc(label(k))} (${Number(v).toLocaleString()})</option>`,
+              )
+              .join("");
+          function filter() {
+            const q = $("search").value.toLowerCase(),
+              c = $("class").value;
+            shown = D.genes.filter(
+              (g) =>
+                (!q || g[0].toLowerCase().includes(q)) && (!c || g[1] === c),
+            );
+            page = Math.min(
+              page,
+              Math.max(0, Math.ceil(shown.length / pageSize) - 1),
+            );
+            renderRows();
+            if (!selected && shown.length) choose(shown[0]);
+          }
+          function renderRows() {
+            const slice = shown.slice(page * pageSize, (page + 1) * pageSize);
+            $("gene-rows").innerHTML =
+              slice
+                .map(
+                  (g) =>
+                    `<tr class="${selected?.[0] === g[0] ? "selected" : ""}"><td><button class="link" data-gene="${esc(g[0])}">${esc(g[0])}</button></td><td>${esc(label(g[1]))}</td><td>${g[2]} / ${S.planned_variants}</td></tr>`,
+                )
+                .join("") ||
+              '<tr><td colspan="3">No genes match these filters.</td></tr>';
+            $("page-label").textContent = shown.length
+              ? `${page * pageSize + 1}–${Math.min((page + 1) * pageSize, shown.length)} of ${shown.length.toLocaleString()} genes`
+              : "0 genes";
+            $("previous").disabled = !page;
+            $("next").disabled = (page + 1) * pageSize >= shown.length;
+          }
+          $("gene-rows").onclick = (e) => {
+            const b = e.target.closest("[data-gene]");
+            if (b) choose(D.genes.find((g) => g[0] === b.dataset.gene));
+          };
+          $("search").oninput = $("class").onchange = () => {
+            page = 0;
+            filter();
+          };
+          $("previous").onclick = () => {
+            page--;
+            renderRows();
+          };
+          $("next").onclick = () => {
+            page++;
+            renderRows();
+          };
+          function choose(g) {
+            selected = g;
+            renderRows();
+            $("gene-title").textContent = g[0];
+            $("gene-status").textContent =
+              `${label(g[1])} · ${g[2]} of ${S.planned_variants} within-variant detections`;
+            const estimates = g[4],
+              valid = estimates.filter((e) => e[0] != null && e[1] != null);
+            const extent = Math.max(
+              1.5,
+              ...valid.map((e) => Math.abs(e[0]) + 1.96 * e[1]),
+            );
+            const x = (v) => 80 + ((v + extent) / (2 * extent)) * 375;
+            $("forest").innerHTML =
+              `<line x1="${x(0)}" y1="20" x2="${x(0)}" y2="264" stroke="#bdc6b8" stroke-dasharray="4 4"/>` +
+              [-1, 0, 1]
+                .map(
+                  (t) =>
+                    `<text x="${x(t * extent)}" y="290" class="plot-label" text-anchor="middle">${fmt(t * extent, 3)}</text>`,
+                )
+                .join("") +
+              estimates
+                .map((e, i) => {
+                  const y = 35 + i * 28;
+                  return (
+                    `<text x="12" y="${y + 4}" class="plot-title">V${i + 1}</text>` +
+                    (e[0] == null
+                      ? `<text x="80" y="${y + 4}" class="plot-label">${esc(label(e[4]))}</text>`
+                      : `<line x1="${x(e[0] - 1.96 * (e[1] || 0))}" x2="${x(e[0] + 1.96 * (e[1] || 0))}" y1="${y}" y2="${y}" stroke="#839785" stroke-width="2"/><circle cx="${x(e[0])}" cy="${y}" r="4.5" fill="${e[3] < P.alpha ? "#317461" : "#b2996b"}"/>`)
+                  );
+                })
+                .join("");
+            const vals = g[5],
+              max = Math.max(1, ...vals.map((v) => Math.log2(v + 1))),
+              y = (v) => 245 - (Math.log2(v + 1) / max) * 215,
+              donors = [...new Set(D.samples.map((s) => s.donor))],
+              colors = ["#317461", "#b27a38", "#60728e", "#a36575"];
+            let lines = "";
+            donors.forEach((donor, i) => {
+              const ids = D.samples
+                .map((s, j) => (s.donor === donor ? j : -1))
+                .filter((j) => j >= 0)
+                .sort((a, b) =>
+                  D.samples[a].group.localeCompare(D.samples[b].group),
+                );
+              if (ids.length === 2 && vals.length) {
+                const [a, b] = ids;
+                lines +=
+                  `<line x1="125" x2="350" y1="${y(vals[a])}" y2="${y(vals[b])}" stroke="${colors[i % 4]}" stroke-width="2"/>` +
+                  [a, b]
+                    .map(
+                      (j, k) =>
+                        `<circle cx="${k ? 350 : 125}" cy="${y(vals[j])}" r="5" fill="${colors[i % 4]}"><title>${esc(donor)} ${esc(D.samples[j].group)}: ${fmt(vals[j])}</title></circle>`,
+                    )
+                    .join("");
+              }
+              lines += `<text x="${15 + i * 120}" y="16" fill="${colors[i % 4]}" font-size="10">${esc(donor)}</text>`;
+            });
+            $("donors").innerHTML =
+              lines +
+              '<text x="125" y="276" class="plot-label" text-anchor="middle">Control</text><text x="350" y="276" class="plot-label" text-anchor="middle">Treated</text>';
+            $("gene-numbers").innerHTML =
+              "<table><thead><tr><th>Variant</th><th>log2 FC</th><th>Raw P</th><th>Within-run q</th><th>Family q</th></tr></thead><tbody>" +
+              estimates
+                .map(
+                  (e, i) =>
+                    `<tr><td>V${i + 1}</td><td>${fmt(e[0])}</td><td>${fmt(e[5])}</td><td>${fmt(e[2])}</td><td>${fmt(e[3])}</td></tr>`,
+                )
+                .join("") +
+              "</tbody></table>";
+          }
+          const evidence = D.evidence_graph.nodes || [],
+            byId = Object.fromEntries(evidence.map((e) => [e.id, e]));
+          $("methods").innerHTML = evidence
+            .filter((e) => e.type === "method")
+            .map(
+              (m) =>
+                `<div class="method"><span class="eyebrow">${esc(label(m.key))}</span><p><strong>${esc(m.value)}</strong></p><p class="subtle">${esc(m.reason)}</p><details><summary>View ${m.evidence_ids?.length || 0} source regions</summary>${(
+                  m.evidence_ids || []
+                )
+                  .map((id) => {
+                    const e = byId[id];
+                    return `<blockquote><strong>${esc(e?.kind)}${e?.page ? " · page " + e.page : ""}</strong><p>${esc(e?.text)}</p><small>${esc(id)}</small></blockquote>`;
+                  })
+                  .join("")}</details></div>`,
+            )
+            .join("");
+          $("graph").textContent = JSON.stringify(D.evidence_graph, null, 2);
+          $("protocol").textContent = JSON.stringify(P, null, 2);
+          const checkCols = checks.length
+            ? Object.keys(checks[0]).filter((k) =>
+                ["key", "expected", "actual", "passed", "basis"].includes(k),
+              )
+            : [];
+          $("checks").innerHTML =
+            "<table><thead><tr>" +
+            checkCols.map((k) => `<th>${esc(label(k))}</th>`).join("") +
+            "</tr></thead><tbody>" +
+            checks
+              .map(
+                (c) =>
+                  "<tr>" +
+                  checkCols
+                    .map(
+                      (k) =>
+                        `<td>${esc(typeof c[k] === "object" ? JSON.stringify(c[k]) : c[k])}</td>`,
+                    )
+                    .join("") +
+                  "</tr>",
+              )
+              .join("") +
+            "</tbody></table>";
+          $("adaptations").textContent =
+            D.reference.adapter.adaptations.join(" ");
+          $("lineage").innerHTML = [
+            ["Shared input", P.input_hash],
+            ["Locked reference plan", D.reference.plan_hash],
+            ["Frozen protocol", P.protocol_hash],
+            ["Executed runtime", P.image_id],
+          ]
+            .map(
+              ([label, hash]) =>
+                `<div><h3>${esc(label)}</h3><div class="hash">${esc(hash)}</div></div>`,
+            )
+            .join("");
+          $("replay").textContent =
+            D.public_notes?.replay ||
+            "Verify each bundle manifest, then rebuild and rerun with the included standalone Python replay script.";
+          if (D.public_notes?.alignment)
+            $("alignment").innerHTML =
+              `<div class="discrepancy"><strong>Sample alignment correction preserved.</strong> ${esc(D.public_notes.alignment)}</div>`;
+          if (D.public_notes?.figure) {
+            $("source-figure-title").textContent = "Published Figure 10";
+            $("source-picture").src = D.public_notes.figure;
+            $("source-citation").innerHTML =
+              'Love, Anders, Kim and Huber (2015), version 1, page 25. CC BY 4.0. <a href="https://f1000research.com/articles/4-1070/v1">Read the source article</a>.';
+          } else
+            $("source-picture").replaceWith(
+              Object.assign(document.createElement("p"), {
+                textContent:
+                  "Open the linked source article to inspect the published figure.",
+              }),
+            );
+          $("registration-context").textContent =
+            D.public_notes?.registration || "";
+          if (D.public_notes?.published_genes) {
+            $("published-genes").innerHTML =
+              '<h3 style="margin-top:24px">Independent published gene examples</h3><table><thead><tr><th>Gene</th><th>Published log2 FC</th><th>Computed log2 FC</th><th>Difference</th></tr></thead><tbody>' +
+              D.public_notes.published_genes
+                .map(
+                  (g) =>
+                    `<tr><td><button class="link" data-gene="${esc(g.gene_id)}">${esc(g.gene_id)}</button></td><td>${fmt(g.published_log2fc, 7)}</td><td>${fmt(g.computed_log2fc, 7)}</td><td>${fmt(g.computed_log2fc - g.published_log2fc)}</td></tr>`,
+                )
+                .join("") +
+              "</tbody></table>";
+            $("published-genes").onclick = (e) => {
+              const b = e.target.closest("[data-gene]");
+              if (b) {
+                choose(D.genes.find((g) => g[0] === b.dataset.gene));
+                $("explore").scrollIntoView({ behavior: "smooth" });
+              }
+            };
+          }
+          $("download").onclick = () => {
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(
+              new Blob([JSON.stringify(D)], { type: "application/json" }),
+            );
+            a.download = "sensitivity-study.json";
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+          };
+          if (
+            D.public_notes?.bundle_url &&
+            /^https:\/\//.test(D.public_notes.bundle_url)
+          ) {
+            $("bundle-link").href = D.public_notes.bundle_url;
+            $("bundle-link").classList.remove("hide");
+          }
+          const canvas = $("ma"),
+            ctx = canvas.getContext("2d");
+          const plotGenes = D.genes.filter(
+            (g) => g[3] > 0 && g[4][0]?.[0] != null,
+          );
+          const maxX = Math.max(
+            1,
+            ...plotGenes.map((g) => Math.log10(g[3] + 1)),
+          );
+          const maxY = Math.max(
+            1,
+            ...plotGenes.map((g) => Math.abs(g[4][0][0])),
+          );
+          ctx.fillStyle = "#fafbf6";
+          ctx.fillRect(0, 0, 700, 420);
+          ctx.strokeStyle = "#dce2d8";
+          ctx.beginPath();
+          ctx.moveTo(45, 200);
+          ctx.lineTo(680, 200);
+          ctx.stroke();
+          plotGenes.sort(
+            (a, b) =>
+              (a[1] === "family_supported") - (b[1] === "family_supported"),
+          );
+          for (const g of plotGenes) {
+            const x = 45 + (Math.log10(g[3] + 1) / maxX) * 620,
+              y = 200 - (g[4][0][0] / maxY) * 175;
+            ctx.fillStyle = g[1] === "family_supported" ? "#317461" : "#bac2b5";
+            ctx.beginPath();
+            ctx.arc(x, y, g[1] === "family_supported" ? 2 : 1, 0, Math.PI * 2);
+            ctx.fill();
+            maPoints.push({ g, x, y });
+          }
+          ctx.fillStyle = "#69746a";
+          ctx.font = "12px system-ui";
+          ctx.fillText("log10 mean expression + 1", 260, 408);
+          ctx.fillText("log2 FC", 5, 18);
+          canvas.onclick = (e) => {
+            const r = canvas.getBoundingClientRect(),
+              x = ((e.clientX - r.left) / r.width) * 700,
+              y = ((e.clientY - r.top) / r.height) * 420;
+            let near = null,
+              best = Infinity;
+            for (const p of maPoints) {
+              const d = (p.x - x) ** 2 + (p.y - y) ** 2;
+              if (d < best) {
+                near = p;
+                best = d;
+              }
+            }
+            if (near) {
+              choose(near.g);
+              $("explore").scrollIntoView({ behavior: "smooth" });
+            }
+          };
+          filter();
+          $("loading").remove();
+          $("app").classList.remove("hide");
+        } catch (error) {
+          $("loading").textContent =
+            "The report could not open. Use a current browser with gzip stream support, or inspect the bundle data.";
+          console.error(error);
+        }
+      })();
+    </script>
+  </body>
+</html>

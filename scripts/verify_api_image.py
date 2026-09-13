@@ -3,6 +3,7 @@
 import json
 import time
 import uuid
+from datetime import UTC, datetime
 
 from workbench.config import ROOT, Settings
 from workbench.runner import Docker
@@ -74,10 +75,20 @@ try:
             "import os, shutil; assert shutil.which('docker') is None; assert not os.path.exists('/var/run/docker.sock')",
         ]
     )
+    portable_exports = docker.command(
+        [
+            "exec",
+            name,
+            "python",
+            "-c",
+            "from workbench.config import ROOT; assert (ROOT / 'scripts/reproduce_study.py').is_file(); from workbench.adapters import registry; assert len(registry()) == 4; from pathlib import Path; import workbench.reports as reports; assert (Path(reports.__file__).parent / 'report_assets/study.html').is_file()",
+        ]
+    )
     info = docker.inspect(name)
     checks = {
         "health_and_database": True,
         "static_ui": static.returncode == 0,
+        "registered_adapters_and_portable_family_files": portable_exports.returncode == 0,
         "no_docker_cli_or_socket": no_docker.returncode == 0,
         "non_root": info["Config"]["User"] == "1000:1000",
         "read_only_root": info["HostConfig"]["ReadonlyRootfs"],
@@ -85,7 +96,7 @@ try:
     }
     assert all(checks.values())
     receipt = {
-        "date": "2026-09-11",
+        "verified_at": datetime.now(UTC).isoformat(),
         "image_id": info["Image"],
         "checks": checks,
         "scope": "Local container image smoke test using ephemeral SQLite. Does not verify a live OIDC tenant or production deployment.",

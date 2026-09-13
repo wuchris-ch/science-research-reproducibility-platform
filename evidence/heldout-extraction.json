@@ -1,0 +1,579 @@
+{
+  "schema_version": 1,
+  "corpus_sha256": "7e4ee471426f03c0d7de3c570627f44cd6894dfa051a394bd523eb13f6ee03d8",
+  "scope": "Three papers excluded from lexical pattern-development fixtures; source passages and 18 reference answers frozen before live extraction. Himes is also the experimental source of the airway demonstration.",
+  "reference_method": "Source inspection with passage anchors. Reference answers are review labels, not an independent participant study.",
+  "model_label": "Configured extraction model",
+  "limits": {
+    "max_calls": 3,
+    "max_output_tokens_per_call": 4096,
+    "max_input_bytes_per_call": 60000
+  },
+  "billing": "Token usage is measured. Invoice cost is unavailable; no billing amount is inferred.",
+  "papers": [
+    {
+      "id": "himes",
+      "doi": "10.1371/journal.pone.0099625",
+      "source_sha256": "ed3e585419ff07b3e2de17c70f0ac5bf70e50331973949e90972abb4d4cca322",
+      "input_bytes": 12712,
+      "lexical": {
+        "accession": {
+          "value": "GSE34313",
+          "evidence_ids": [
+            "p17"
+          ],
+          "value_correct": false,
+          "quotation_valid": true,
+          "context_correct": false,
+          "passed": false,
+          "reference": [
+            "GSE52778"
+          ]
+        },
+        "method": {
+          "value": "Cufflinks",
+          "evidence_ids": [
+            "p9"
+          ],
+          "value_correct": false,
+          "quotation_valid": true,
+          "context_correct": false,
+          "passed": false,
+          "reference": [
+            "Cuffdiff"
+          ]
+        },
+        "aligner": {
+          "value": "TopHat",
+          "evidence_ids": [
+            "p41"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            "TopHat"
+          ]
+        },
+        "replicates": {
+          "value": "four",
+          "evidence_ids": [
+            "p9"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            4
+          ]
+        },
+        "min_total_count": {
+          "value": null,
+          "evidence_ids": [],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            null
+          ]
+        },
+        "normalization": {
+          "value": null,
+          "evidence_ids": [],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            null
+          ]
+        }
+      },
+      "model": {
+        "accession": {
+          "value": "GSE52778",
+          "evidence_ids": [
+            "p42"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            "GSE52778"
+          ]
+        },
+        "method": {
+          "value": "Cuffdiff (v.2.0.2)",
+          "evidence_ids": [
+            "p42"
+          ],
+          "value_correct": false,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": false,
+          "reference": [
+            "Cuffdiff"
+          ]
+        },
+        "aligner": {
+          "value": "TopHat (v.2.0.4)",
+          "evidence_ids": [
+            "p41"
+          ],
+          "value_correct": false,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": false,
+          "reference": [
+            "TopHat"
+          ]
+        },
+        "replicates": {
+          "value": 4,
+          "evidence_ids": [
+            "p9"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            4
+          ]
+        },
+        "min_total_count": {
+          "value": null,
+          "evidence_ids": [],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            null
+          ]
+        },
+        "normalization": {
+          "value": null,
+          "evidence_ids": [],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            null
+          ]
+        }
+      },
+      "lexical_seconds": 0.0005985829920973629,
+      "model_seconds": 7.03149179200409,
+      "usage": {
+        "prompt_tokens": 4934,
+        "completion_tokens": 447
+      }
+    },
+    {
+      "id": "schurch",
+      "doi": "10.1261/rna.053959.115",
+      "source_sha256": "e607b16c1c7c9eb827a0e41cb9d1d5e305761fd7ddd012e9ee906b25ada2be43",
+      "input_bytes": 10205,
+      "lexical": {
+        "accession": {
+          "value": "PRJEB5348",
+          "evidence_ids": [
+            "p48"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            "PRJEB5348"
+          ]
+        },
+        "organism": {
+          "value": "mouse",
+          "evidence_ids": [
+            "p5"
+          ],
+          "value_correct": false,
+          "quotation_valid": true,
+          "context_correct": false,
+          "passed": false,
+          "reference": [
+            "Saccharomyces cerevisiae",
+            "S. cerevisiae"
+          ]
+        },
+        "replicates": {
+          "value": "48",
+          "evidence_ids": [
+            "p2"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            48
+          ]
+        },
+        "clean_wt": {
+          "value": "42",
+          "evidence_ids": [
+            "p10"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            42
+          ]
+        },
+        "clean_mutant": {
+          "value": "44",
+          "evidence_ids": [
+            "p10"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            44
+          ]
+        },
+        "normalization": {
+          "value": "DESeq",
+          "evidence_ids": [
+            "p2"
+          ],
+          "value_correct": false,
+          "quotation_valid": true,
+          "context_correct": false,
+          "passed": false,
+          "reference": [
+            null
+          ]
+        }
+      },
+      "model": {
+        "accession": {
+          "value": "PRJEB5348",
+          "evidence_ids": [
+            "p48"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            "PRJEB5348"
+          ]
+        },
+        "organism": {
+          "value": "Saccharomyces cerevisiae",
+          "evidence_ids": [
+            "p10"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            "Saccharomyces cerevisiae",
+            "S. cerevisiae"
+          ]
+        },
+        "replicates": {
+          "value": 48,
+          "evidence_ids": [
+            "p10"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            48
+          ]
+        },
+        "clean_wt": {
+          "value": 42,
+          "evidence_ids": [
+            "p10"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            42
+          ]
+        },
+        "clean_mutant": {
+          "value": 44,
+          "evidence_ids": [
+            "p10"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            44
+          ]
+        },
+        "normalization": {
+          "value": null,
+          "evidence_ids": [],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            null
+          ]
+        }
+      },
+      "lexical_seconds": 0.0005082499992568046,
+      "model_seconds": 5.093040999985533,
+      "usage": {
+        "prompt_tokens": 3779,
+        "completion_tokens": 384
+      }
+    },
+    {
+      "id": "holik",
+      "doi": "10.1093/nar/gkw1063",
+      "source_sha256": "22a219af8f27f907c6578f6ed3c961adc140b0e18afbff991d143729c5c58641",
+      "input_bytes": 6260,
+      "lexical": {
+        "accession": {
+          "value": "GSE86337",
+          "evidence_ids": [
+            "p11"
+          ],
+          "value_correct": false,
+          "quotation_valid": true,
+          "context_correct": false,
+          "passed": false,
+          "reference": [
+            "GSE64098"
+          ]
+        },
+        "pilot_accession": {
+          "value": "GSE86337",
+          "evidence_ids": [
+            "p11"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            "GSE86337"
+          ]
+        },
+        "min_samples": {
+          "value": "3",
+          "evidence_ids": [
+            "p24"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            3
+          ]
+        },
+        "retained_genes": {
+          "value": "14981",
+          "evidence_ids": [
+            "p24"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            14981
+          ]
+        },
+        "normalization": {
+          "value": "TMM",
+          "evidence_ids": [
+            "p21"
+          ],
+          "value_correct": false,
+          "quotation_valid": true,
+          "context_correct": false,
+          "passed": false,
+          "reference": [
+            "median ratio",
+            "median-ratio"
+          ]
+        },
+        "design": {
+          "value": null,
+          "evidence_ids": [],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            null
+          ]
+        }
+      },
+      "model": {
+        "accession": {
+          "value": "GSE64098",
+          "evidence_ids": [
+            "p14",
+            "p80"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            "GSE64098"
+          ]
+        },
+        "pilot_accession": {
+          "value": "GSE86337",
+          "evidence_ids": [
+            "p11",
+            "p80"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            "GSE86337"
+          ]
+        },
+        "min_samples": {
+          "value": 3,
+          "evidence_ids": [
+            "p24"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            3
+          ]
+        },
+        "retained_genes": {
+          "value": 14981,
+          "evidence_ids": [
+            "p24"
+          ],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            14981
+          ]
+        },
+        "normalization": {
+          "value": "Median ratio method",
+          "evidence_ids": [
+            "p25"
+          ],
+          "value_correct": false,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": false,
+          "reference": [
+            "median ratio",
+            "median-ratio"
+          ]
+        },
+        "design": {
+          "value": null,
+          "evidence_ids": [],
+          "value_correct": true,
+          "quotation_valid": true,
+          "context_correct": true,
+          "passed": true,
+          "reference": [
+            null
+          ]
+        }
+      },
+      "lexical_seconds": 0.0003133749996777624,
+      "model_seconds": 5.833953875000589,
+      "usage": {
+        "prompt_tokens": 2419,
+        "completion_tokens": 351
+      }
+    }
+  ],
+  "summary": {
+    "lexical": {
+      "fields": 18,
+      "correct": 12,
+      "incorrect_or_missing": 6,
+      "supported_precision": 0.6,
+      "supported_recall": 0.6428571428571429,
+      "unsupported_proposals": 6,
+      "correct_abstentions": 3
+    },
+    "model": {
+      "fields": 18,
+      "correct": 15,
+      "incorrect_or_missing": 3,
+      "supported_precision": 0.7857142857142857,
+      "supported_recall": 0.7857142857142857,
+      "unsupported_proposals": 3,
+      "correct_abstentions": 4
+    }
+  },
+  "review_comparison": "Incorrect or missing fields count corrections against the frozen source-review reference. Reviewer time and a participant comparison were not measured.",
+  "semantic_review": {
+    "timing": "After the initial frozen exact-value score; no new model calls and no changes to the source corpus or reference answers.",
+    "decisions": [
+      {
+        "paper": "himes",
+        "field": "method",
+        "value": "Cuffdiff (v.2.0.2)",
+        "source": "p42",
+        "decision": "correct",
+        "reason": "The answer names the reference method and adds the exact version reported in the same source passage."
+      },
+      {
+        "paper": "himes",
+        "field": "aligner",
+        "value": "TopHat (v.2.0.4)",
+        "source": "p41",
+        "decision": "correct",
+        "reason": "The answer names the reference aligner and adds the exact version reported in the same source passage."
+      },
+      {
+        "paper": "holik",
+        "field": "normalization",
+        "value": "Median ratio method",
+        "source": "p25",
+        "decision": "correct",
+        "reason": "The added word method preserves the source meaning and the DESeq2-specific context."
+      }
+    ],
+    "model_correct": 18,
+    "lexical_correct": 12,
+    "fields": 18,
+    "model_supported_precision": 1.0,
+    "model_supported_recall": 1.0,
+    "interpretation": "A small source-extraction evaluation. The source reviewer also authored the reference labels; no blinded second reviewer or participant timing study was performed."
+  }
+}

@@ -8,7 +8,7 @@ Use `make setup`, then `make serve` and `make worker` in separate terminals. The
 
 `WORKBENCH_DATA_DIR` must be an absolute private directory shared by API and worker. `WORKBENCH_DATABASE_URL` defaults to a SQLite database in that directory. The default Docker context is `colima-research`; no command changes the user's default context. On another engine, supply the context explicitly.
 
-`uv run workbench setup` reconstructs datasets from pinned archives, fetches and renders the verified publisher pages, builds the scientific image, records `runtime.json`, and initializes schema version 1. `uv run workbench build` performs the same source-integrity reconstruction before rebuilding and registering the runtime. It does not mutate completed runs. Existing image IDs must remain available while queued/running jobs still reference them.
+`uv run workbench setup` reconstructs datasets from pinned archives, fetches and renders the verified publisher pages, builds the historical and paired DESeq2 images, records `runtime.json` and `runtime-deseq2.json`, and applies additive schema version 3. `uv run workbench build` performs the same source-integrity reconstruction before rebuilding and registering the runtime. Use `--profile historical` or `--profile deseq2` to rebuild one runtime. It does not mutate completed runs. Existing image IDs must remain available while queued/running jobs still reference them.
 
 A hash mismatch is a failed integrity gate. Preserve the old bytes and investigate source/version changes before deliberately changing a fixture ledger. Do not update hashes merely to make a download succeed. Network and publisher availability can affect first setup; a valid cached archive is reused without a request.
 
@@ -58,12 +58,31 @@ The first command checks every manifest file; it does not authenticate the sende
 
 ## Optional model assistance
 
-Set `WORKBENCH_MODEL_URL`, `WORKBENCH_MODEL_KEY`, `WORKBENCH_MODEL_NAME` and both per-million token prices. The endpoint must be HTTPS and implement chat-completions responses with usage accounting. Keys stay server-side. The broker reserves a conservative maximum against the workspace budget before a request. Ambiguous failure retains that reservation; a retry does not silently release possible spend. Calls are scoped to a workspace and bounded source context.
+Set `WORKBENCH_MODEL_URL`, `WORKBENCH_MODEL_KEY`, `WORKBENCH_MODEL_NAME` and both per-million token prices. Set `WORKBENCH_MODEL_API_MODE` to `chat_completions` or `responses` for the configured API shape. The endpoint must use HTTPS or a strict loopback address and return usage accounting. Keys stay server-side. The broker reserves a conservative maximum against the workspace budget before a request. Ambiguous failure retains that reservation; a retry does not silently release possible spend. Calls are scoped to a workspace and bounded source context.
 
-The default workspace budget is USD 2. This is an internal accounting bound, not a substitute for a provider account's own hard spending control. No live provider was used in verification. Proposals show reported, inferred or missing status and linked quotes. A reviewer must resolve and lock methods explicitly.
+The default workspace budget is USD 2. This is an internal accounting bound, not a substitute for a provider account's own hard spending control. Three live calls were measured in `evidence/heldout-extraction.json`; deployment credentials and endpoint identity are supplied privately. Proposals show reported, inferred or missing status and linked quotes. A reviewer must resolve and lock methods explicitly.
 
 ## Verification and maintenance
 
 Run `make check` after code changes and `make contracts` after route/schema changes. Commit the regenerated OpenAPI and TypeScript files together. CI repeats these checks plus PostgreSQL tests. Run `make science` after a recipe, dependency, count input or scientific comparator changes. Run `make runtime-checks` after supervisor/isolation changes. The scientific harness creates fresh executions on every invocation and updates its evidence receipt.
 
-Schema migration is currently additive version 1. `uv run workbench migrate` verifies/applies it without starting a server. Future schema changes must have explicit versioned migrations, rollback/recovery documentation and compatibility checks before a release. No destructive migration or production deployment is part of local setup.
+Schema migration is additive through version 3. Version 3 adds onboarding/revision and sensitivity/variant tables while preserving completed runs and artifacts. `uv run workbench migrate` verifies/applies it without starting a server. Future schema changes must have explicit versioned migrations, rollback/recovery documentation and compatibility checks before a release. No destructive migration or production deployment is part of local setup.
+
+## Uploaded studies and sensitivity families
+
+Use **Onboard a study** to upload a paper, supplements, `counts.tsv` and `samples.tsv`. The count file starts with `gene_id`; every other column is a unique sample. The sample file uses `sample`, `donor`, `condition`, with one `control` and one `treated` row per donor. Validation requires exact sample alignment, at least three pairs and a full-rank design. Each table is bounded to 9 MB, 100,000 genes and 64 samples. Review every method against the linked source regions, then seal an executable plan. Corrections and validation failures remain in the revision history.
+
+In **Sensitivity studies**, select the locked plan, state the hypothesis and register two to eight variants using the adapter's allowed choices. Registration freezes the matrix, shared input hash, adapter version, runtime, limits, family alpha and minimum effect. Start or cancel the family from the same panel. A restarted worker resumes durable scheduling; cancelled, failed and unsubmitted outcomes remain visible. Revoked scheduling access cancels the affected family.
+
+Download the family ZIP after it reaches a terminal state. In a fresh directory:
+
+```sh
+python3 reproduce_study.py --verify-only
+python3 reproduce_study.py --variant 1 --context colima-research
+```
+
+Omit `--variant` to replay all completed variants. `study.html` opens the offline explorer in a modern browser supporting gzip decompression. The archive deduplicates exact inputs and source documents and lists every registered outcome, including failures. Pointwise uncertainty intervals and within-run BH results are distinct from the family-wide BY criterion.
+
+## Public example releases
+
+The GitHub workflow runs tests and contract checks; a push or PR merge does not deploy a service automatically. The public service is the static explorer configured in `.openai/hosting.json`. Publish the committed `public-example/index.html` as `dist/index.html` using Sites, retaining the exact merged Git SHA in the saved version. Attach the verified family ZIP and its checksum to the matching GitHub release. Verify anonymous HTTP access, deployed content identity, functional gene exploration and the release download. The execution API remains local unless a separately configured team deployment is requested.

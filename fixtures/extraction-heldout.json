@@ -1,0 +1,283 @@
+{
+  "schema_version": 1,
+  "scope": "Three papers excluded from lexical pattern-development fixtures; source passages and 18 reference answers frozen before live extraction. Himes is also the experimental source of the airway demonstration.",
+  "reference_method": "Source inspection with passage anchors. Reference answers are review labels, not an independent participant study.",
+  "max_calls": 3,
+  "max_output_tokens_per_call": 4096,
+  "max_input_bytes_per_call": 60000,
+  "papers": [
+    {
+      "id": "himes",
+      "pmcid": "PMC4057123",
+      "doi": "10.1371/journal.pone.0099625",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4057123/fullTextXML",
+      "sha256": "ed3e585419ff07b3e2de17c70f0ac5bf70e50331973949e90972abb4d4cca322",
+      "paragraphs": [
+        7,
+        9,
+        10,
+        11,
+        17,
+        33,
+        41,
+        42,
+        47
+      ],
+      "questions": [
+        {
+          "key": "accession",
+          "question": "What is the primary RNA-seq GEO accession, excluding secondary microarray data?",
+          "accepted": [
+            "GSE52778"
+          ],
+          "evidence_paragraphs": [
+            42
+          ],
+          "baseline_pattern": "GSE\\d+",
+          "reason": "Secondary microarray accessions are not the primary experiment."
+        },
+        {
+          "key": "method",
+          "question": "Which program performed the primary RNA-seq differential expression test?",
+          "accepted": [
+            "Cuffdiff"
+          ],
+          "evidence_paragraphs": [
+            42
+          ],
+          "baseline_pattern": "\\b(?:Cufflinks|Cuffdiff|limma|DESeq2)\\b",
+          "reason": "Cufflinks quantifies transcripts; Cuffdiff tests differential expression."
+        },
+        {
+          "key": "aligner",
+          "question": "Which program aligned the primary RNA-seq reads?",
+          "accepted": [
+            "TopHat"
+          ],
+          "evidence_paragraphs": [
+            41
+          ],
+          "baseline_pattern": "\\b(?:TopHat|STAR|HISAT2)\\b",
+          "reason": "The original experiment and the later workflow have different alignment context."
+        },
+        {
+          "key": "replicates",
+          "question": "How many biological donors contributed to each primary RNA-seq condition?",
+          "accepted": [
+            4
+          ],
+          "evidence_paragraphs": [
+            9
+          ],
+          "baseline_pattern": "\\b(?:three|four|\\d+)\\b(?= (?:white male donors|donors|cell lines))",
+          "reason": "qRT-PCR triplicates and three-donor validation are distinct from four RNA-seq donors."
+        },
+        {
+          "key": "min_total_count",
+          "question": "What numerical minimum total raw gene count filter is reported for the primary RNA-seq analysis?",
+          "accepted": [
+            null
+          ],
+          "evidence_paragraphs": [],
+          "baseline_pattern": "(?<=total count of )\\d+",
+          "reason": "No such raw-count filter is reported in the supplied primary-analysis text."
+        },
+        {
+          "key": "normalization",
+          "question": "Was TMM explicitly used for the primary Cuffdiff RNA-seq analysis? Return TMM only if supported, otherwise null.",
+          "accepted": [
+            null
+          ],
+          "evidence_paragraphs": [],
+          "baseline_pattern": "\\bTMM\\b",
+          "reason": "Secondary microarray processing does not establish a primary RNA-seq TMM step."
+        }
+      ]
+    },
+    {
+      "id": "schurch",
+      "pmcid": "PMC4878611",
+      "doi": "10.1261/rna.053959.115",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4878611/fullTextXML",
+      "sha256": "e607b16c1c7c9eb827a0e41cb9d1d5e305761fd7ddd012e9ee906b25ada2be43",
+      "paragraphs": [
+        2,
+        5,
+        6,
+        10,
+        40,
+        41,
+        48
+      ],
+      "questions": [
+        {
+          "key": "accession",
+          "question": "What is the primary ENA project accession?",
+          "accepted": [
+            "PRJEB5348"
+          ],
+          "evidence_paragraphs": [
+            48
+          ],
+          "baseline_pattern": "(?:GSE|PRJEB)\\d+",
+          "reason": "Project accession is distinct from the individual experiment accession."
+        },
+        {
+          "key": "organism",
+          "question": "What organism was used in the primary highly replicated experiment?",
+          "accepted": [
+            "Saccharomyces cerevisiae",
+            "S. cerevisiae"
+          ],
+          "evidence_paragraphs": [
+            10
+          ],
+          "baseline_pattern": "\\b(?:mouse|human|Saccharomyces cerevisiae)\\b",
+          "reason": "Mouse and human studies in the introduction are prior comparisons."
+        },
+        {
+          "key": "replicates",
+          "question": "How many biological replicates were originally sequenced per condition before quality control?",
+          "accepted": [
+            48
+          ],
+          "evidence_paragraphs": [
+            2,
+            10
+          ],
+          "baseline_pattern": "\\d+(?= biological replic)",
+          "reason": "Original sample count differs from retained or recommended counts."
+        },
+        {
+          "key": "clean_wt",
+          "question": "How many wild-type biological replicates remained after quality control?",
+          "accepted": [
+            42
+          ],
+          "evidence_paragraphs": [
+            10
+          ],
+          "baseline_pattern": "\\d+(?= WT)",
+          "reason": "Wild-type and mutant retained sample counts differ."
+        },
+        {
+          "key": "clean_mutant",
+          "question": "How many mutant biological replicates remained after quality control?",
+          "accepted": [
+            44
+          ],
+          "evidence_paragraphs": [
+            10
+          ],
+          "baseline_pattern": "\\d+(?= \u0394)",
+          "reason": "Forty-two in the abstract describes the common comparison size, not retained mutant count."
+        },
+        {
+          "key": "normalization",
+          "question": "What single normalization method was applied to every differential-expression tool? Return null if methods differ.",
+          "accepted": [
+            null
+          ],
+          "evidence_paragraphs": [
+            40
+          ],
+          "baseline_pattern": "\\b(?:DESeq|TMM)\\b",
+          "reason": "Default normalization differs across tools; DESeq normalization defines the separate reference fold changes."
+        }
+      ]
+    },
+    {
+      "id": "holik",
+      "pmcid": "PMC5389713",
+      "doi": "10.1093/nar/gkw1063",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5389713/fullTextXML",
+      "sha256": "22a219af8f27f907c6578f6ed3c961adc140b0e18afbff991d143729c5c58641",
+      "paragraphs": [
+        11,
+        14,
+        21,
+        24,
+        25,
+        29,
+        36,
+        41,
+        80
+      ],
+      "questions": [
+        {
+          "key": "accession",
+          "question": "What is the GEO accession of the main mixture experiment?",
+          "accepted": [
+            "GSE64098"
+          ],
+          "evidence_paragraphs": [
+            14,
+            80
+          ],
+          "baseline_pattern": "GSE\\d+",
+          "reason": "The earlier accession belongs to the pilot."
+        },
+        {
+          "key": "pilot_accession",
+          "question": "What is the GEO accession of the pilot experiment?",
+          "accepted": [
+            "GSE86337"
+          ],
+          "evidence_paragraphs": [
+            11,
+            80
+          ],
+          "baseline_pattern": "GSE\\d+",
+          "reason": "Pilot and mixture experiments must remain distinct."
+        },
+        {
+          "key": "min_samples",
+          "question": "How many samples must meet the main expression filter before differential analysis?",
+          "accepted": [
+            3
+          ],
+          "evidence_paragraphs": [
+            24
+          ],
+          "baseline_pattern": "\\d+(?= or more samples)",
+          "reason": "The main filter uses three samples; a later secondary analysis uses four."
+        },
+        {
+          "key": "retained_genes",
+          "question": "How many genes remain after the primary CPM > 1 filter?",
+          "accepted": [
+            14981
+          ],
+          "evidence_paragraphs": [
+            24
+          ],
+          "baseline_pattern": "\\d+ \\d+(?= after filtering)",
+          "reason": "The lower-cutoff sensitivity analysis retains 16131 genes."
+        },
+        {
+          "key": "normalization",
+          "question": "Which normalization is used specifically by DESeq2?",
+          "accepted": [
+            "median ratio",
+            "median-ratio"
+          ],
+          "evidence_paragraphs": [
+            25
+          ],
+          "baseline_pattern": "\\b(?:TMM|median ratio|Quantile)\\b",
+          "reason": "The nearby overall description says TMM, but DESeq2 uses median ratio."
+        },
+        {
+          "key": "design",
+          "question": "What exact R model formula is printed for the main differential analysis? Return null if no formula is present.",
+          "accepted": [
+            null
+          ],
+          "evidence_paragraphs": [],
+          "baseline_pattern": "~\\s*0\\s*\\+\\s*group\\s*\\+\\s*lane",
+          "reason": "A plausible formula must not be invented from a narrative design."
+        }
+      ]
+    }
+  ]
+}

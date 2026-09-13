@@ -5,7 +5,62 @@ import io
 import json
 import math
 
-from .fixtures import EVIDENCE
+from .adapters import MANIFESTS
+from .statistics import adjust
+
+
+def validate_effects(table, metrics, plan, ids, retained, samples):
+    rows = table("effects.tsv")
+    if len(rows) != len(ids) or {r["gene_id"] for r in rows} != set(ids):
+        raise ValueError("Effects must preserve the complete input gene universe")
+    tested = []
+    for row in rows:
+        status = row["status"]
+        if status == "excluded_low_total":
+            if row["gene_id"] in retained or any(
+                row[k] != "NA" for k in ("pvalue", "padj", "log2FoldChange")
+            ):
+                raise ValueError("Excluded gene has inconsistent statistics")
+            continue
+        if row["gene_id"] not in retained or status not in (
+            "tested",
+            "cook_outlier",
+            "independently_filtered",
+        ):
+            raise ValueError("Invalid gene exclusion status")
+        for key in ("baseMean", "log2FoldChange", "lfcSE", "stat"):
+            if not math.isfinite(float(row[key])):
+                raise ValueError("Non-finite retained gene statistic")
+        if float(row["baseMean"]) < 0 or float(row["lfcSE"]) < 0:
+            raise ValueError("Negative mean or uncertainty")
+        if status == "cook_outlier":
+            if row["pvalue"] != "NA" or row["padj"] != "NA":
+                raise ValueError("Outlier must remain untested")
+        else:
+            if not 0 <= float(row["pvalue"]) <= 1:
+                raise ValueError("Invalid P value")
+            if status == "independently_filtered" and row["padj"] != "NA":
+                raise ValueError("Independent-filter exclusion must have no adjusted P value")
+            if status == "tested":
+                if not 0 <= float(row["padj"]) <= 1:
+                    raise ValueError("Invalid adjusted P value")
+                tested.append(row)
+    corrected = adjust([float(row["pvalue"]) for row in tested])
+    if any(abs(value - float(row["padj"])) > 1e-10 for value, row in zip(corrected, tested, strict=True)):
+        raise ValueError("DESeq2 adjusted P values differ from the declared BH universe")
+    if (
+        len(tested) != metrics["tested_genes"]
+        or sum(float(r["padj"]) < plan["parameters"]["fdr"] for r in tested) != metrics["significant_genes"]
+    ):
+        raise ValueError("Differential counts do not match metrics")
+    normalized = table("normalized-counts.tsv")
+    if len(normalized) != len(ids) or {r["gene_id"] for r in normalized} != set(ids):
+        raise ValueError("Normalized counts must preserve all genes")
+    sample_ids = {s["sample"] for s in samples}
+    if set(normalized[0]) != sample_ids | {"gene_id"}:
+        raise ValueError("Normalized sample columns differ from the input")
+    if any(not math.isfinite(float(r[s])) or float(r[s]) < 0 for r in normalized for s in sample_ids):
+        raise ValueError("Invalid normalized count")
 
 
 def validate_metrics(data: bytes, plan: dict):
@@ -21,58 +76,44 @@ def validate_metrics(data: bytes, plan: dict):
         raise ValueError("Output contract does not match locked plan")
     if m.get("parameters") != plan["parameters"]:
         raise ValueError("Output parameters differ from locked plan")
-    if m["retained_genes"] > m["input_genes"] or m["samples"] not in (9, 12):
+    if m["retained_genes"] > m["input_genes"] or not 2 <= m["samples"] <= 64:
         raise ValueError("Invalid gene or sample counts")
     return m
 
 
 def compare(metrics, plan):
+    reference = json.loads((MANIFESTS / "references.json").read_text()).get(
+        plan.get("reference_dataset", plan["dataset_id"]), {}
+    )
     checks = []
-
-    def check(key, expected, basis):
-        actual = metrics.get(key)
-        checks.append(
-            {"key": key, "expected": expected, "actual": actual, "passed": actual == expected, "basis": basis}
-        )
-
-    check("input_genes", 27179, "Public count matrix and paper")
-    if plan["dataset_id"] == "law2018":
-        check("samples", 9, "Paper sample mapping")
-        check("all_zero_genes", 5153, "Paper and independent input probe")
-        p = plan["parameters"]
-        if p["filter_policy"] == "published" and (p["min_count"], p["min_total_count"], p["min_samples"]) == (
-            10,
-            15,
-            3,
-        ):
-            check("retained_genes", 16624, "Paper v3 reported filtered universe")
-        elif p["filter_policy"] == "cpm1" and p["min_samples"] == 3:
-            check("retained_genes", 14165, "Independent Python filter probe; not a published result")
-        expected = {
-            e["member"].split("_", 1)[1].removesuffix(".txt.gz"): e["library_size"] for e in EVIDENCE["files"]
-        }
-        check("library_sizes", expected, "Pinned GEO sample totals")
-        limitations = [
-            "Paper supplies no density grid, so numerical curve agreement with the published plot is unverified.",
-            "Scalar agreement is not evidence that every scientific conclusion reproduces.",
-        ]
-        if plan["recipe"] == "differential":
-            limitations.append(
-                "Full gene-level reference table is unavailable; FDR and effect sizes are exported for review."
+    for entry in reference.get("checks", []):
+        if any(plan["parameters"].get(k) != v for k, v in entry.get("when", {}).items()):
+            continue
+        actual = metrics.get(entry["key"])
+        checks.append({**entry, "actual": actual, "passed": actual == entry["expected"]})
+    for key in ("input_genes", "samples", "all_zero_genes", "library_sizes"):
+        if key in plan.get("input_summary", {}):
+            expected = plan["input_summary"][key]
+            checks.append(
+                {
+                    "key": key,
+                    "expected": expected,
+                    "actual": metrics.get(key),
+                    "passed": metrics.get(key) == expected,
+                    "kind": "input_integrity",
+                    "basis": "Validated immutable uploaded inputs",
+                }
             )
-    else:
-        check("samples", 12, "Paper sample mapping")
-        check("annotated_genes", 26357, "Paper with org.Mm.eg.db 3.3.0")
-        if plan["parameters"]["filter_policy"] == "published":
-            check("retained_genes", 15653, "Paper CPM > 0.5 in two samples")
-        limitations = [
-            "Adapted R and edgeR versions; no published numerical MDS coordinates are available.",
-            "MDS axis signs are arbitrary. Compare pairwise distances for fresh-run consistency.",
-        ]
     return {
-        "status": "checks_match" if all(c["passed"] for c in checks) else "mismatch",
+        "status": "checks_match"
+        if checks and all(c["passed"] for c in checks)
+        else "mismatch"
+        if checks
+        else "no_reference",
         "checks": checks,
-        "limitations": limitations,
+        "limitations": reference.get(
+            "limitations", ["No independently reported result table is registered for this imported dataset."]
+        ),
         "claim": "Checked observables only",
         "metrics": metrics,
     }
@@ -86,6 +127,8 @@ def compare_fresh(store, left, right):
         a, b = store.read(left[name]["sha256"]), store.read(right[name]["sha256"])
         if name in (
             "density.tsv",
+            "effects.tsv",
+            "normalized-counts.tsv",
             "differential.tsv",
             "mds.tsv",
             "genes.tsv",
@@ -109,6 +152,9 @@ def validate_tables(store, artifacts, metrics, plan):
             csv.DictReader(io.StringIO(store.read(artifacts[name]["sha256"]).decode()), delimiter="\t")
         )
 
+    required = plan.get("adapter", {}).get("required_outputs", [])
+    if set(required) - artifacts.keys():
+        raise ValueError("Missing required adapter outputs")
     genes = table("genes.tsv")
     ids = [g["gene_id"] for g in genes]
     retained = {g["gene_id"] for g in genes if g["retained"] == "TRUE"}
@@ -162,6 +208,8 @@ def validate_tables(store, artifacts, metrics, plan):
             last = min(last, ps[i] * n / rank)
             if abs(last - float(rows[i]["adj.P.Val"])) > 1e-10:
                 raise ValueError("Adjusted P values do not match full-universe BH correction")
+    elif plan["recipe"] == "deseq2":
+        validate_effects(table, metrics, plan, ids, retained, samples)
     else:
         rows = table("mds.tsv")
         if {r["sample"] for r in rows} != {s["sample"] for s in samples} or len(rows) != len(samples):

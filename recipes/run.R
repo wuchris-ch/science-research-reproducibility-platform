@@ -8,20 +8,33 @@ q <- p$parameters
 out <- '/work/output'
 dir.create(out, recursive=TRUE, showWarnings=FALSE)
 writeLines(capture.output(sessionInfo()), file.path(out, 'session.txt'))
-if (p$dataset_id == 'law2018') {
-    map <- read.csv('/app/law-samples.csv', stringsAsFactors=FALSE)
-    tables <- lapply(map$file, function(f) read.delim(file.path('/data/law2018', f), stringsAsFactors=FALSE))
-    stopifnot(all(sapply(tables, function(t) identical(t$EntrezID, tables[[1]]$EntrezID))))
-    counts <- do.call(cbind, lapply(tables, function(t) t$Count))
-    rownames(counts) <- tables[[1]]$EntrezID
-    colnames(counts) <- map$sample
-    group <- factor(map$group)
-} else {
-    t <- read.delim('/data/chen2016/counts.tsv', row.names=1)
-    counts <- as.matrix(t[,-1])
-    colnames(counts) <- substring(colnames(counts),1,7)
-    group <- factor(paste(rep(c('B','L'),each=6), rep(rep(c('virgin','pregnant','lactating'),each=2),2),sep='.'))
-}
+# The build embeds the reviewed dataset declarations in the sealed recipe.
+# @dataset-registry
+readers <- list(
+    'count-files'=function(root, spec) {
+        map <- spec$sample_map
+        tables <- lapply(map$file, function(f) read.delim(file.path(root, f), stringsAsFactors=FALSE))
+        stopifnot(all(sapply(tables, function(t) identical(t$EntrezID, tables[[1]]$EntrezID))))
+        counts <- do.call(cbind, lapply(tables, function(t) t$Count))
+        rownames(counts) <- tables[[1]]$EntrezID
+        colnames(counts) <- map$sample
+        list(counts=counts, map=map, symbols=NULL)
+    },
+    'annotated-matrix'=function(root, spec) {
+        table <- read.delim(file.path(root,'counts.tsv'), row.names=1, check.names=FALSE)
+        map <- spec$sample_map
+        counts <- as.matrix(table[,map$column])
+        colnames(counts) <- map$sample
+        list(counts=counts, map=map, symbols=read.delim(file.path(root,'symbols.tsv'), stringsAsFactors=FALSE))
+    }
+)
+stopifnot(p$dataset_id %in% names(dataset_registry))
+spec <- dataset_registry[[p$dataset_id]]
+stopifnot(spec$reader %in% names(readers))
+input <- readers[[spec$reader]](file.path('/data',p$dataset_id),spec)
+counts <- input$counts
+map <- input$map
+group <- factor(map$group)
 stopifnot(all(is.finite(counts)), all(counts >= 0), all(counts == floor(counts)), !anyDuplicated(rownames(counts)))
 x <- DGEList(counts, group=group)
 original.libs <- colSums(counts)
@@ -30,18 +43,17 @@ M <- median(original.libs)*1e-6
 L <- mean(original.libs)*1e-6
 filter.cpm <- if(q$filter_policy == 'cpm1') 1 else q$min_count/M
 cutoff <- log2(filter.cpm + 2/L)
-if (p$dataset_id == 'chen2016') {
-    symbols <- read.delim('/data/chen2016/symbols.tsv', stringsAsFactors=FALSE)
-    x <- x[rownames(x) %in% symbols$gene_id, ]
-    annotated.genes <- nrow(x)
-    # Historical article uses 0.5 CPM in at least two samples.
-    keep <- rowSums(cpm(x) > if (q$filter_policy == 'published') 0.5 else 1) >= 2
-} else if (q$filter_policy == 'cpm1') {
-    keep <- rowSums(cpm(x) > 1) >= q$min_samples
-} else {
-    # Equal-size design, declared minimum group size; edgeR 3.24.0 rule.
-    keep <- rowSums(cpm(x) >= q$min_count/M) >= q$min_samples & rowSums(x$counts) >= q$min_total_count
-}
+if (!is.null(input$symbols)) x <- x[rownames(x) %in% input$symbols$gene_id, ]
+annotated.genes <- nrow(x)
+filters <- list(
+    'annotated-cpm'=function(x) rowSums(cpm(x) > if(q$filter_policy == 'published') 0.5 else 1) >= q$min_samples,
+    'group-rule'=function(x) {
+        if(q$filter_policy == 'cpm1') return(rowSums(cpm(x) > 1) >= q$min_samples)
+        rowSums(cpm(x) >= q$min_count/M) >= q$min_samples & rowSums(x$counts) >= q$min_total_count
+    }
+)
+stopifnot(spec$filter %in% names(filters))
+keep <- filters[[spec$filter]](x)
 all.ids <- rownames(counts)
 retained <- rownames(x)[keep]
 x <- x[keep,,keep.lib.sizes=FALSE]
@@ -50,7 +62,7 @@ filtered <- cpm(x, log=TRUE)
 write.table(data.frame(gene_id=all.ids, retained=all.ids %in% retained),file.path(out,'genes.tsv'),sep='\t',quote=FALSE,row.names=FALSE)
 write.table(data.frame(sample=colnames(counts),group=as.character(group),library_size=original.libs,filtered_library_size=x$samples$lib.size),file.path(out,'samples.tsv'),sep='\t',quote=FALSE,row.names=FALSE)
 metrics <- list(schema_version=1, dataset_id=p$dataset_id, recipe=p$recipe, input_genes=nrow(counts), samples=ncol(counts), all_zero_genes=sum(rowSums(counts)==0), retained_genes=nrow(x), library_sizes=as.list(original.libs), parameters=q)
-if (p$recipe == 'density') {
+recipe_functions <- list(density=function() {
     colors <- brewer.pal(ncol(counts),'Paired')
     grids <- data.frame()
     png(file.path(out,'figure.png'),width=1440,height=720,res=160)
@@ -73,7 +85,8 @@ if (p$recipe == 'density') {
     metrics$log_cpm_cutoff <- cutoff
     metrics$raw_summary <- unclass(apply(raw,2,summary))
     metrics$filtered_summary <- unclass(apply(filtered,2,summary))
-} else if(p$recipe == 'differential') {
+    metrics
+}, differential=function() {
     x <- calcNormFactors(x,method='TMM')
     lane <- factor(map$lane)
     design <- model.matrix(~0+group+lane)
@@ -95,7 +108,8 @@ if (p$recipe == 'density') {
     metrics$significant_genes <- sum(tab$adj.P.Val < q$fdr)
     metrics$up <- sum(tab$adj.P.Val < q$fdr & tab$logFC > 0)
     metrics$down <- sum(tab$adj.P.Val < q$fdr & tab$logFC < 0)
-} else {
+    metrics
+}, mds=function() {
     x <- calcNormFactors(x,method='TMM')
     colors <- rep(c('darkgreen','red','blue'),2)
     shapes <- c(0,1,2,15,16,17)
@@ -106,6 +120,9 @@ if (p$recipe == 'density') {
     write.table(data.frame(sample=colnames(x),group=as.character(group),x=m$x,y=m$y),file.path(out,'mds.tsv'),sep='\t',quote=FALSE,row.names=FALSE)
     metrics$annotated_genes <- annotated.genes
     metrics$normalization_factors <- as.list(x$samples$norm.factors)
-}
+    metrics
+})
+stopifnot(p$recipe %in% names(recipe_functions))
+metrics <- recipe_functions[[p$recipe]]()
 write_json(metrics,file.path(out,'metrics.json'),auto_unbox=TRUE,digits=16,pretty=TRUE,na='null')
 cat('Completed',p$recipe,'with',nrow(x),'retained genes\n')

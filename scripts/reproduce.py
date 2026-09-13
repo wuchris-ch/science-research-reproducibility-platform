@@ -21,6 +21,8 @@ def compare_numeric(originals, outputs):
         "genes.tsv",
         "samples.tsv",
         "design.tsv",
+        "effects.tsv",
+        "normalized-counts.tsv",
     }
     checks = {}
     for original in originals.iterdir():
@@ -53,7 +55,9 @@ def main():
     docker = ["docker"] + (["--context", args.context] if args.context else [])
     packages = root / "build/packages"
     packages.mkdir(exist_ok=True)
-    for entry in json.loads((root / "locked-packages.json").read_text()):
+    lock = json.loads((root / "locked-packages.json").read_text())
+    # Snapshot-based distribution packages are authenticated by APT during the image build.
+    for entry in lock if isinstance(lock, list) else []:
         path = packages / entry["file"]
         if not path.exists():
             with urllib.request.urlopen(entry["url"], timeout=90) as r:
@@ -105,7 +109,7 @@ def main():
         "--tmpfs",
         "/tmp:rw,nosuid,nodev,noexec,size=16m,uid=1000,gid=1000,mode=0700",
         "-e",
-        "PLAN_JSON=" + json.dumps(plan),
+        "PLAN_JSON=" + json.dumps({key: plan[key] for key in ("dataset_id", "recipe", "parameters")}),
         "-e",
         "WALL_SECONDS=" + str(limits["wall_seconds"]),
         image,

@@ -51,7 +51,7 @@ def create_app(settings=None, docker=None):
         yield
         db.engine.dispose()
 
-    app = FastAPI(title="Research Workbench", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(title="Research Workbench", version="0.2.0", lifespan=lifespan)
     app.state.service = service
     app.state.auth = auth
     app.add_middleware(
@@ -89,7 +89,7 @@ def create_app(settings=None, docker=None):
                 c.execute(text("SELECT 1"))
         except SQLAlchemyError:
             return JSONResponse({"status": "unavailable", "database": "unreachable"}, status_code=503)
-        return {"status": "ok", "version": "0.1.0", "identity_mode": "oidc" if auth.jwks else "local"}
+        return {"status": "ok", "version": "0.2.0", "identity_mode": "oidc" if auth.jwks else "local"}
 
     @app.get("/api/session")
     def session(request: Request):
@@ -200,13 +200,14 @@ def create_app(settings=None, docker=None):
 
     @app.get("/api/sources/{identity}")
     def source(identity: str, who=Depends(actor)):
-        return service.source(identity)
+        return service.source(identity, who)
 
     @app.get("/api/sources/{identity}/asset/{kind}")
     def source_asset(identity: str, kind: str, who=Depends(actor)):
+        figure_format = SOURCES.get(identity, {}).get("figure_format", "gif")
         allowed = {
             "pdf": f"{identity}.pdf",
-            "figure": f"{identity}-figure.gif",
+            "figure": f"{identity}-figure.{figure_format}",
             "xml": f"{identity}.xml",
             "page": f"{identity}-page.png",
         }
@@ -219,7 +220,7 @@ def create_app(settings=None, docker=None):
             path,
             media_type={
                 "pdf": "application/pdf",
-                "figure": "image/gif",
+                "figure": "image/" + figure_format,
                 "xml": "application/xml",
                 "page": "image/png",
             }[kind],
@@ -252,7 +253,10 @@ def create_app(settings=None, docker=None):
     @app.post("/api/runs")
     def submit(body: RunCreate, who=Depends(actor), idempotency_key: str = Header()):
         try:
-            image = docker.image_id()
+            with db.transaction() as c:
+                plan = service.get_plan(c, who, body.plan_id)
+            profile = plan["body"].get("adapter", {}).get("runtime", "historical")
+            image = docker.image_id(profile) if isinstance(docker, RuntimeRegistry) else docker.image_id()
         except (RuntimeError, OSError) as e:
             raise Problem(503, "Scientific runtime unavailable. Run workbench doctor.") from e
         return service.submit(who, body, idempotency_key, image)
@@ -429,6 +433,18 @@ def create_app(settings=None, docker=None):
     from .extraction import register_extraction
 
     register_extraction(app, service, actor)
+    from .onboarding import register_onboarding
+
+    register_onboarding(app, service, actor)
+    from .studies import register_studies
+
+    register_studies(app, service, actor)
+    from .exploration import register_exploration
+
+    register_exploration(app, service, actor)
+    from .study_exports import register_study_exports
+
+    register_study_exports(app, service, actor)
     dist = ROOT / "web/dist"
     if dist.exists():
         app.mount("/", StaticFiles(directory=dist, html=True), name="web")

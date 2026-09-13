@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class Strict(BaseModel):
@@ -26,29 +26,28 @@ class Limits(Strict):
 class PlanCreate(Strict):
     workspace_id: str
     title: str = Field(min_length=1, max_length=160)
-    dataset_id: Literal["law2018", "chen2016"] = "law2018"
-    recipe: Literal["density", "differential", "mds"] = "density"
-    parameters: Parameters = Field(default_factory=Parameters)
+    dataset_id: str = Field(default="law2018", pattern=r"^[a-zA-Z0-9_-]{1,80}$")
+    recipe: str = Field(default="density", pattern=r"^[a-z][a-z0-9_-]{2,40}$")
+    parameters: dict[str, str | int | float | bool] = Field(default_factory=dict)
     parent_id: str | None = None
     reason: str = Field(default="", max_length=2000)
 
-    @model_validator(mode="after")
-    def supported(self):
-        if (self.dataset_id == "chen2016") != (self.recipe == "mds"):
-            raise ValueError("Chen supports MDS; Law supports density and differential expression")
-        if self.dataset_id == "chen2016":
-            if "min_samples" not in self.parameters.model_fields_set:
-                self.parameters.min_samples = 2
-            elif self.parameters.min_samples != 2:
-                raise ValueError("Chen MDS requires two samples per group")
-        return self
+    @field_validator("parameters", mode="before")
+    @classmethod
+    def parameter_object(cls, value):
+        return value.model_dump(exclude_unset=True) if isinstance(value, BaseModel) else value
 
 
 class Correction(Strict):
     expected_revision: int
-    parameters: Parameters
+    parameters: dict[str, str | int | float | bool]
     reason: str = Field(min_length=3, max_length=2000)
     evidence_ids: list[str] = Field(default_factory=list, max_length=30)
+
+    @field_validator("parameters", mode="before")
+    @classmethod
+    def parameter_object(cls, value):
+        return value.model_dump(exclude_unset=True) if isinstance(value, BaseModel) else value
 
 
 class LockRequest(Strict):

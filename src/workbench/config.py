@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     model_url: str = ""
     model_key: str = ""
     model_name: str = ""
+    model_api_mode: str = "chat_completions"
+    model_public_label: str = "Configured extraction model"
     model_input_per_million: float = 0
     model_output_per_million: float = 0
     model_budget_usd: float = 2

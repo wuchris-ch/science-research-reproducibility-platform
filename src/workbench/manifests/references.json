@@ -1,0 +1,253 @@
+{
+  "law2018": {
+    "checks": [
+      {
+        "key": "input_genes",
+        "expected": 27179,
+        "basis": "Published count matrix",
+        "kind": "published"
+      },
+      {
+        "key": "samples",
+        "expected": 9,
+        "basis": "Paper sample mapping",
+        "kind": "published"
+      },
+      {
+        "key": "all_zero_genes",
+        "expected": 5153,
+        "basis": "Paper and independent count probe",
+        "kind": "published"
+      },
+      {
+        "key": "retained_genes",
+        "expected": 16624,
+        "basis": "Law v3 filtered universe",
+        "kind": "published",
+        "when": {
+          "filter_policy": "published",
+          "min_count": 10,
+          "min_total_count": 15,
+          "min_samples": 3
+        }
+      },
+      {
+        "key": "retained_genes",
+        "expected": 14165,
+        "basis": "Independent Python filter probe",
+        "kind": "input_probe",
+        "when": {
+          "filter_policy": "cpm1",
+          "min_samples": 3
+        }
+      },
+      {
+        "key": "library_sizes",
+        "expected": {
+          "10_6_5_11": 32863052,
+          "9_6_5_11": 35335491,
+          "purep53": 57160817,
+          "JMS8-2": 51368625,
+          "JMS8-3": 75795034,
+          "JMS8-4": 60517657,
+          "JMS8-5": 55086324,
+          "JMS9-P7c": 21311068,
+          "JMS9-P8c": 19958838
+        },
+        "basis": "Pinned GEO input totals",
+        "kind": "input_probe"
+      }
+    ],
+    "limitations": [
+      "The paper supplies scalar checks and a rendered density plot; no numerical density grid is published.",
+      "The limma contrast result is compared to fresh executions; a complete external DE table is unavailable."
+    ]
+  },
+  "chen2016": {
+    "checks": [
+      {
+        "key": "input_genes",
+        "expected": 27179,
+        "basis": "Chen v2 with original annotation",
+        "kind": "published"
+      },
+      {
+        "key": "samples",
+        "expected": 12,
+        "basis": "Chen v2 with original annotation",
+        "kind": "published"
+      },
+      {
+        "key": "annotated_genes",
+        "expected": 26357,
+        "basis": "Chen v2 with original annotation",
+        "kind": "published"
+      },
+      {
+        "key": "retained_genes",
+        "expected": 15653,
+        "basis": "Chen v2 with original annotation",
+        "kind": "published",
+        "when": {
+          "filter_policy": "published"
+        }
+      }
+    ],
+    "limitations": [
+      "R and edgeR versions are adapted. Published MDS coordinates are unavailable; compare fresh pairwise distances."
+    ]
+  },
+  "airway2015": {
+    "checks": [
+      {
+        "key": "input_genes",
+        "expected": 64102,
+        "basis": "Love v1 PDF page 14",
+        "kind": "published",
+        "document": "airway2015.pdf",
+        "page": 14
+      },
+      {
+        "key": "samples",
+        "expected": 8,
+        "basis": "Love v1 PDF page 14",
+        "kind": "published",
+        "document": "airway2015.pdf",
+        "page": 14
+      },
+      {
+        "key": "retained_genes",
+        "expected": 29391,
+        "basis": "Love v1 PDF page 14",
+        "kind": "published",
+        "document": "airway2015.pdf",
+        "page": 14,
+        "when": {
+          "min_total_count": 2,
+          "size_factor": "ratio",
+          "independent_filtering": true,
+          "beta_prior": true,
+          "fdr": 0.1
+        }
+      },
+      {
+        "key": "significant_genes",
+        "expected": 4897,
+        "basis": "Love v1 PDF page 23",
+        "kind": "published",
+        "document": "airway2015.pdf",
+        "page": 23,
+        "when": {
+          "min_total_count": 2,
+          "size_factor": "ratio",
+          "independent_filtering": true,
+          "beta_prior": true,
+          "fdr": 0.1
+        }
+      },
+      {
+        "key": "up",
+        "expected": 2647,
+        "basis": "Love v1 PDF page 22",
+        "kind": "published",
+        "document": "airway2015.pdf",
+        "page": 22,
+        "when": {
+          "min_total_count": 2,
+          "size_factor": "ratio",
+          "independent_filtering": true,
+          "beta_prior": true,
+          "fdr": 0.1
+        }
+      },
+      {
+        "key": "down",
+        "expected": 2250,
+        "basis": "Love v1 PDF page 22",
+        "kind": "published",
+        "document": "airway2015.pdf",
+        "page": 22,
+        "when": {
+          "min_total_count": 2,
+          "size_factor": "ratio",
+          "independent_filtering": true,
+          "beta_prior": true,
+          "fdr": 0.1
+        }
+      },
+      {
+        "key": "pvalue_genes",
+        "expected": 29391,
+        "basis": "Love v1 PDF page 23",
+        "kind": "published",
+        "document": "airway2015.pdf",
+        "page": 23,
+        "when": {
+          "min_total_count": 2,
+          "size_factor": "ratio",
+          "independent_filtering": true,
+          "beta_prior": true,
+          "fdr": 0.1
+        }
+      }
+    ],
+    "limitations": [
+      "Counts and sample identities match the historical airway package. DESeq2 1.38.3 replaces 1.8.1, including changes in independent filtering and numerical fitting.",
+      "The paper reports selected gene examples and aggregate results. Fresh-run consistency is evaluated separately."
+    ],
+    "gene_examples": {
+      "basis": "Published top up- and down-regulated examples, page 24 of version 1",
+      "doi": "10.12688/f1000research.7035.1",
+      "values": [
+        {
+          "gene_id": "ENSG00000162692",
+          "published_log2fc": -3.452454
+        },
+        {
+          "gene_id": "ENSG00000146006",
+          "published_log2fc": -2.856273
+        },
+        {
+          "gene_id": "ENSG00000105989",
+          "published_log2fc": -2.85096
+        },
+        {
+          "gene_id": "ENSG00000214814",
+          "published_log2fc": -2.759539
+        },
+        {
+          "gene_id": "ENSG00000267339",
+          "published_log2fc": -2.743928
+        },
+        {
+          "gene_id": "ENSG00000013293",
+          "published_log2fc": -2.646116
+        },
+        {
+          "gene_id": "ENSG00000179593",
+          "published_log2fc": 4.880507
+        },
+        {
+          "gene_id": "ENSG00000109906",
+          "published_log2fc": 4.860877
+        },
+        {
+          "gene_id": "ENSG00000152583",
+          "published_log2fc": 4.315374
+        },
+        {
+          "gene_id": "ENSG00000250978",
+          "published_log2fc": 4.090157
+        },
+        {
+          "gene_id": "ENSG00000163884",
+          "published_log2fc": 4.078073
+        },
+        {
+          "gene_id": "ENSG00000168309",
+          "published_log2fc": 3.991146
+        }
+      ]
+    }
+  }
+}

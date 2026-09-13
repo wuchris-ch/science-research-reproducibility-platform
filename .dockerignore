@@ -13,6 +13,7 @@
 !environments/**
 !scripts/
 !scripts/reproduce.py
+!scripts/reproduce_study.py
 !web/
 !web/package.json
 !web/package-lock.json

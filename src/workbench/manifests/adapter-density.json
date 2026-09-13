@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "id": "edger-density",
+  "version": "1.0.0",
+  "recipe": "density",
+  "title": "Count filtering and density",
+  "runtime": "historical",
+  "environment": "R 3.5.1 / edgeR 3.24.0 / limma 3.38.3 / Linux amd64",
+  "input_contract": "legacy-curated",
+  "parameters": {
+    "filter_policy": {
+      "type": "string",
+      "default": "published",
+      "label": "Count filter",
+      "choices": [
+        "published",
+        "cpm1"
+      ],
+      "sensitivity": [
+        "published",
+        "cpm1"
+      ]
+    },
+    "min_count": {
+      "type": "integer",
+      "default": 10,
+      "label": "Minimum count",
+      "minimum": 1,
+      "maximum": 100
+    },
+    "min_total_count": {
+      "type": "integer",
+      "default": 15,
+      "label": "Minimum total count",
+      "minimum": 1,
+      "maximum": 1000
+    },
+    "min_samples": {
+      "type": "integer",
+      "default": 3,
+      "label": "Minimum samples",
+      "minimum": 2,
+      "maximum": 9
+    },
+    "contrast": {
+      "type": "string",
+      "default": "BasalvsLP",
+      "label": "Contrast",
+      "choices": [
+        "BasalvsLP",
+        "BasalvsML",
+        "LPvsML"
+      ]
+    },
+    "fdr": {
+      "type": "number",
+      "default": 0.05,
+      "label": "FDR",
+      "minimum": 0.001,
+      "maximum": 0.2
+    },
+    "seed": {
+      "type": "integer",
+      "default": 1,
+      "label": "Random seed",
+      "minimum": 0,
+      "maximum": 2147483647
+    }
+  },
+  "required_outputs": [
+    "metrics.json",
+    "genes.tsv",
+    "samples.tsv",
+    "density.tsv",
+    "figure.png",
+    "session.txt"
+  ],
+  "numeric_outputs": [
+    "metrics.json",
+    "genes.tsv",
+    "samples.tsv",
+    "density.tsv"
+  ],
+  "methods": {
+    "normalization": "Library-size CPM",
+    "analysis": "Count filtering and density"
+  },
+  "adaptations": [
+    "Historical curated reader; Law display-only annotation is omitted.",
+    "Linux rendering differs from the source operating system. Chen uses the shared R 3.5.1 runtime."
+  ],
+  "references": [
+    "https://doi.org/10.12688/f1000research.9005.3"
+  ]
+}

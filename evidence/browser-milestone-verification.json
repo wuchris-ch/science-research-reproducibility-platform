@@ -1,0 +1,20 @@
+{
+  "verified_at": "2026-09-13T02:11:43.077253+00:00",
+  "surface": "In-app browser",
+  "report_sha256": "72eaeb77cf0da5f7ab9f9bc2936220ad1296530d1527f8fac910aeb7adb6e6b3",
+  "checks": {
+    "completed_variants": 8,
+    "input_gene_universe": 64102,
+    "family_supported_filter_count": 660,
+    "gene_search": "ENSG00000152583",
+    "effect_intervals_and_paired_donor_plots": true,
+    "small_probabilities_preserve_exponents": true,
+    "keyboard_search_to_classification": true,
+    "mobile_viewport_width": 390,
+    "mobile_document_width": 375,
+    "horizontal_page_overflow": false,
+    "source_pdf_page_14_highlight_verified": true,
+    "onboarding_revision_7_mismatch_and_revision_9_correction_visible": true
+  },
+  "scope": "Local report checked against the release artifact. Source highlight and onboarding history checked during the completed application workflow."
+}

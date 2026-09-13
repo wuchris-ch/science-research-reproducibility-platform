@@ -1,9 +1,10 @@
 {
-  "date": "2026-09-11",
-  "image_id": "sha256:15c53fea952ba7a367fbc83690a910360c3c5986d55fb1ec5db4cd6b5facedc5",
+  "verified_at": "2026-09-13T02:11:48.059885+00:00",
+  "image_id": "sha256:4a780b72842a8e45f510942724b2a346e591829c5ae30630392ea1477504204e",
   "checks": {
     "health_and_database": true,
     "static_ui": true,
+    "registered_adapters_and_portable_family_files": true,
     "no_docker_cli_or_socket": true,
     "non_root": true,
     "read_only_root": true,

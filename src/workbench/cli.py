@@ -80,6 +80,16 @@ def build(settings):
     ]:
         shutil.copyfile(ROOT / src, context / name)
     shutil.copyfile(ROOT / "environments/locked-packages.json", context / "locked-packages.json")
+    from .adapters import datasets
+
+    declarations = {
+        identity: data["legacy_input"] for identity, data in datasets().items() if "legacy_input" in data
+    }
+    recipe = (context / "run.R").read_text()
+    recipe = recipe.replace(
+        "# @dataset-registry", "dataset_registry <- fromJSON(" + json.dumps(json.dumps(declarations)) + ")"
+    )
+    (context / "run.R").write_text(recipe)
     docker = Docker(settings)
     subprocess.run(
         docker.prefix + ["build", "--platform", "linux/amd64", "-t", settings.image, str(context)], check=True
@@ -94,17 +104,27 @@ def assets(settings):
         fetch(entry["url"], settings.data_dir / "sources" / entry["file"], entry["sha256"], cap=10_000_000)
     import pypdfium2 as pdfium
 
-    for dataset, name in (("law2018", "law"), ("chen2016", "chen")):
-        geometry = json.loads((ROOT / f"fixtures/{name}-geometry.json").read_text())
+    from .adapters import datasets
+
+    for dataset, metadata in datasets().items():
+        if not metadata.get("geometry_file"):
+            continue
+        geometry = json.loads((ROOT / "fixtures" / metadata["geometry_file"]).read_text())
         path = settings.data_dir / f"sources/{dataset}.json"
         source = json.loads(path.read_text())
         source["geometry"] = geometry
-        source["geometry_status"] = "Verified on publisher PDF, page 8"
+        source["geometry_status"] = f"Verified on publisher PDF, page {geometry['page']}"
         path.write_text(json.dumps(source))
         pdf = pdfium.PdfDocument(str(settings.data_dir / f"sources/{dataset}.pdf"))
         pdf[geometry["page"] - 1].render(scale=1.6).to_pil().save(
             settings.data_dir / f"sources/{dataset}-page.png"
         )
+        if metadata.get("figure_format") == "png":
+            left, top, right, bottom = geometry["figure_bbox"]
+            width, height = pdf[geometry["page"] - 1].get_size()
+            pdf[geometry["page"] - 1].render(
+                scale=2, crop=(left, height - bottom, width - right, top)
+            ).to_pil().save(settings.data_dir / f"sources/{dataset}-figure.png")
         pdf.close()
 
 
@@ -173,7 +193,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("setup")
-    sub.add_parser("build")
+    build_parser = sub.add_parser("build")
+    build_parser.add_argument("--profile", choices=["historical", "deseq2", "all"], default="all")
     sub.add_parser("doctor")
     sub.add_parser("migrate")
     serve = sub.add_parser("serve")
@@ -196,21 +217,36 @@ def main():
     settings.initialize()
     if args.command == "setup":
         build(settings)
+        from .airway import build_airway
+
+        build_airway(settings)
         make_service(settings)
         print("Setup complete. Start workbench serve and workbench worker in separate terminals.")
     elif args.command == "build":
-        build(settings)
+        if args.profile in ("historical", "all"):
+            build(settings)
+        if args.profile in ("deseq2", "all"):
+            from .airway import build_airway
+
+            build_airway(settings)
     elif args.command == "migrate":
         make_service(settings).db.engine.dispose()
         print("Database schema is current.")
     elif args.command == "doctor":
+        from .adapters import datasets, registry
+        from .runtime import RuntimeRegistry
+
         result = {
             "database": settings.database_url.split(":", 1)[0],
             "data_dir": str(settings.data_dir),
-            "sources": {
-                k: (settings.data_dir / f"sources/{k}.json").exists() for k in ("law2018", "chen2016")
-            },
+            "sources": {k: (settings.data_dir / f"sources/{k}.json").exists() for k in datasets()},
+            "runtimes": {},
         }
+        for profile in sorted({adapter.runtime for adapter in registry().values()}):
+            try:
+                result["runtimes"][profile] = {"image_id": RuntimeRegistry(settings).image_id(profile)}
+            except RuntimeError as ex:
+                result["runtimes"][profile] = {"error": str(ex)}
         try:
             result["image_id"] = Docker(settings).image_id()
         except Exception as ex:

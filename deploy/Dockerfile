@@ -17,6 +17,7 @@ COPY evidence/feasibility.json evidence/feasibility.json
 COPY recipes/ recipes/
 COPY environments/ environments/
 COPY scripts/reproduce.py scripts/reproduce.py
+COPY scripts/reproduce_study.py scripts/reproduce_study.py
 COPY --from=web /build/web/dist web/dist
 RUN uv sync --frozen --no-dev && groupadd -g 1000 workbench && useradd -u 1000 -g 1000 -M workbench && mkdir /data && chown 1000:1000 /data
 ENV WORKBENCH_DATA_DIR=/data PATH=/app/.venv/bin:$PATH PYTHONDONTWRITEBYTECODE=1
