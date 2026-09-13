@@ -389,7 +389,7 @@
       @media (max-width: 1000px) {
         .grid,
         .gene-grid {
-          grid-template-columns: 1fr;
+          grid-template-columns: minmax(0, 1fr);
         }
         .method-grid {
           grid-template-columns: repeat(2, 1fr);
@@ -436,6 +436,10 @@
         .section-head {
           align-items: start;
           flex-wrap: wrap;
+        }
+        .pager {
+          flex-wrap: wrap;
+          gap: 8px;
         }
         .footer {
           display: block;
