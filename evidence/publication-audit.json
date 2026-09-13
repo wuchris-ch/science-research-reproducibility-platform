@@ -1,0 +1,18 @@
+{
+  "verified_at": "2026-09-13T02:14:10.442999+00:00",
+  "source_revision": "db4e619c7bb275e3819e97d4085b35918dd90f4e",
+  "checks": {
+    "configured_public_exclusions": true,
+    "configured_secret_values": true,
+    "credential_patterns": true,
+    "full_reachable_history": true,
+    "working_public_files": true,
+    "decoded_report_and_bundle_contents": true
+  },
+  "counts": {
+    "git_blobs": 339,
+    "working_files": 142,
+    "bundle_members": 120,
+    "decoded_payloads": 3
+  }
+}
