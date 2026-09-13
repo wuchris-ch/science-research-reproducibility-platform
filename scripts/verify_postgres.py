@@ -5,6 +5,7 @@ import os
 import secrets
 import subprocess
 import time
+from datetime import UTC, datetime
 
 from workbench.config import ROOT, Settings
 from workbench.runner import Docker
@@ -49,7 +50,7 @@ try:
     (ROOT / "evidence/postgres-verification.json").write_text(
         json.dumps(
             {
-                "date": "2026-09-11",
+                "verified_at": datetime.now(UTC).isoformat(),
                 "image_id": info["Image"],
                 "database": "PostgreSQL 16",
                 "exit_code": result.returncode,

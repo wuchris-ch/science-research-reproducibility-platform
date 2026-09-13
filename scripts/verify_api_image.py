@@ -3,6 +3,7 @@
 import json
 import time
 import uuid
+from datetime import UTC, datetime
 
 from workbench.config import ROOT, Settings
 from workbench.runner import Docker
@@ -95,7 +96,7 @@ try:
     }
     assert all(checks.values())
     receipt = {
-        "date": "2026-09-11",
+        "verified_at": datetime.now(UTC).isoformat(),
         "image_id": info["Image"],
         "checks": checks,
         "scope": "Local container image smoke test using ephemeral SQLite. Does not verify a live OIDC tenant or production deployment.",
