@@ -1,0 +1,18 @@
+{
+  "verified_at": "2026-09-13T02:10:15.996373+00:00",
+  "report": {
+    "path": "public-example/index.html",
+    "bytes": 9766614,
+    "sha256": "72eaeb77cf0da5f7ab9f9bc2936220ad1296530d1527f8fac910aeb7adb6e6b3",
+    "javascript_syntax": "passed",
+    "embedded_data_decoded": true
+  },
+  "bundle": {
+    "release_asset": "airway-sensitivity.zip",
+    "bytes": 42950747,
+    "sha256": "4271f2841314bcd541e790b5d5172b7a60b6dea3c08e0c5996558fba5263f58d",
+    "manifest_files": 119,
+    "standalone_verifier": "passed",
+    "numerical_artifacts_matching_execution_receipts": 48
+  }
+}
