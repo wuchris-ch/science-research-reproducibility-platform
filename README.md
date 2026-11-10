@@ -58,6 +58,19 @@ For frontend development, keep the API running and use `make dev-web` at [localh
 
 [Operating guide](docs/RUNBOOK.md) covers setup, inspection, restart, backup, restore, exports, team identity, quotas and troubleshooting. [Team deployment template](deploy/README.md) includes an API image and PostgreSQL configuration. Its image has been built and smoke-tested locally; a production deployment and live identity-provider integration have not been performed.
 
+## Document review service
+
+The [document review service](services/document-review/README.md) is an ASP.NET Core Web API on .NET 10 that runs beside the workbench. It records each study document's revisions and reviewer decisions in SQL Server through Entity Framework Core and stores the files in Azure Blob Storage. Editors upload revisions, reviewers approve or reject the latest revision, and the history endpoint returns every revision with its decisions in one timeline. It uses the workbench role names and ranks.
+
+```sh
+cd services/document-review
+dotnet test                                 # xUnit unit and integration tests against SQL Server and Azurite
+dotnet run --project src/DocumentReview.Api # http://127.0.0.1:8319 in the Development profile
+scripts/end-to-end.sh                       # upload twice, approve, read the history back
+```
+
+The service README lists the SQL Server and Azurite containers to start first. The `document-review.yml` workflow runs the tests on every push and pull request with SQL Server and Azurite containers. [The end-to-end transcript](evidence/document-review-end-to-end.txt) records a local run.
+
 ## Scope and design records
 
 The optional model broker proposes source-linked fields under a spending reservation. Proposals never lock methods or execute code. Study onboarding accepts papers, supplements, count matrices and sample tables. Reviewed methods and validated immutable inputs can produce executable paired DESeq2 plans. Sensitivity families freeze their choices before execution and retain every outcome. Execution supports the four registered recipes; arbitrary uploaded code and repositories require a separate, stronger execution boundary.

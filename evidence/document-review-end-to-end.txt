@@ -1,0 +1,226 @@
+
+## Environment
+
+Run at: 2026-11-10T03:59:56Z
+Commit: 88401a4
+.NET SDK: 10.0.403
+SQL Server: 16.0.4305.5 Developer Edition (64-bit)
+Azurite: 3.37.0
+Issued local development tokens for ada (author) and grace (reviewer).
+
+## Health
+
+{
+  "database": "ok",
+  "blobStorage": "ok"
+}
+
+## Create a workspace and add a reviewer
+
+> POST /api/workspaces
+< 201
+{
+  "id": "29e06464-8aad-4e6b-9b8d-edf3abe1de04",
+  "name": "Airway study review",
+  "role": "owner",
+  "createdBy": "ada",
+  "createdAt": "2026-11-10T03:59:59.192254+00:00"
+}
+
+> PUT /api/workspaces/29e06464-8aad-4e6b-9b8d-edf3abe1de04/members
+< 200
+{
+  "subject": "grace",
+  "role": "reviewer",
+  "assignedBy": "ada",
+  "assignedAt": "2026-11-10T03:59:59.497631+00:00"
+}
+
+
+## Upload the first revision
+
+Local SHA-256: c64ce0ce84337dc0242ecedeac6e2c06934c377e3e00b4c5bfe410b61043f268
+
+> POST /api/workspaces/29e06464-8aad-4e6b-9b8d-edf3abe1de04/documents
+< 201
+{
+  "id": "82ff6e25-7013-49ca-ad77-c052b4bc60ca",
+  "workspaceId": "29e06464-8aad-4e6b-9b8d-edf3abe1de04",
+  "title": "Airway methods appendix",
+  "createdBy": "ada",
+  "createdAt": "2026-11-10T03:59:59.556338+00:00",
+  "latestRevision": {
+    "number": 1,
+    "fileName": "methods-v1.md",
+    "contentType": "text/markdown",
+    "sizeBytes": 61,
+    "sha256": "c64ce0ce84337dc0242ecedeac6e2c06934c377e3e00b4c5bfe410b61043f268",
+    "uploadedBy": "ada",
+    "uploadedAt": "2026-11-10T03:59:59.578797+00:00",
+    "note": null
+  }
+}
+
+
+## Upload the second revision
+
+Local SHA-256: 1274457da729182e62e82956fbf5d875e58326be95408f7e1c9096eedb71de7f
+
+> POST /api/documents/82ff6e25-7013-49ca-ad77-c052b4bc60ca/revisions
+< 201
+{
+  "number": 2,
+  "fileName": "methods-v2.md",
+  "contentType": "text/markdown",
+  "sizeBytes": 88,
+  "sha256": "1274457da729182e62e82956fbf5d875e58326be95408f7e1c9096eedb71de7f",
+  "uploadedBy": "ada",
+  "uploadedAt": "2026-11-10T03:59:59.674857+00:00",
+  "note": "Stricter filter and paired design"
+}
+
+
+## Rules: the superseded revision and the author's own revision cannot be approved
+
+> POST /api/documents/82ff6e25-7013-49ca-ad77-c052b4bc60ca/revisions/1/reviews
+< 409
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.10",
+  "title": "Revision 1 was superseded by revision 2. Review the latest revision.",
+  "status": 409,
+  "traceId": "00-06166db8e4f6398546f28416076b8f41-931fdd21ec48a187-00"
+}
+
+> POST /api/documents/82ff6e25-7013-49ca-ad77-c052b4bc60ca/revisions/2/reviews
+< 403
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.4",
+  "title": "Reviewers cannot approve or reject their own revision",
+  "status": 403,
+  "traceId": "00-b888bca3328f79afcd313492bf8408aa-fcda1c99210612d5-00"
+}
+
+
+## Approve revision 2
+
+> POST /api/documents/82ff6e25-7013-49ca-ad77-c052b4bc60ca/revisions/2/reviews
+< 201
+{
+  "reviewer": "grace",
+  "decision": "approved",
+  "comment": "Filter and design match the source paper.",
+  "reviewedAt": "2026-11-10T03:59:59.839899+00:00"
+}
+
+
+## Read the history back
+
+> GET /api/documents/82ff6e25-7013-49ca-ad77-c052b4bc60ca/history
+< 200
+{
+  "id": "82ff6e25-7013-49ca-ad77-c052b4bc60ca",
+  "workspaceId": "29e06464-8aad-4e6b-9b8d-edf3abe1de04",
+  "title": "Airway methods appendix",
+  "createdBy": "ada",
+  "createdAt": "2026-11-10T03:59:59.556338+00:00",
+  "revisions": [
+    {
+      "number": 1,
+      "fileName": "methods-v1.md",
+      "contentType": "text/markdown",
+      "sizeBytes": 61,
+      "sha256": "c64ce0ce84337dc0242ecedeac6e2c06934c377e3e00b4c5bfe410b61043f268",
+      "uploadedBy": "ada",
+      "uploadedAt": "2026-11-10T03:59:59.578797+00:00",
+      "note": null,
+      "isLatest": false,
+      "status": "pending",
+      "reviews": []
+    },
+    {
+      "number": 2,
+      "fileName": "methods-v2.md",
+      "contentType": "text/markdown",
+      "sizeBytes": 88,
+      "sha256": "1274457da729182e62e82956fbf5d875e58326be95408f7e1c9096eedb71de7f",
+      "uploadedBy": "ada",
+      "uploadedAt": "2026-11-10T03:59:59.674857+00:00",
+      "note": "Stricter filter and paired design",
+      "isLatest": true,
+      "status": "approved",
+      "reviews": [
+        {
+          "reviewer": "grace",
+          "decision": "approved",
+          "comment": "Filter and design match the source paper.",
+          "reviewedAt": "2026-11-10T03:59:59.839899+00:00"
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "at": "2026-11-10T03:59:59.578797+00:00",
+      "actor": "ada",
+      "kind": "uploaded",
+      "revision": 1,
+      "detail": null
+    },
+    {
+      "at": "2026-11-10T03:59:59.674857+00:00",
+      "actor": "ada",
+      "kind": "uploaded",
+      "revision": 2,
+      "detail": "Stricter filter and paired design"
+    },
+    {
+      "at": "2026-11-10T03:59:59.839899+00:00",
+      "actor": "grace",
+      "kind": "approved",
+      "revision": 2,
+      "detail": "Filter and design match the source paper."
+    }
+  ]
+}
+
+
+## Download revision 2 from Blob Storage through the API
+
+Downloaded SHA-256: 1274457da729182e62e82956fbf5d875e58326be95408f7e1c9096eedb71de7f
+Matches the uploaded file: yes
+
+## SQL Server rows (metadata and blob names only)
+
+MigrationId
+-----------
+20261110034833_AddWorkspaces
+20261110035328_AddDocumentRevisions
+20261110035515_AddRevisionReviews
+
+Number FileName SizeBytes Sha256 BlobName UploadedBy
+------ -------- --------- ------ -------- ----------
+1 methods-v1.md 61 c64ce0ce84337dc0242ecedeac6e2c06934c377e3e00b4c5bfe410b61043f268 29e064648aad4e6b9b8dedf3abe1de04/82ff6e25701349caad77c052b4bc60ca/fc23add390854bbd84df06b8957f60ef ada
+2 methods-v2.md 88 1274457da729182e62e82956fbf5d875e58326be95408f7e1c9096eedb71de7f 29e064648aad4e6b9b8dedf3abe1de04/82ff6e25701349caad77c052b4bc60ca/07cc965994ae4005b5c17e5194e017d8 ada
+
+Number Reviewer Decision Comment
+------ -------- -------- -------
+2 grace approved Filter and design match the source paper.
+
+COLUMN_NAME DATA_TYPE
+----------- ---------
+Id uniqueidentifier
+DocumentId uniqueidentifier
+Number int
+FileName nvarchar
+ContentType varchar
+SizeBytes bigint
+Sha256 char
+BlobName varchar
+UploadedBy nvarchar
+UploadedAt datetimeoffset
+Note nvarchar
+
+## Azurite blob writes for this document
+
+172.17.0.1 - - [10/Nov/2026:03:59:59 +0000] "PUT /devstoreaccount1/document-revisions/29e064648aad4e6b9b8dedf3abe1de04/82ff6e25701349caad77c052b4bc60ca/fc23add390854bbd84df06b8957f60ef HTTP/1.1" 201 -
+172.17.0.1 - - [10/Nov/2026:03:59:59 +0000] "PUT /devstoreaccount1/document-revisions/29e064648aad4e6b9b8dedf3abe1de04/82ff6e25701349caad77c052b4bc60ca/07cc965994ae4005b5c17e5194e017d8 HTTP/1.1" 201 -

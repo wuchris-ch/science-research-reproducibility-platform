@@ -15,6 +15,7 @@ Verification date: September 11, 2026. The application and scientific checks bel
 | P4.1-2 | Full primary-data differential expression and second-paper MDS adapter | Actual executions, complete tested universe, table validation and package/session records |
 | P5 foundations | OIDC access-token verification, workspace roles, scoped queries/storage access, audit, review records, quotas, backup/restore, Docker-engine-bound recovery | Cross-workspace, JWT, restore and recovery tests; isolated PostgreSQL suite |
 | Operations | Source checkout lifecycle commands, contract regeneration, CI, API image with no Docker CLI/socket, team configuration template | Build and container health/UI smoke test |
+| Document review | ASP.NET Core Web API on .NET 10 in `services/document-review`: Entity Framework Core on SQL Server for documents, numbered revisions and approve/reject decisions; file bytes in Azure Blob Storage; full history; workspace roles; OIDC or local JWT | 51 xUnit unit and integration tests against SQL Server 2022 and Azurite in `document-review.yml`; `evidence/document-review-end-to-end.txt` |
 
 ## Measured scientific results
 
@@ -41,6 +42,7 @@ Neither article supplies an authoritative machine-readable density grid or full 
 - `evidence/api-image-verification.json`: actual API image starts, queries its database, serves the UI, runs non-root with a read-only root, and has neither a Docker CLI nor socket.
 - `evidence/extraction-evaluation.json`: the small lexical evaluation preserves failures and its limited scope. A misleading accession instruction still produced a false proposal. Evidence linkage alone does not guarantee semantic correctness.
 - `evidence/browser-verification.json`: observed UI actions and responsive/keyboard checks, recorded separately from automated tests.
+- `evidence/document-review-end-to-end.txt`: November 9, 2026 run of the document review API against SQL Server 2022 and Azurite. A fresh database received all three migrations. Two uploads became revisions 1 and 2, the superseded revision and the author's own approval were refused, a reviewer approved revision 2, and the history and SQL rows were read back. The downloaded file matched its SHA-256, and SQL Server held only metadata and blob names.
 
 The Python tests exercise stale revision rejection, unresolved locks, concurrent idempotency, stale-owner fencing, recovery after intent and sealed receipts, daemon failure during cancellation, inaccessible runtime ownership, invalid artifact collection, hash corruption, source boundaries, CSRF, OIDC validation, cross-workspace access, membership, review persistence, spending reservations, uploaded PDF boundaries, chunked request limits and database health failure. Frontend checks compile the generated contracts and production bundle. Two upstream test-client deprecation warnings remain; the suite passes.
 
@@ -61,3 +63,5 @@ The fixture cache and artifact directory are private operator-managed storage. C
 Queued/active jobs are capped per workspace, each execution has declared resource limits, imports are capped at 10 MB including request overhead, and model calls reserve from a workspace budget. Aggregate disk quotas and organization-wide rate limiting are not implemented. Before a multi-tenant deployment, supply those controls at the infrastructure layer and validate them against the intended workload.
 
 The application currently accepts an OIDC access token pasted into its sign-in form. It validates issuer, audience, RS256 signature, issue/expiry claims and subject. It does not yet implement an interactive authorization-code flow. No live identity tenant is configured in the checked-in files.
+
+The document review service has run against SQL Server and the Azurite storage emulator, locally and in CI. It connects to Blob Storage with a connection string and has not been deployed to an Azure account.
