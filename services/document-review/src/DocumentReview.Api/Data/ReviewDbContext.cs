@@ -8,6 +8,7 @@ public sealed class ReviewDbContext(DbContextOptions<ReviewDbContext> options) :
     public DbSet<WorkspaceMember> WorkspaceMembers => Set<WorkspaceMember>();
     public DbSet<Document> Documents => Set<Document>();
     public DbSet<DocumentRevision> DocumentRevisions => Set<DocumentRevision>();
+    public DbSet<RevisionReview> RevisionReviews => Set<RevisionReview>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -48,6 +49,17 @@ public sealed class ReviewDbContext(DbContextOptions<ReviewDbContext> options) :
             revision.Property(r => r.BlobName).HasMaxLength(300).IsUnicode(false);
             revision.Property(r => r.UploadedBy).HasMaxLength(200);
             revision.Property(r => r.Note).HasMaxLength(2000);
+        });
+
+        modelBuilder.Entity<RevisionReview>(review =>
+        {
+            review.HasIndex(r => new { r.RevisionId, r.Reviewer }).IsUnique();
+            review.Property(r => r.Reviewer).HasMaxLength(200);
+            review.Property(r => r.Comment).HasMaxLength(2000);
+            review.Property(r => r.Decision)
+                .HasConversion(decision => decision.ToString().ToLowerInvariant(), value => Enum.Parse<ReviewDecision>(value, true))
+                .HasMaxLength(16);
+            review.HasOne<DocumentRevision>().WithMany().HasForeignKey(r => r.RevisionId).OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

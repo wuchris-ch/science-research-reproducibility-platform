@@ -52,6 +52,7 @@ if (app.Environment.IsDevelopment())
 app.MapHealthEndpoints();
 app.MapWorkspaceEndpoints();
 app.MapDocumentEndpoints();
+app.MapReviewEndpoints();
 
 await app.RunAsync();
 

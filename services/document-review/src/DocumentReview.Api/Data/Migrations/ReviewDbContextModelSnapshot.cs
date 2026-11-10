@@ -113,6 +113,40 @@ namespace DocumentReview.Api.Data.Migrations
                     b.ToTable("DocumentRevisions");
                 });
 
+            modelBuilder.Entity("DocumentReview.Api.Data.RevisionReview", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Decision")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
+
+                    b.Property<DateTimeOffset>("ReviewedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Reviewer")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<Guid>("RevisionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RevisionId", "Reviewer")
+                        .IsUnique();
+
+                    b.ToTable("RevisionReviews");
+                });
+
             modelBuilder.Entity("DocumentReview.Api.Data.Workspace", b =>
                 {
                     b.Property<Guid>("Id")
@@ -180,6 +214,15 @@ namespace DocumentReview.Api.Data.Migrations
                     b.HasOne("DocumentReview.Api.Data.Document", null)
                         .WithMany("Revisions")
                         .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DocumentReview.Api.Data.RevisionReview", b =>
+                {
+                    b.HasOne("DocumentReview.Api.Data.DocumentRevision", null)
+                        .WithMany()
+                        .HasForeignKey("RevisionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

@@ -37,8 +37,14 @@ A team installation sets `Auth__Authority` and `Auth__Audience` to its OIDC issu
 | `POST /api/documents/{id}/revisions` | editor | Multipart `file`, optional `note` and `expectedLatestRevision`; adds the next revision |
 | `GET /api/documents/{id}/revisions` | viewer | Lists every revision with size, SHA-256, uploader and note |
 | `GET /api/documents/{id}/revisions/{number}/content` | viewer | Streams the revision's file from Blob Storage |
+| `POST /api/documents/{id}/revisions/{number}/reviews` | reviewer | JSON `decision` (`approved` or `rejected`) and `comment`; records one decision per reviewer |
+| `GET /api/documents/{id}/history` | viewer | Every revision with its status and decisions, plus one timeline of uploads and decisions |
 
 Callers outside a workspace get 404 for its documents, so document IDs do not reveal which documents exist. Members without the required role get 403.
+
+## Review rules
+
+Reviewers, editors and owners can decide on the latest revision of a document. A decision on an older revision returns 409, so approvals always refer to the current file. Uploaders cannot review their own revision. A rejection needs a comment. Each reviewer records one decision per revision, and a unique index enforces this under concurrent requests. Any rejection marks a revision rejected; otherwise one approval marks it approved. Decisions take the same document lock as uploads, so a decision cannot land on a revision that another request has just superseded.
 
 ## Storage
 
