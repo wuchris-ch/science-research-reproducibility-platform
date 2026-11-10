@@ -1,0 +1,3 @@
+# Entity Framework Core generates these files.
+[*.cs]
+generated_code = true

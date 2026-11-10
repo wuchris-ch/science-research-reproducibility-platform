@@ -22,6 +22,97 @@ namespace DocumentReview.Api.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("DocumentReview.Api.Data.Document", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<Guid>("WorkspaceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkspaceId");
+
+                    b.ToTable("Documents");
+                });
+
+            modelBuilder.Entity("DocumentReview.Api.Data.DocumentRevision", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("BlobName")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<Guid>("DocumentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Sha256")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
+                        .HasColumnType("char(64)")
+                        .IsFixedLength();
+
+                    b.Property<long>("SizeBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("UploadedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("UploadedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlobName")
+                        .IsUnique();
+
+                    b.HasIndex("DocumentId", "Number")
+                        .IsUnique();
+
+                    b.ToTable("DocumentRevisions");
+                });
+
             modelBuilder.Entity("DocumentReview.Api.Data.Workspace", b =>
                 {
                     b.Property<Guid>("Id")
@@ -75,6 +166,24 @@ namespace DocumentReview.Api.Data.Migrations
                     b.ToTable("WorkspaceMembers");
                 });
 
+            modelBuilder.Entity("DocumentReview.Api.Data.Document", b =>
+                {
+                    b.HasOne("DocumentReview.Api.Data.Workspace", null)
+                        .WithMany()
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DocumentReview.Api.Data.DocumentRevision", b =>
+                {
+                    b.HasOne("DocumentReview.Api.Data.Document", null)
+                        .WithMany("Revisions")
+                        .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DocumentReview.Api.Data.WorkspaceMember", b =>
                 {
                     b.HasOne("DocumentReview.Api.Data.Workspace", null)
@@ -82,6 +191,11 @@ namespace DocumentReview.Api.Data.Migrations
                         .HasForeignKey("WorkspaceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DocumentReview.Api.Data.Document", b =>
+                {
+                    b.Navigation("Revisions");
                 });
 
             modelBuilder.Entity("DocumentReview.Api.Data.Workspace", b =>
