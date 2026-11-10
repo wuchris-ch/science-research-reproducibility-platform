@@ -57,3 +57,7 @@ dotnet test
 ```
 
 The integration tests start the API in memory and use real SQL Server and Azurite. Each test class creates its own database and blob container and deletes them afterwards. Set `DOCUMENT_REVIEW_TEST_SQL` and `DOCUMENT_REVIEW_TEST_BLOBS` to use other servers. The GitHub workflow `document-review.yml` runs the same tests with SQL Server and Azurite containers, and it fails on formatting changes or an entity model change without a migration.
+
+## End-to-end run
+
+With the containers and the API running, `scripts/end-to-end.sh` creates a workspace, adds a reviewer, uploads a document twice, tries two refused reviews, approves revision 2, reads the history, downloads the file and queries SQL Server and the Azurite log. It prints a transcript; [the recorded run](../../evidence/document-review-end-to-end.txt) is in the repository evidence folder.
