@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using DocumentReview.Api.Access;
 using DocumentReview.Api.Auth;
 using DocumentReview.Api.Data;
+using DocumentReview.Api.Documents;
 using DocumentReview.Api.Endpoints;
 using DocumentReview.Api.Storage;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,8 @@ builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddDbContext<ReviewDbContext>((services, options) =>
     options.UseSqlServer(services.GetRequiredService<IConfiguration>().GetConnectionString("ReviewDatabase")));
 builder.Services.AddScoped<WorkspaceAccess>();
+builder.Services.AddScoped<RevisionStore>();
+builder.Services.AddOptions<DocumentOptions>().BindConfiguration("Documents");
 builder.Services.AddDocumentBlobStore();
 builder.Services.AddReviewAuthentication();
 
@@ -48,6 +51,7 @@ if (app.Environment.IsDevelopment())
 
 app.MapHealthEndpoints();
 app.MapWorkspaceEndpoints();
+app.MapDocumentEndpoints();
 
 await app.RunAsync();
 

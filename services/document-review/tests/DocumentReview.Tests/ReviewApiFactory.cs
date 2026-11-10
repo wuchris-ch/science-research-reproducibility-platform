@@ -17,6 +17,7 @@ namespace DocumentReview.Tests;
 public sealed class ReviewApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     public const string SigningKey = "test-only-signing-key-for-document-review-0123456789";
+    public const long MaxUploadBytes = 1024 * 1024;
 
     public static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web)
     {
@@ -44,6 +45,7 @@ public sealed class ReviewApiFactory : WebApplicationFactory<Program>, IAsyncLif
         builder.UseSetting("BlobStorage:ConnectionString", BlobStorage);
         builder.UseSetting("BlobStorage:Container", ContainerName);
         builder.UseSetting("Auth:LocalSigningKey", SigningKey);
+        builder.UseSetting("Documents:MaxUploadBytes", MaxUploadBytes.ToString(System.Globalization.CultureInfo.InvariantCulture));
         builder.UseSetting("InitializeStorageOnStartup", "true");
     }
 

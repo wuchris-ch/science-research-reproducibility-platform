@@ -31,6 +31,18 @@ A team installation sets `Auth__Authority` and `Auth__Audience` to its OIDC issu
 | `GET /api/workspaces` | Signed in | Lists the caller's workspaces and roles |
 | `GET /api/workspaces/{id}/members` | viewer | Lists members |
 | `PUT /api/workspaces/{id}/members` | owner | Adds a member or changes a role; the last owner cannot be demoted |
+| `POST /api/workspaces/{id}/documents` | editor | Multipart `title`, `file` and optional `note`; creates a document with revision 1 |
+| `GET /api/workspaces/{id}/documents` | viewer | Lists documents with their latest revision |
+| `GET /api/documents/{id}` | viewer | Returns a document and its latest revision |
+| `POST /api/documents/{id}/revisions` | editor | Multipart `file`, optional `note` and `expectedLatestRevision`; adds the next revision |
+| `GET /api/documents/{id}/revisions` | viewer | Lists every revision with size, SHA-256, uploader and note |
+| `GET /api/documents/{id}/revisions/{number}/content` | viewer | Streams the revision's file from Blob Storage |
+
+Callers outside a workspace get 404 for its documents, so document IDs do not reveal which documents exist. Members without the required role get 403.
+
+## Storage
+
+Each upload is hashed with SHA-256 and written to the blob `{workspace}/{document}/{revision}` with an if-none-match condition, so an existing blob is never overwritten. SQL Server then records the revision metadata and blob name in one transaction. The transaction locks the document row, so concurrent uploads take consecutive revision numbers. If the database write fails, or `expectedLatestRevision` no longer matches, the service deletes the new blob. Uploads are limited to `Documents:MaxUploadBytes` (25 MiB by default). File names keep only their last path segment.
 
 ## Test
 
