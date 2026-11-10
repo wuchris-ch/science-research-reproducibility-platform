@@ -1,0 +1,56 @@
+name: Document review service
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: services/document-review
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: Y
+          MSSQL_SA_PASSWORD: ReviewCi2026Passw0rd
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P ReviewCi2026Passw0rd -Q 'SELECT 1' -b"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 20
+          --health-start-period 20s
+    env:
+      DOCUMENT_REVIEW_TEST_SQL: Server=localhost,1433;User Id=sa;Password=ReviewCi2026Passw0rd;TrustServerCertificate=True
+      DOCUMENT_REVIEW_TEST_BLOBS: UseDevelopmentStorage=true
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      DOTNET_NOLOGO: 1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: services/document-review/global.json
+      # Service containers cannot take arguments. The Blob Storage SDK can be newer than the emulator,
+      # so Azurite starts here with --skipApiVersionCheck.
+      - name: Start Azurite
+        run: >-
+          docker run -d --name azurite -p 10000:10000
+          mcr.microsoft.com/azure-storage/azurite
+          azurite-blob --blobHost 0.0.0.0 --skipApiVersionCheck
+      - run: dotnet tool restore
+      - run: dotnet build --configuration Release
+      - run: dotnet format --verify-no-changes --no-restore
+      - name: Check for model changes without a migration
+        run: dotnet ef migrations has-pending-model-changes --project src/DocumentReview.Api --configuration Release --no-build
+      - run: dotnet test --configuration Release --no-build --logger "console;verbosity=normal" --logger trx --results-directory TestResults
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: document-review-test-results
+          path: services/document-review/TestResults
